@@ -22,25 +22,6 @@ const db = new sqlite3.Database(dbName, (err) => {
         console.log("room table create success")
       }
     })
-
-    db.run(
-      `CREATE TABLE IF NOT EXISTS chat (
-        id INTEGER PRIMARY KEY,
-        user_id TEXT,
-        room_id INTEGER,
-        sequence INTEGER,
-        comment TEXT,
-        created_at INTEGER,
-        delete_yn TEXT DEFAULT 'N'
-      )`, 
-    (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("chat table create success")
-      }
-    })
-
   }
 })
 

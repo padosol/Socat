@@ -1,4 +1,4 @@
-const db = require('./database');
+const db = require('./db/chat.db');
 
 const createChat = ({userId, roomId, comment}, callback) => {
   const sql = "INSERT INTO chat (user_id, room_id, comment, created_at) VALUES(?,?,?,?)"

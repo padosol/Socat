@@ -2,7 +2,6 @@ const router = require("express").Router();
 const {createRoom, findAllRoom, findRoomById, softDeleteRoomById} = require('../room');
 
 router.post("", (req, res) => {
-
 	const {roomName, userId, roomComment} = req.body;
 
 	createRoom({roomName, userId, roomComment}, (err, data) => {
