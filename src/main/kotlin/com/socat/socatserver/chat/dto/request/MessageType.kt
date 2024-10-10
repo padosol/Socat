@@ -1,4 +1,4 @@
-package com.socat.socatserver.chat.domain
+package com.socat.socatserver.chat.dto.request
 
 enum class MessageType {
     CHAT,

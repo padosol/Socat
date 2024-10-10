@@ -1,4 +1,4 @@
-package com.socat.socatserver.chat.domain
+package com.socat.socatserver.chat.dto.request
 
 data class ChatMessageDTO(
     var roomId: String,

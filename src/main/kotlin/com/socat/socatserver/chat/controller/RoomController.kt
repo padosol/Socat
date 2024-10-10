@@ -1,6 +1,6 @@
 package com.socat.socatserver.chat.controller
 
-import com.socat.socatserver.chat.domain.ChatRoomDTO
+import com.socat.socatserver.chat.dto.request.ChatRoomDTO
 import com.socat.socatserver.chat.repository.ChatRoomRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class RoomController(
-
     private val chatRoomRepository: ChatRoomRepository
 ) {
 

@@ -1,6 +1,6 @@
 package com.socat.socatserver.chat.controller
 
-import com.socat.socatserver.chat.domain.ChatMessageDTO
+import com.socat.socatserver.chat.dto.request.ChatMessageDTO
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.web.bind.annotation.RestController
