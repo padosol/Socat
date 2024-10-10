@@ -1,4 +1,4 @@
-package com.socat.socatserver.chat
+package com.socat.socatserver.chat.controller
 
 import com.socat.socatserver.chat.domain.ChatMessageDTO
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class ChatController(
-    private val template: SimpMessagingTemplate
+    private val template: SimpMessagingTemplate,
 ) {
 
     @MessageMapping(value = ["/chat/enter"])
@@ -18,6 +18,9 @@ class ChatController(
 
     @MessageMapping("/chat/message")
     fun message(message: ChatMessageDTO) {
+
+        print("test")
+
         template.convertAndSend("/sub/chat/room/${message.roomId}", message)
     }
 
