@@ -1,4 +1,4 @@
-package com.socat.socatserver.chat.dto.request
+package com.socat.socatserver.room.dto.request
 
 import org.springframework.web.socket.WebSocketSession
 import java.util.*

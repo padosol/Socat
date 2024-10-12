@@ -1,4 +1,4 @@
-package com.socat.socatserver.chat.domain
+package com.socat.socatserver.room.domain
 
 import java.time.LocalDateTime
 import java.util.*

@@ -1,6 +1,6 @@
-package com.socat.socatserver.chat.controller
+package com.socat.socatserver.room.controller
 
-import com.socat.socatserver.chat.dto.request.ChatRoomDTO
+import com.socat.socatserver.room.dto.request.ChatRoomDTO
 import com.socat.socatserver.chat.repository.ChatRoomRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

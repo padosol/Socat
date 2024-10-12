@@ -1,6 +1,6 @@
 package com.socat.socatserver.chat.repository
 
-import com.socat.socatserver.chat.dto.request.ChatRoomDTO
+import com.socat.socatserver.room.dto.request.ChatRoomDTO
 import org.springframework.stereotype.Repository
 
 @Repository
