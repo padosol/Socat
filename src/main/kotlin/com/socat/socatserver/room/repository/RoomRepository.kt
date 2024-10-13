@@ -1,7 +1,13 @@
 package com.socat.socatserver.room.repository
 
-import org.springframework.stereotype.Repository
+import com.socat.socatserver.room.document.RoomDoc
+import com.socat.socatserver.room.domain.Room
 
-@Repository
 interface RoomRepository {
+
+    fun save(roomDoc: RoomDoc): Room
+
+    fun findById(roomId: String): Room?
+
+    fun findAll(): List<Room>
 }

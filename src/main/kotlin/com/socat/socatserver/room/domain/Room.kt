@@ -4,10 +4,10 @@ import java.time.LocalDateTime
 import java.util.*
 
 class Room(
-    roomId: String,
-    roomName: String,
-    createAt: LocalDateTime,
-) {
+    var roomId: String? = null,
+    var roomName: String,
+    var createAt: LocalDateTime? = null,
+){
 
     companion object {
         fun create(roomName: String): Room {
@@ -18,6 +18,11 @@ class Room(
             )
         }
 
+    }
+
+    fun createRoom(idGenerator: IdGenerator) {
+        roomId = idGenerator.createId()
+        createAt = LocalDateTime.now()
     }
 
 }

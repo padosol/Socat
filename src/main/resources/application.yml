@@ -6,7 +6,17 @@ spring:
       port: 6379
       host: localhost
 
+    mongodb:
+      uri: mongodb://root:1234@localhost:27017/socat?authSource=admin
+
 server:
   port: 8888
 
-
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG

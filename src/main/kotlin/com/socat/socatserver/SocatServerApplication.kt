@@ -1,6 +1,7 @@
 package com.socat.socatserver
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
