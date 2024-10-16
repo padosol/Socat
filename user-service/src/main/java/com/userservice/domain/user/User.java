@@ -14,6 +14,8 @@ public class User {
     private LocalDateTime createdAt;
     private String password;
 
+    private UserState userState;
+
 
     // 유저 생성
     public void createUser(IdGenerator generator) {
@@ -28,6 +30,11 @@ public class User {
 
     // 유저 수정
 
+
+    // 유저 삭제 soft delete
+    public void deleteUser() {
+        this.userState = UserState.DELETE;
+    }
 
 
 }

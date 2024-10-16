@@ -1,3 +1,38 @@
 spring:
   application:
     name: user-service
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/users
+    username: postgres
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+# 초기 script 용 설정
+#    defer-datasource-initialization: true
+#  sql:
+#    init:
+#      mode: always
+
+
+jwt:
+  secret: sac;kjrmlqwkhjrcklqcqwejrhcnqewjklrhcuwienhrcjkwerchnwlq
+  access_token_expired_time: 3600000 # 시간
+  refresh_token_expired_time: 604800000 # 하루
+  access_token_name: access_token
+  refresh_token_name: refresh_token
+
+
+# 로깅 설정
+
+
+
