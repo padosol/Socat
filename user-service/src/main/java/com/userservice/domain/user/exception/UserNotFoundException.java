@@ -1,4 +1,4 @@
-package com.userservice.infrastructure.apdapters.output.persistence.exception;
+package com.userservice.domain.user.exception;
 
 import com.userservice.global.exception.CustomException;
 import org.springframework.http.HttpStatus;

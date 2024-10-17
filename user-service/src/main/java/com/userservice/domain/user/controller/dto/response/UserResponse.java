@@ -1,4 +1,4 @@
-package com.userservice.infrastructure.apdapters.input.rest.dto.response;
+package com.userservice.domain.user.controller.dto.response;
 
 public class UserResponse {
     private String userName;

@@ -1,7 +1,7 @@
-package com.userservice.infrastructure.apdapters.output.persistence.mapper;
+package com.userservice.domain.user.repository.mapper;
 
 import com.userservice.domain.user.User;
-import com.userservice.infrastructure.apdapters.output.persistence.entity.UserEntity;
+import com.userservice.domain.user.entity.UserEntity;
 
 public class UserEntityMapper {
 

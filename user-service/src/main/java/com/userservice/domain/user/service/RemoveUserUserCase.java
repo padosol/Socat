@@ -1,4 +1,4 @@
-package com.userservice.application.ports.input;
+package com.userservice.domain.user.service;
 
 import com.userservice.domain.user.User;
 

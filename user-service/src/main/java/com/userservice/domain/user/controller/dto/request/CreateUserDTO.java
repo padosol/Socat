@@ -1,4 +1,4 @@
-package com.userservice.infrastructure.apdapters.input.rest.dto.request;
+package com.userservice.domain.user.controller.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

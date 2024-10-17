@@ -1,10 +1,10 @@
-package com.userservice.infrastructure.apdapters.input.rest;
+package com.userservice.domain.user.controller;
 
 
-import com.userservice.application.ports.input.CreateUserUseCase;
-import com.userservice.infrastructure.apdapters.input.rest.dto.request.CreateUserDTO;
-import com.userservice.infrastructure.apdapters.input.rest.dto.response.UserResponse;
-import com.userservice.infrastructure.apdapters.input.rest.mapper.UserDtoMapper;
+import com.userservice.domain.user.service.CreateUserUseCase;
+import com.userservice.domain.user.controller.dto.request.CreateUserDTO;
+import com.userservice.domain.user.controller.dto.response.UserResponse;
+import com.userservice.domain.user.controller.mapper.UserDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

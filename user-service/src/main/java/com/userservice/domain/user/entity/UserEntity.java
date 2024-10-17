@@ -1,4 +1,4 @@
-package com.userservice.infrastructure.apdapters.output.persistence.entity;
+package com.userservice.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

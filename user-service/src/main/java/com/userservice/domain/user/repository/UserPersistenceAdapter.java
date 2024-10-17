@@ -1,16 +1,12 @@
-package com.userservice.infrastructure.apdapters.output.persistence;
+package com.userservice.domain.user.repository;
 
-import com.userservice.application.ports.output.UserOutputPort;
 import com.userservice.domain.user.User;
-import com.userservice.infrastructure.apdapters.output.persistence.entity.UserEntity;
-import com.userservice.infrastructure.apdapters.output.persistence.exception.UserNotFoundException;
-import com.userservice.infrastructure.apdapters.output.persistence.mapper.UserEntityMapper;
-import com.userservice.infrastructure.apdapters.output.persistence.repository.UserJpaRepository;
+import com.userservice.domain.user.entity.UserEntity;
+import com.userservice.domain.user.exception.UserNotFoundException;
+import com.userservice.domain.user.repository.mapper.UserEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor

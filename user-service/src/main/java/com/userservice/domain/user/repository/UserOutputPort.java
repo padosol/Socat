@@ -1,7 +1,7 @@
-package com.userservice.application.ports.output;
+package com.userservice.domain.user.repository;
 
 import com.userservice.domain.user.User;
-import com.userservice.infrastructure.apdapters.output.persistence.entity.UserEntity;
+import com.userservice.domain.user.entity.UserEntity;
 
 public interface UserOutputPort {
     User save(UserEntity user);
