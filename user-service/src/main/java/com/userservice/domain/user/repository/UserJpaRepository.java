@@ -1,7 +1,11 @@
 package com.userservice.domain.user.repository;
 
-import com.userservice.domain.user.entity.UserEntity;
+import com.userservice.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserJpaRepository extends JpaRepository<UserEntity, String> {
+import java.util.Optional;
+
+public interface UserJpaRepository extends JpaRepository<User, String> {
+
+    Optional<User> findUserByEmail(String email);
 }

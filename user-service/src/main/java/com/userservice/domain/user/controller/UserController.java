@@ -1,6 +1,7 @@
 package com.userservice.domain.user.controller;
 
 
+import com.userservice.domain.user.entity.User;
 import com.userservice.domain.user.service.CreateUserUseCase;
 import com.userservice.domain.user.controller.dto.request.CreateUserDTO;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
@@ -25,7 +26,13 @@ public class UserController {
             @RequestBody  CreateUserDTO createUserDTO
     ) {
 
-        UserResponse user = createUserUseCase.createUser(UserDtoMapper.toUser(createUserDTO));
+        UserResponse user = createUserUseCase.createUser(
+                User.builder()
+                    .userName(createUserDTO.getUserName())
+                    .email(createUserDTO.getEmail())
+                    .password(createUserDTO.getPassword())
+                    .build()
+        );
 
         return ResponseEntity.status(201).body(user);
     }
