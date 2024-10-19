@@ -25,6 +25,10 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+    private static final String[] SWAGGER_AUTH_WHITELIST = {
+        "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -40,8 +44,9 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(request -> request
-                    .requestMatchers("/api/signup").permitAll()
+                    .requestMatchers("/api/v1/users").permitAll()
                     .requestMatchers("/api/authenticate").permitAll()
+                    .requestMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
                     .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)

@@ -7,11 +7,17 @@ import com.userservice.domain.user.repository.UserJpaRepository;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +31,10 @@ public class UserService implements CreateUserUseCase, ModifyUserUserCase, Remov
     public UserResponse createUser(User user) {
 
         // 해당 이메일로 가입되어 있는 유저 체크
-        userJpaRepository.findUserByEmail(user.getEmail()).orElseThrow(
-                () -> new UserAlreadyExistException(HttpStatus.BAD_REQUEST, "이미 가입되어 있는 유저 입니다.")
-        );
+        Optional<User> findUser = userJpaRepository.findUserByEmail(user.getEmail());
+        if(findUser.isPresent()) {
+            throw new UserAlreadyExistException(HttpStatus.BAD_REQUEST, "이미 가입되어 있는 유저 입니다.");
+        }
 
         user.createUser(idGenerator);
         user.encoderPassword(passwordEncoder);
@@ -56,7 +63,21 @@ public class UserService implements CreateUserUseCase, ModifyUserUserCase, Remov
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userJpaRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
+
+//        List<GrantedAuthority> grantedAuthorities = userEntity.getAuthorities().stream()
+//                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
+//                .collect(Collectors.toList());
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("USER_ROLE"));
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .authorities(grantedAuthorities)
+                .build();
     }
 }

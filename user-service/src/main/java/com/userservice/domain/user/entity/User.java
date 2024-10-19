@@ -12,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Getter
+@Table(name = "users")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,13 +34,9 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "status", length = 10)
-    private String status;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "state", length = 10)
     private UserState state;
-
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<UserAuth> authorities;

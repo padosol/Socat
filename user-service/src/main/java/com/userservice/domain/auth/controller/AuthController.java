@@ -4,6 +4,8 @@ import com.userservice.domain.auth.dto.request.LoginDto;
 import com.userservice.domain.auth.dto.response.AuthDto;
 import com.userservice.global.config.security.JwtFilter;
 import com.userservice.global.utils.JwtProvider;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Auth", description = "유저 권한 API")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
