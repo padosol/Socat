@@ -10,4 +10,9 @@ public class AuthDto {
     public AuthDto(String jwt) {
         this.jwt = jwt;
     }
+
+    public AuthDto(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }

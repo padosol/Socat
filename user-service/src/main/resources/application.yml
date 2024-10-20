@@ -1,6 +1,6 @@
 # 서버설정
 server:
-  port: 9000
+  port: 0
 
 spring:
   application:
@@ -74,12 +74,20 @@ springdoc:
 
 jwt:
   secret: sackjrmlqwkhjrcklqcqwejrhcnqewjklrhcuwienhrcjkwerchnwlq
-  access_token_expired_time: 3600000 # 시간
+  access-token-expired-time: 3600000 # 시간
   refresh_token_expired_time: 604800000 # 하루
   access_token_name: access_token
   refresh_token_name: refresh_token
 
-# 로깅 설정
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 
 
 

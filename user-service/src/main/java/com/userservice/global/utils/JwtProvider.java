@@ -33,7 +33,7 @@ public class JwtProvider implements InitializingBean {
 
     public JwtProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.access_token_expired_time}") long tokenValidityInSeconds
+            @Value("${jwt.access-token-expired-time}") long tokenValidityInSeconds
     ) {
         this.secret = secret;
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;

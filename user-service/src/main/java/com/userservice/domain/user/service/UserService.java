@@ -21,7 +21,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements CreateUserUseCase, ModifyUserUserCase, RemoveUserUserCase, UserDetailsService {
+public class UserService implements
+        CreateUserUseCase,
+        ModifyUserUserCase,
+        RemoveUserUserCase,
+        UserDetailsService,
+        GetUserUseCase
+{
 
     private final UserJpaRepository userJpaRepository;
     private final IdGenerator idGenerator;
@@ -78,6 +84,18 @@ public class UserService implements CreateUserUseCase, ModifyUserUserCase, Remov
                 .username(user.getEmail())
                 .password(user.getPassword())
                 .authorities(grantedAuthorities)
+                .build();
+    }
+
+    @Override
+    public UserResponse findUserByEmail(String email) {
+        User user = userJpaRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
+
+        return UserResponse.builder()
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .id(user.getId())
                 .build();
     }
 }

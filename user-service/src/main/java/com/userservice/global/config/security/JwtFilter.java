@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -14,20 +15,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @RequiredArgsConstructor
 @Slf4j
-public class JwtFilter extends GenericFilterBean {
+public class JwtFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION_HEADER = HttpHeaders.AUTHORIZATION;
     private final JwtProvider jwtProvider;
 
     @Override
-    public void doFilter(
-            ServletRequest request, ServletResponse response, FilterChain chain
-    ) throws IOException, ServletException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
         String jwt = jwtProvider.resolveToken(httpServletRequest);
@@ -43,6 +47,6 @@ public class JwtFilter extends GenericFilterBean {
             log.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }
 
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }

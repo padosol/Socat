@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @Tag(name = "Auth", description = "유저 권한 API")
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -37,11 +38,16 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = jwtProvider.createJwt(authentication);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        String accessToken = jwtProvider.createJwt(authentication);
+        String refreshToken = UUID.randomUUID().toString();
 
-        return ResponseEntity.status(200).headers(headers).body(new AuthDto(jwt));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + accessToken);
+
+        return ResponseEntity
+                .status(200)
+                .headers(headers)
+                .body(new AuthDto(accessToken, refreshToken));
     }
 
 }

@@ -1,10 +1,14 @@
 package com.userservice.global.config.security;
 
 
+import com.userservice.domain.user.service.UserService;
 import com.userservice.global.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,7 +17,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,9 +24,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtProvider jwtProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final Environment env;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+
 
     private static final String[] SWAGGER_AUTH_WHITELIST = {
         "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**"
@@ -31,6 +37,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder);
+
+        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
         http
             .csrf(
@@ -44,20 +56,19 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(request -> request
-                    .requestMatchers("/api/v1/users").permitAll()
-                    .requestMatchers("/api/authenticate").permitAll()
+                    .requestMatchers("/users").permitAll()
                     .requestMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
                     .anyRequest().authenticated()
             )
-            .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+            .addFilter(new AuthenticationFilter(authenticationManager, userService, env))
+
+//            .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
         ;
 
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+
+
 
 }
