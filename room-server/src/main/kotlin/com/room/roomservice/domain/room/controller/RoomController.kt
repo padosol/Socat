@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "room", description = "Room API")
 @RestController
-@RequestMapping("/api")
 class RoomController(
     private val roomService: RoomService,
 ) {
@@ -73,8 +72,8 @@ class RoomController(
 
         val createdRoom = roomService.createRoom(
             Room(
-            roomName = createRoomDTO.roomName
-        )
+                roomName = createRoomDTO.roomName
+            )
         )
 
         return ResponseEntity.status(201).body(createdRoom)
