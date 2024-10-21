@@ -11,6 +11,10 @@ eureka:
 spring:
   application:
     name: apigateway-service
+
+  config:
+    import: optional:configserver:http://localhost:8888
+
   cloud:
     gateway:
       default-filters:
@@ -41,9 +45,9 @@ spring:
           predicates:
             - Path=/user-service
 
-jwt:
-  secret: sackjrmlqwkhjrcklqcqwejrhcnqewjklrhcuwienhrcjkwerchnwlq
-  access_token_expired_time: 3600000 # 시간
-  refresh_token_expired_time: 604800000 # 하루
-  access_token_name: access_token
-  refresh_token_name: refresh_token
+#jwt:
+#  secret: sackjrmlqwkhjrcklqcqwejrhcnqewjklrhcuwienhrcjkwerchnwlq
+#  access_token_expired_time: 3600000 # 시간
+#  refresh_token_expired_time: 604800000 # 하루
+#  access_token_name: access_token
+#  refresh_token_name: refresh_token

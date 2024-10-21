@@ -1,0 +1,6 @@
+jwt:
+  secret: sackjrmlqwkhjrcklqcqwejrhcnqewjklrhcuwienhrcjkwerchnwlq
+  access_token_expired_time: 3600000 # 시간
+  refresh_token_expired_time: 604800000 # 하루
+  access_token_name: access_token
+  refresh_token_name: refresh_token

@@ -28,6 +28,7 @@ dependencies {
 
     // 엑츄에이터
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 }
 
 dependencyManagement {
