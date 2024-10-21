@@ -38,12 +38,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        AuthenticationManagerBuilder authenticationManagerBuilder =
-                http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder);
-
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
-
         http
             .csrf(
                     AbstractHttpConfigurer::disable
@@ -60,7 +54,7 @@ public class SecurityConfig {
                     .requestMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
                     .anyRequest().authenticated()
             )
-            .addFilter(new AuthenticationFilter(authenticationManager, userService, env))
+            .addFilter(new AuthenticationFilter(userService, env))
 
 //            .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
         ;
