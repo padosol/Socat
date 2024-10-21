@@ -1,6 +1,6 @@
 spring:
   application:
-    name: socat-server
+    name: room-server
   data:
     redis:
       port: 6379
