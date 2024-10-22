@@ -46,6 +46,7 @@ public class User {
     public void createUser(IdGenerator generator) {
         this.id = generator.generate();
         this.createdAt = LocalDateTime.now();
+        this.state = UserState.ACTIVE;
     }
 
     public void encoderPassword(PasswordEncoder encoder) {

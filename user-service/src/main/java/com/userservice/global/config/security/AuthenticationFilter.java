@@ -29,14 +29,16 @@ import java.util.Date;
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final UserService userService;
     private final Environment env;
+    private final GetUserUseCase getUserUseCase;
 
     public AuthenticationFilter(
-            UserService userService,
+            AuthenticationManager authenticationManager,
+            GetUserUseCase userService,
             Environment env
     ) {
-        this.userService = userService;
+        super.setAuthenticationManager(authenticationManager);
+        this.getUserUseCase = userService;
         this.env = env;
     }
 
@@ -72,7 +74,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     ) throws IOException, ServletException {
 
         String email = ((User) authResult.getPrincipal()).getUsername();
-        UserResponse userResponse = userService.findUserByEmail(email);
+        UserResponse userResponse = getUserUseCase.findUserByEmail(email);
 
         String jwt = Jwts.builder()
                 .subject(userResponse.getId())

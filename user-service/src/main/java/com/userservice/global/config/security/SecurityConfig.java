@@ -1,6 +1,7 @@
 package com.userservice.global.config.security;
 
 
+import com.userservice.domain.user.service.GetUserUseCase;
 import com.userservice.domain.user.service.UserService;
 import com.userservice.global.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,10 +28,10 @@ public class SecurityConfig {
 
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final UserDetailsService userService;
+    private final GetUserUseCase getUserUseCase;
     private final Environment env;
-    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-
 
     private static final String[] SWAGGER_AUTH_WHITELIST = {
         "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**"
@@ -37,6 +39,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder);
+
+        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
         http
             .csrf(
@@ -54,15 +61,13 @@ public class SecurityConfig {
                     .requestMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
                     .anyRequest().authenticated()
             )
-            .addFilter(new AuthenticationFilter(userService, env))
+            .authenticationManager(authenticationManager)
+            .addFilter(new AuthenticationFilter(authenticationManager, getUserUseCase, env))
 
 //            .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
         ;
 
         return http.build();
     }
-
-
-
 
 }

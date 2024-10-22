@@ -42,6 +42,9 @@ public class UserController {
 
         return ResponseEntity.status(201).body(user);
     }
+    
+    // 유저 검색
+
 
     // 유저 수정
 

@@ -35,10 +35,8 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
 
-
     // eureka client
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
