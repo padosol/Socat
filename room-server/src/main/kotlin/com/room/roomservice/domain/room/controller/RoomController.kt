@@ -72,6 +72,7 @@ class RoomController(
 
         val createdRoom = roomService.createRoom(
             Room(
+                userId = createRoomDTO.userId,
                 roomName = createRoomDTO.roomName
             )
         )

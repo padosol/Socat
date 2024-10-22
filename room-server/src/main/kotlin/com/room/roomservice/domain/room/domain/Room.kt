@@ -4,14 +4,16 @@ import java.time.LocalDateTime
 import java.util.*
 
 class Room(
+    val userId: String,
     var roomId: String? = null,
     var roomName: String,
     var createAt: LocalDateTime? = null,
 ){
 
     companion object {
-        fun create(roomName: String): Room {
+        fun create(userId: String, roomName: String): Room {
             return Room(
+                userId = userId,
                 roomId = UUID.randomUUID().toString(),
                 roomName = roomName,
                 createAt = LocalDateTime.now()

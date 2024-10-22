@@ -1,5 +1,6 @@
 package com.room.roomservice.domain.room.service.impl
 
+import com.room.roomservice.domain.room.client.UserServiceClient
 import com.room.roomservice.domain.room.document.RoomDoc
 import com.room.roomservice.domain.room.domain.Room
 import com.room.roomservice.domain.room.domain.RoomIdGenerator
@@ -14,9 +15,13 @@ import java.lang.IllegalStateException
 class RoomServiceImpl(
     private val redisTemplate: RedisTemplate<String, Any>,
     private val roomRepository: RoomRepository,
+    private val userServiceClient: UserServiceClient
 ) : RoomService {
 
     override fun createRoom(room: Room): RoomResponse {
+
+        val userId = room.userId
+        val user = userServiceClient.getUser(userId)
 
         val roomIdGenerator = RoomIdGenerator()
         room.createRoom(roomIdGenerator)
