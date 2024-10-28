@@ -9,6 +9,7 @@ class RoomDoc(
 
     @org.springframework.data.annotation.Id
     val roomId: String,
+    val userId: String,
     val roomName: String,
     val createdAt: LocalDateTime
 ) {
@@ -16,6 +17,7 @@ class RoomDoc(
     companion object {
         fun create(room: Room): RoomDoc {
             return RoomDoc(
+                userId = room.userId,
                 roomId = room.roomId!!,
                 roomName = room.roomName,
                 createdAt = room.createAt!!

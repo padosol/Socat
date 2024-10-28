@@ -1,4 +1,4 @@
-package com.room.roomservice.config
+package com.room.roomservice.global.config
 
 import com.room.roomservice.chat.handler.StompHandler
 import org.springframework.context.annotation.Configuration

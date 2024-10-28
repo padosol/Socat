@@ -1,4 +1,4 @@
-package com.room.roomservice.config
+package com.room.roomservice.global.config
 
 import com.mongodb.ReadPreference
 import com.mongodb.WriteConcern

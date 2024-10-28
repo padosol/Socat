@@ -16,6 +16,7 @@ class RoomRepositoryImpl(
         val save = roomMongoRepository.save(roomDoc)
 
         return Room(
+            userId = save.userId,
             roomId = save.roomId,
             roomName = save.roomName,
             createAt = save.createdAt
@@ -26,6 +27,7 @@ class RoomRepositoryImpl(
         return roomMongoRepository.findByIdOrNull(roomId)
             ?.let {
                 Room(
+                    userId = it.userId,
                     roomId = it.roomId,
                     roomName = it.roomName,
                     createAt = it.createdAt
@@ -36,6 +38,7 @@ class RoomRepositoryImpl(
     override fun findAll(): List<Room> {
         return  roomMongoRepository.findAll().map {
             Room(
+                userId = it.userId,
                 roomId = it.roomId,
                 roomName = it.roomName,
                 createAt = it.createdAt

@@ -1,4 +1,4 @@
-package com.room.roomservice.config
+package com.room.roomservice.global.config
 
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info

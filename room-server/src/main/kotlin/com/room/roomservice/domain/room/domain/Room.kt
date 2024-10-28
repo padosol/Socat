@@ -19,7 +19,6 @@ class Room(
                 createAt = LocalDateTime.now()
             )
         }
-
     }
 
     fun createRoom(idGenerator: IdGenerator) {

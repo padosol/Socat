@@ -1,4 +1,4 @@
-package com.room.roomservice.config
+package com.room.roomservice.global.config
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
