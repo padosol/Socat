@@ -1,4 +1,4 @@
-package com.room.roomservice.chat.dto.request
+package com.chatservice.domain.dto
 
 enum class MessageType {
     CHAT,
