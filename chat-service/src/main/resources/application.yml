@@ -15,4 +15,7 @@ spring:
     cache: false
     suffix: .ftl
 
-
+  data:
+    redis:
+      port: 6379
+      host: localhost

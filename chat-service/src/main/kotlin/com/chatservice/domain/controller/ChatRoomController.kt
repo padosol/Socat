@@ -20,9 +20,6 @@ class ChatRoomController(
     // 채팅 리스트 화면
     @GetMapping("/room")
     fun rooms(model: Model): String {
-
-        print(1234)
-
         return "/chat/room"
     }
 
