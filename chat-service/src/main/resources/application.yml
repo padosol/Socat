@@ -5,4 +5,14 @@ spring:
   application:
     name: chat-service
 
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  freemarker:
+    cache: false
+    suffix: .ftl
+
 
