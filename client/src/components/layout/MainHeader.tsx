@@ -1,8 +1,8 @@
-const Header = ({toggleSidebar} : {toggleSidebar: () => void}) => {
+const MainHeader = ({toggleSidebar} : {toggleSidebar: () => void}) => {
 
   return (
-    <header className=" text-white p-4 border">
-      <div className="flex items-center justify-between">
+    <header className=" text-white border absolute w-full shadow-sm">
+      <div className="flex items-center justify-between h-16 px-2">
         <div className="flex items-center space-x-4">
           <div className="h-6 w-6">
             <button onClick={toggleSidebar} className="focus:outline-none">
@@ -12,11 +12,11 @@ const Header = ({toggleSidebar} : {toggleSidebar: () => void}) => {
           <h1 className="text-xl font-bold text-black cursor-pointer">SOCAT</h1>
         </div>
         <div className="flex items-center justify-evenly">
-          <a className="border text-black rounded-lg p-1" href="http://localhost:3010/login">로그인</a>
+          <a className="border text-black rounded-xl p-2 hover:bg-slate-300" href="http://localhost:3010/login">로그인</a>
         </div>
       </div>
     </header>
   )
 };
 
-export default Header;
+export default MainHeader;
