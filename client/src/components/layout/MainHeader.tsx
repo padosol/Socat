@@ -1,11 +1,11 @@
-const MainHeader = ({toggleSidebar} : {toggleSidebar: () => void}) => {
+const MainHeader = () => {
 
   return (
-    <header className=" text-white border absolute w-full shadow-sm">
+    <header className=" text-white border w-full shadow-sm">
       <div className="flex items-center justify-between h-16 px-2">
         <div className="flex items-center space-x-4">
           <div className="h-6 w-6">
-            <button onClick={toggleSidebar} className="focus:outline-none">
+            <button className="focus:outline-none">
               {/* <img src="src/assets/image/menu.svg"></img> */}
             </button>
           </div>
