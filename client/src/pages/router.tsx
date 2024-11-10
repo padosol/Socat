@@ -2,31 +2,52 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
+import MainPage, {
+  loader as mainPageLoader
+} from "./main/MainPage";
 
-import MainPage from "./main/MainPage";
-import Login from "./login/Login";
+import Login, {
+  action as loginAction
+} from "./login/Login";
 
+import Join, {
+  action as joinAction
+} from "./login/Join";
+
+import Room, {
+} from "./main/room/Room";
+
+
+
+
+import RoomIndex from "./main/room/RoomIndex";
 import ErrorPage from "./error/ErrorPage";
-
-// path: "/",
-// element: <Root />,
-// errorElement: <ErrorPage />,
-// loader: rootLoader,
-// action: rootAction,
-// children: [
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainPage />,
     errorElement: <ErrorPage />,
+    loader: mainPageLoader,
     children: [
-      
+      {
+        index: true, element: <RoomIndex />,
+      },
+      {
+        path: "/room/:roomId",
+        element: <Room />
+      }
     ]
   },
   {
     path: '/login',
-    element: <Login />
+    element: <Login />,
+    action: loginAction
+  },
+  {
+    path: "/join",
+    element: <Join />,
+    action: joinAction
   }
 ])
 

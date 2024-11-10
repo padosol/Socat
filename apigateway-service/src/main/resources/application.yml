@@ -16,6 +16,9 @@ spring:
     import: optional:configserver:http://localhost:8888
 
   cloud:
+    config:
+      name: socat
+
     gateway:
       default-filters:
         - name: GlobalFilter
@@ -24,6 +27,7 @@ spring:
             preLogger: true
             postLogger: true
       routes:
+          ## user-service
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -43,7 +47,37 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service
+            - Path=/user-service/**k
+          filters:
+            - AuthorizationHeaderFilter
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        ## room-service
+        - id: room-service
+          uri: lb://ROOM-SERVICE
+          predicates:
+            - Path=/room-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/room-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+
+        ## chat-service
+        - id: chat-service
+          uri: lb://CHAT-SERVICE
+          predicates:
+            - Path=/chat-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
+
+        - id: chat-service
+          uri: lb:ws://CHAT-SERVICE
+          predicates:
+            - Path=/chat-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
 
 #jwt:
 #  secret: sackjrmlqwkhjrcklqcqwejrhcnqewjklrhcuwienhrcjkwerchnwlq
@@ -51,3 +85,15 @@ spring:
 #  refresh_token_expired_time: 604800000 # 하루
 #  access_token_name: access_token
 #  refresh_token_name: refresh_token
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, beans
+
+logging:
+  level:
+    io.netty: DEBUG
+    reactor.netty: DEBUG
+

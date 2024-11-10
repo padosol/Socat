@@ -31,7 +31,7 @@ class ChatRoomController(
     }
 
     // 채팅방 생성
-    @PostMapping("/room")
+    @PostMapping("/rooms")
     @ResponseBody
     fun createRoom(@RequestParam("name") name: String): ChatRoomDTO {
         return chatRoomRepository.createChatRoom(name)
@@ -48,7 +48,7 @@ class ChatRoomController(
     }
 
     // 특정 채팅방 조회
-    @GetMapping("/room/{roomId}")
+    @GetMapping("/rooms/{roomId}")
     fun roomInfo(
         @PathVariable("roomId") roomId: String
     ): ChatRoomDTO? {

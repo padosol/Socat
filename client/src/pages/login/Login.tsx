@@ -1,9 +1,41 @@
 import { 
-  Link
+  Form,
+  Link,
+  redirect
 } from "react-router-dom";
 
-export async function action() {
+import { login } from "../../api/login";
+import {getUserInfo} from '@/api/user'  
 
+
+export async function action(
+  { request, params }: {request: Request, params: Params<string>}
+) {
+  const formData = await request.formData();
+
+  try {
+    const response = await login(formData);
+
+    if (response.status === 200) {
+      //header 에 token 추가
+      const access_token  = response.headers['authorization']
+      localStorage.setItem("authorization", access_token)
+
+      const userResponse = await getUserInfo();
+
+      if(userResponse.status === 200) {
+        localStorage.setItem("user-info", JSON.stringify(userResponse.data));
+      }
+      
+
+    }
+    
+    return redirect("/")
+
+  } catch(e) {
+    console.log(e)
+    return null;
+  }
 }
 
 const Login = () => {
@@ -15,10 +47,10 @@ const Login = () => {
           <span className="text-2xl/9">Login</span>
         </div>
 
-        <form>
+        <Form method="post">
           <div className="mb-6">
             <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-              Email Address
+              Email address
             </label>
             <div className="mt-2">
               <input
@@ -26,8 +58,7 @@ const Login = () => {
                 name="email"
                 type="email"
                 required
-                autoComplete="email"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm/6"
+                className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm/6"
               />
             </div>
           </div>
@@ -38,12 +69,11 @@ const Login = () => {
             </label>
             <div className="mt-2">
               <input
-                id="email"
-                name="email"
-                type="email"
+                id="password"
+                name="password"
+                type="password"
                 required
-                autoComplete="email"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm/6"
+                className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm/6"
               />
             </div>
           </div>
@@ -63,13 +93,16 @@ const Login = () => {
               Log in
             </button>
           </div>
-        </form>
+        </Form>
 
-        <p className="mt-8 text-center text-sm/6 text-gray-500">
+        <p className="mt-6 text-center text-sm/6 text-gray-500">
             Don't have an account?{' '}
-          <a href="#" className="font-semibold text-blue-500 hover:text-blue-400">
-            Sign up
-          </a>
+            <Link
+              to={"/join"}
+              className="font-semibold text-blue-500 hover:text-blue-400"
+            >
+              Sign up
+            </Link>
         </p>
       </div>
 

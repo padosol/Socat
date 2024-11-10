@@ -12,7 +12,7 @@ public class CreateUserDTO {
     @NotBlank(message = "이름을 입력해주세요.")
     @Size(min = 2, max = 4, message = "이름은 2자 이상 4자 이하입니다.")
     @Schema(description = "유저 아이디", example = "test")
-    private String userName;
+    private String username;
 
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식이 아닙니다.")
     @Schema(description = "유저 이메일", example = "test@test.com")

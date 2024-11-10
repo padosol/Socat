@@ -5,23 +5,26 @@ import com.userservice.domain.user.entity.User;
 import com.userservice.domain.user.service.CreateUserUseCase;
 import com.userservice.domain.user.controller.dto.request.CreateUserDTO;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
+import com.userservice.domain.user.service.GetUserUseCase;
+import com.userservice.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User", description = "User API")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
+    private final GetUserUseCase getUserUseCase;
     private final CreateUserUseCase createUserUseCase;
+    private final JwtProvider jwtProvider;
 
     @Operation(summary = "유저 회원가입", description = "유저 회원가입을 한다.")
     @ApiResponses(value = {
@@ -34,7 +37,7 @@ public class UserController {
     ) {
         UserResponse user = createUserUseCase.createUser(
                 User.builder()
-                    .userName(createUserDTO.getUserName())
+                    .userName(createUserDTO.getUsername())
                     .email(createUserDTO.getEmail())
                     .password(createUserDTO.getPassword())
                     .build()
@@ -43,7 +46,17 @@ public class UserController {
         return ResponseEntity.status(201).body(user);
     }
     
-    // 유저 검색
+    // 유저 검색, 유저 정보 얻기
+    @GetMapping("users")
+    public ResponseEntity<UserResponse> getUser(
+            HttpServletRequest request
+    ) {
+        String userEmail = jwtProvider.getUserId(request);
+
+        UserResponse userResponse = getUserUseCase.findUserById(userEmail);
+
+        return ResponseEntity.status(200).body(userResponse);
+    }
 
 
     // 유저 수정

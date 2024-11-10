@@ -15,5 +15,3 @@ spring:
           search-locations: file:///C:\Users\hzyan\Desktop\socat
         git:
           uri: https://github.com/padosol/Socat.git
-
-

@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,7 +30,7 @@ public class JwtProvider implements InitializingBean {
     private static final String AUTHORITIES_KEY = "auth";
     private final String secret;
     private final long tokenValidityInMilliseconds;
-    private Key key;
+    private SecretKey key;
 
     public JwtProvider(
             @Value("${jwt.secret}") String secret,
@@ -43,6 +44,7 @@ public class JwtProvider implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+
     }
 
     public String createJwt(Authentication authentication) {
@@ -112,6 +114,16 @@ public class JwtProvider implements InitializingBean {
         }
 
         return null;
+    }
+
+    public String getUserId(HttpServletRequest request) {
+        String token = resolveToken(request);
+
+        Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+
+        String subject = claimsJws.getPayload().getSubject();
+
+        return subject;
     }
 
 }

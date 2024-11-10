@@ -1,8 +1,12 @@
+import {
+  Outlet
+} from "react-router-dom"
+
 
 const Content = () => {
   return (
     <div className="border p-8 h-full">
-      내용
+      <Outlet />
     </div>
   )
 }

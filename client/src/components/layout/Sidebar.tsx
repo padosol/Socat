@@ -1,9 +1,22 @@
+import { useEffect, useState } from "react";
 import { 
   Form,
   Link
 } from "react-router-dom";
 
 const Sidebar = () => {
+
+  const [userInfo, setUserInfo] = useState(null);
+  
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user-info"));
+
+    console.log(user)
+
+    setUserInfo(user);
+
+  }, [])
+
   return (
     <div className="border h-full w-96 flex flex-col justify-between">
       <div className="order-1 p-4 border-t flex justify-between items-center">
@@ -17,11 +30,19 @@ const Sidebar = () => {
           </span>
         </h1>
         <div className="">
-          <Link to={`/login`}>
-            <button className="border p-1 rounded-xl px-2 text-indi-500">
-              Login
-            </button>
-          </Link>
+          {
+            userInfo 
+            ? 
+            <div>
+              {userInfo.email}
+            </div> 
+            :
+            <Link to={`/login`}>
+              <button className="border p-1 rounded-xl px-2 text-indi-500">
+                Login
+              </button>
+            </Link>
+          }
         </div>
       </div>
 

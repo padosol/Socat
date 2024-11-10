@@ -10,13 +10,15 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Assertions.*
 import java.util.UUID
+import java.util.UUID.*
 
 
-class RoomIdGenerator : IdGenerator {
-    var id: String? = null
+class RoomIdGenerator(
+    val id: String
+) : IdGenerator {
+
     override fun createId(): String {
-        id = UUID.randomUUID().toString()
-        return id as String
+        return id
     }
 }
 
@@ -31,18 +33,18 @@ class RoomTest : BehaviorSpec({
         )
 
         When("방을 생성한다.") {
-            val roomIdGenerator = RoomIdGenerator()
+
+            val roomId = randomUUID().toString()
+
+            val roomIdGenerator = RoomIdGenerator(roomId)
             room.createRoom(roomIdGenerator)
 
             Then("방 Id 가 생성된다."){
                 room.roomId shouldNotBe null
-                roomIdGenerator shouldNotBe null
 
-                room.roomId.shouldBe(roomIdGenerator.id)
+                roomId shouldBe roomIdGenerator.id
             }
         }
     }
-
-
 })
 

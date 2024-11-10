@@ -98,4 +98,17 @@ public class UserService implements
                 .id(user.getId())
                 .build();
     }
+
+    @Override
+    public UserResponse findUserById(String id) {
+
+        User user = userJpaRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
+
+        return UserResponse.builder()
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .id(user.getId())
+                .build();
+    }
 }

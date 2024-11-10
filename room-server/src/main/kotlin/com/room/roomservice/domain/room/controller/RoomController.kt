@@ -1,6 +1,7 @@
 package com.room.roomservice.domain.room.controller
 
 import com.room.roomservice.domain.room.domain.Room
+import com.room.roomservice.domain.room.domain.RoomIdGenerator
 import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
 import com.room.roomservice.domain.room.dto.response.RoomResponse
 import com.room.roomservice.domain.room.service.RoomService
@@ -71,9 +72,10 @@ class RoomController(
     fun create(@RequestBody createRoomDTO: CreateRoomDTO): ResponseEntity<RoomResponse> {
 
         val createdRoom = roomService.createRoom(
-            Room(
-                userId = createRoomDTO.userId,
-                roomName = createRoomDTO.roomName
+            Room.create(
+                createRoomDTO.userId,
+                createRoomDTO.roomName,
+                RoomIdGenerator()
             )
         )
 

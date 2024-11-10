@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class ChatController(
-    private val template: SimpMessageSendingOperations,
     private val redisPublisher: RedisPublisher,
     private val chatRoomRepository: ChatRoomRepository
 ) {

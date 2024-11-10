@@ -1,29 +1,35 @@
 package com.room.roomservice.domain.room.domain
 
+import com.room.roomservice.domain.room.vo.ChatResponse
 import java.time.LocalDateTime
 import java.util.*
 
 class Room(
     val userId: String,
-    var roomId: String? = null,
+    val roomId: String,
     var roomName: String,
     var createAt: LocalDateTime? = null,
+    var chats: MutableList<ChatResponse> = mutableListOf()
 ){
 
     companion object {
-        fun create(userId: String, roomName: String): Room {
+        fun create(userId: String, roomName: String, idGenerator: RoomIdGenerator): Room {
             return Room(
                 userId = userId,
-                roomId = UUID.randomUUID().toString(),
+                roomId = idGenerator.createId(),
                 roomName = roomName,
                 createAt = LocalDateTime.now()
             )
         }
     }
 
-    fun createRoom(idGenerator: IdGenerator) {
-        roomId = idGenerator.createId()
+    fun createRoom(clockHolder: ClockHolder) {
         createAt = LocalDateTime.now()
     }
+
+    fun addChats(chats: MutableList<ChatResponse>) {
+        this.chats = chats
+    }
+
 
 }
