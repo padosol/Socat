@@ -49,10 +49,12 @@ class ChatRoomController(
 
     // 특정 채팅방 조회
     @GetMapping("/rooms/{roomId}")
+    @ResponseBody
     fun roomInfo(
         @PathVariable("roomId") roomId: String
     ): ChatRoomDTO? {
-        return chatRoomRepository.findRoomById(roomId)
+        val findRoom = chatRoomRepository.findRoomById(roomId)
+        return findRoom
     }
 
 
