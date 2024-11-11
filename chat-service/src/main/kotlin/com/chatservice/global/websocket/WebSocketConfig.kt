@@ -21,7 +21,7 @@ class WebSocketConfig(
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*")
-//            .withSockJS()
+            .withSockJS()
     }
 
     override fun configureClientInboundChannel(registration: ChannelRegistration) {

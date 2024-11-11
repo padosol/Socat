@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import {
   useLoaderData
 } from "react-router-dom"
-import { Stomp } from "@stomp/stompjs";
+import * as StompJs from '@stomp/stompjs';
 
 import { getRoom } from "../../../api/room";
 
@@ -10,30 +10,44 @@ export async function loader({params}) {
 
   const response = await getRoom(params.roomId);
 
-  console.log(response)
+  const room = response.data;
 
-  return null;
+  return {room};
 }
 
 
 const Room = () => {
-  const stompClient = useRef(null)
+  const {room} = useLoaderData();
+
+  const client = useRef(null)
   
   const connect = () => {
-    const socket = new WebSocket("ws://localhost:8000/ws-stomp");
-    stompClient.current = Stomp.over(socket)
-    stompClient.current.connect({}, () => {
-      stompClient.current.subscribe(`/sub/chat/room`)
+    console.log("connect")
+
+    client.current = new StompJs.Client({
+      brokerURL: "ws://localhost:8000/chat-service/ws-stomp",
+      onConnect: () => {
+        console.log('success');
+        subscribe();
+      }
+    })
+
+    client.current.activate();
+  }
+
+  const subscribe = () => {
+    client.current.subscribe(`/sub/chat/room/${room.roomId}`, (body) => {
+      console.log(body)
     })
   }
 
   useEffect(() => {
     connect();
-  }, [])
+  }, [room])
 
   return (
     <div>
-      방
+      {room.name}
     </div>
   )
 }
