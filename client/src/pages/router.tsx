@@ -15,10 +15,8 @@ import Join, {
 } from "./login/Join";
 
 import Room, {
+  loader as roomLoader
 } from "./main/room/Room";
-
-
-
 
 import RoomIndex from "./main/room/RoomIndex";
 import ErrorPage from "./error/ErrorPage";
@@ -35,7 +33,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/room/:roomId",
-        element: <Room />
+        element: <Room />,
+        loader: roomLoader
       }
     ]
   },

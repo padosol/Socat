@@ -3,11 +3,21 @@ import MainContent from "../../components/layout/MainContent"
 
 import { getRooms } from "../../api/room";
 
+import { 
+  useLoaderData
+} from "react-router-dom";
+
 export async function loader() {
-  return await getRooms();
+  const response = await getRooms();
+
+  const rooms = response.data
+  return {rooms};
 }
 
 const MainPage = () => {
+
+  const {rooms} = useLoaderData();
+
   return (
     <div className="flex h-screen w-full border"> 
       <Sidebar />

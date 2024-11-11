@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { 
   Form,
-  Link
+  Link,
+  useLoaderData
 } from "react-router-dom";
 
 const Sidebar = () => {
 
   const [userInfo, setUserInfo] = useState(null);
-  
+  const {rooms} = useLoaderData();
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user-info"));
-
-    console.log(user)
 
     setUserInfo(user);
 
@@ -35,6 +35,7 @@ const Sidebar = () => {
             ? 
             <div>
               {userInfo.email}
+              <img src="src/assets/logout.svg" />
             </div> 
             :
             <Link to={`/login`}>
@@ -47,25 +48,41 @@ const Sidebar = () => {
       </div>
 
       {/* 검색 폼 */}
-      <div className="border-b p-4 flex">
-        <Form>  
-          <input 
-            className="border rounded-xl p-[6px] shadow-sm" 
-            type="search"
-            name="roomName"
-            placeholder="enter Room Name"
-          >
-          </input>
-        </Form>
-        <Form>
-          <button className="ml-2 px-[10px] py-[6px] border rounded-xl text-cyan-600 shadow-sm hover:bg-slate-200">
-            New
-          </button>
-        </Form>
+      <div className="flex flex-col">
+        <div className="p-4 flex border-b">
+          <Form>  
+            <input 
+              className="border rounded-xl p-[6px] shadow-sm" 
+              type="search"
+              name="roomName"
+              placeholder="enter Room Name"
+            >
+            </input>
+          </Form>
+          <Form>
+            <button className="ml-2 px-[10px] py-[6px] border rounded-xl text-cyan-600 shadow-sm hover:bg-slate-200">
+              New
+            </button>
+          </Form>
+
+        </div>
+        <div className="mt-2">
+          {rooms.length ? (
+            <ul>
+              {rooms.map((room) => (
+                <Link to={`/room/${room.roomId}`} key={room.roomId}>
+                  <li className="p-3 hover:bg-slate-300 cursor-pointer m-2 rounded-lg">{room.name}</li>
+                </Link>
+              ))}
+            </ul>
+          ) : (
+            <p>No Rooms</p>
+          )}
+        </div>
       </div>
 
     </div>
-  )
+)
 }
 
 export default Sidebar

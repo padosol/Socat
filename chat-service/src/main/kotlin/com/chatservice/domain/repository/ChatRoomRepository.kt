@@ -24,7 +24,8 @@ class ChatRoomRepository(
     }
 
     fun findRoomById(roomId: String):ChatRoomDTO? {
-        return opsHashChatRoom[CHAT_ROOMS, roomId]
+        val chatRoomDTO = opsHashChatRoom[CHAT_ROOMS, roomId]
+        return chatRoomDTO
     }
 
     fun createChatRoom(name: String): ChatRoomDTO {
