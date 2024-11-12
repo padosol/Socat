@@ -1,6 +1,8 @@
 package com.chatservice.domain.service
 
 import com.chatservice.domain.dto.ChatRoomDTO
+import com.chatservice.domain.repository.ChatRoomRepository
+import com.chatservice.domain.service.usecase.CreateRoomUseCase
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -13,7 +15,8 @@ import java.util.UUID.*
 @Service
 class ChatService(
     private val objectMapper: ObjectMapper,
-) {
+    private val chatRoomRepository: ChatRoomRepository,
+) : CreateRoomUseCase{
     private val log = LoggerFactory.getLogger(this::class.java)
     private val chatRooms: MutableMap<String, ChatRoomDTO> = mutableMapOf()
 
@@ -25,7 +28,7 @@ class ChatService(
         return chatRooms[roomId]
     }
 
-    fun createRoom(name: String): ChatRoomDTO {
+    override fun createRoom(name: String): ChatRoomDTO {
         val roomId = randomUUID().toString()
 
         val chatRoomDTO = ChatRoomDTO(
@@ -33,7 +36,8 @@ class ChatService(
             name = name
         )
 
-        chatRooms[roomId] = chatRoomDTO
+        chatRoomRepository.createChatRoom(name)
+
         return chatRoomDTO
     }
 

@@ -6,4 +6,10 @@ data class ChatMessageDTO(
     val sender: String,
     var message: String?,
     var userCount: Long
-)
+) {
+    enum class MessageType {
+        CHAT,
+        JOIN,
+        LEAVE
+    }
+}

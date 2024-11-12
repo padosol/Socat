@@ -21,14 +21,16 @@ class StompHandler(
 
         if (StompCommand.CONNECT == headerAccessor.command) {
             // 토큰 검증
-            val jwt = headerAccessor.getFirstNativeHeader("token") as String
-
-            log.info("CONNECT: $jwt")
-            jwtProvider.validateToken(jwt)
+//            val jwt = headerAccessor.getFirstNativeHeader("token") as String
+//
+//            log.info("CONNECT: $jwt")
+//            jwtProvider.validateToken(jwt)
         }
 
         // header 로 부터 token 정보 가져와서 인증처리
         return message
     }
+
+
 
 }

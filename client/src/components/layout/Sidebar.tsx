@@ -35,7 +35,6 @@ const Sidebar = () => {
             ? 
             <div>
               {userInfo.email}
-              <img src="src/assets/logout.svg" />
             </div> 
             :
             <Link to={`/login`}>

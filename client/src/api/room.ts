@@ -4,6 +4,11 @@ export function getRooms() {
   return instance.get("/api/chat-service/chat/rooms")
 }
 
-export function getRoom(roomId) {
+interface RoomData {
+  name: string,
+  roomId: string
+}
+
+export function getRoom(roomId: string) {
   return instance.get(`/api/chat-service/chat/rooms/${roomId}`)
 }

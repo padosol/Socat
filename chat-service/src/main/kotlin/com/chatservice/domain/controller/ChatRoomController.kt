@@ -2,6 +2,7 @@ package com.chatservice.domain.controller
 
 import com.chatservice.domain.dto.ChatRoomDTO
 import com.chatservice.domain.repository.ChatRoomRepository
+import com.chatservice.domain.service.usecase.CreateRoomUseCase
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/chat")
 class ChatRoomController(
-    private val chatRoomRepository: ChatRoomRepository
+    private val chatRoomRepository: ChatRoomRepository,
+    private val createRoomUseCase: CreateRoomUseCase
 ) {
 
     // 모든 채팅방 목록
@@ -24,7 +26,7 @@ class ChatRoomController(
     // 채팅방 생성
     @PostMapping("/rooms")
     fun createRoom(@RequestParam("name") name: String): ChatRoomDTO {
-        return chatRoomRepository.createChatRoom(name)
+        return createRoomUseCase.createRoom(name)
     }
 
     // 특정 채팅방 조회
