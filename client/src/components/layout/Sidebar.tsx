@@ -22,7 +22,7 @@ const Sidebar = () => {
       <div className="order-1 p-4 border-t flex justify-between items-center">
         <h1 className="flex">
           <span>
-            <img src="src/assets/rocket.svg">
+            <img src="/src/assets/rocket.svg">
             </img>
           </span>
           <span className="ml-4">

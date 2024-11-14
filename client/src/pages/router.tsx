@@ -34,7 +34,8 @@ const router = createBrowserRouter([
       {
         path: "/room/:roomId",
         element: <Room />,
-        loader: roomLoader
+        loader: roomLoader,
+        errorElement: <ErrorPage />
       }
     ]
   },
