@@ -17,17 +17,18 @@ class StompHandler(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     override fun preSend(message: Message<*>, channel: MessageChannel): Message<*>? {
-        val headerAccessor = StompHeaderAccessor.wrap(message)
+        val headerAccessor: StompHeaderAccessor = StompHeaderAccessor.wrap(message)
 
-        if (StompCommand.CONNECT == headerAccessor.command) {
-            // 토큰 검증
-//            val jwt = headerAccessor.getFirstNativeHeader("token") as String
+        if (StompCommand.SEND == headerAccessor.command) {
 
-//            log.info("CONNECT: $jwt")
-//            jwtProvider.validateToken(jwt)
+            // 로그인 후 채팅 가능
+            val jwt = headerAccessor.getNativeHeader("Authorization")?.get(0) ?: ""
+            if(jwtProvider.validateToken(jwt)) {
+
+            }
+
         }
 
-        // header 로 부터 token 정보 가져와서 인증처리
         return message
     }
 }

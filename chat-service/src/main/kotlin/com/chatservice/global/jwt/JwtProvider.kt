@@ -25,7 +25,6 @@ class JwtProvider(
         try {
             Jwts.parser().verifyWith(secretKey).build()
                 .parseSignedClaims(token)
-
             return true
         } catch(e: MalformedJwtException){
             log.info("잘못된 JWT 서명입니다.")
