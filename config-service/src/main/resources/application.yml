@@ -5,6 +5,12 @@ spring:
   application:
     name: config-service
 
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
   profiles:
     active: native
 
@@ -15,3 +21,9 @@ spring:
           search-locations: file:///C:\Users\hzyan\Desktop\socat
         git:
           uri: https://github.com/padosol/Socat.git
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,beans,httptrace,busrefresh

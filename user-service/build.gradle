@@ -35,6 +35,15 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // spring cloud bus
+    implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+
+    // config
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
     // eureka client
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 

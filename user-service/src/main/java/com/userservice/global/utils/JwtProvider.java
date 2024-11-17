@@ -21,6 +21,7 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -29,15 +30,25 @@ public class JwtProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
     private final String secret;
-    private final long tokenValidityInMilliseconds;
+    private final long accessTokenExpiredTime;
+    private final long refreshTokenExpiredTime;
     private SecretKey key;
+
+    public String ACCESS_TOKEN_NAME = "default_access_token_name";
+    public String REFRESH_TOKEN_NAME = "default_refresh_token_name";
 
     public JwtProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.access-token-expired-time}") long tokenValidityInSeconds
+            @Value("${jwt.access-token-expired-time}") long accessTokenExpiredTime,
+            @Value("${jwt.refresh_token_expired_time}") long refreshTokenExpiredTime,
+            @Value("${jwt.access_token_name}") String accessTokenName,
+            @Value("${jwt.refresh_token_name}") String refreshTokenName
     ) {
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+        this.accessTokenExpiredTime = accessTokenExpiredTime;
+        this.refreshTokenExpiredTime = refreshTokenExpiredTime;
+        this.ACCESS_TOKEN_NAME = accessTokenName;
+        this.REFRESH_TOKEN_NAME = refreshTokenName;
     }
 
     @Override
@@ -56,7 +67,7 @@ public class JwtProvider implements InitializingBean {
 
         // 만료시간 설정
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date validity = new Date(now + this.accessTokenExpiredTime);
 
         return Jwts.builder()
                 .subject(authentication.getName())
@@ -66,15 +77,31 @@ public class JwtProvider implements InitializingBean {
                 .compact();
     }
 
+    public String generateAccessToken() {
+        return "access-token";
+    }
+
+    public String generateRefreshToken() {
+        String uuid = UUID.randomUUID().toString();
+        Date expirationDate = new Date((new Date()).getTime() + this.refreshTokenExpiredTime);
+
+        return Jwts.builder()
+                .subject(uuid)
+                .signWith(key)
+                .expiration(expirationDate)
+                .compact()
+                ;
+    }
+
     public Authentication getAuthentication(String token) {
 
         // 토큰을 이용해서 Claims 만듬
         Claims claims = Jwts
                 .parser()
-                .setSigningKey(key)
+                .verifyWith(key)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
 
         // Claims 에 들어있는 권한들을 가져옴
         Collection<? extends GrantedAuthority> authorities =
@@ -90,7 +117,11 @@ public class JwtProvider implements InitializingBean {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);
+
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
@@ -124,6 +155,10 @@ public class JwtProvider implements InitializingBean {
         String subject = claimsJws.getPayload().getSubject();
 
         return subject;
+    }
+
+    public long getRefreshTokenExpiredTime() {
+        return refreshTokenExpiredTime;
     }
 
 }

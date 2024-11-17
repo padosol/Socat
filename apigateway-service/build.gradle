@@ -36,6 +36,9 @@ dependencies {
     // jwt
     implementation 'io.jsonwebtoken:jjwt:0.12.6'
 
+    // spring cloud bus
+    implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+
     // config
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
 

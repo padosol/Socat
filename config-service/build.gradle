@@ -26,8 +26,11 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // 엑츄에이터
+    // actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // spring cloud bus
+    implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 
 }
 

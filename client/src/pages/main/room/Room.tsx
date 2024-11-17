@@ -66,6 +66,7 @@ const Room = () => {
 
           wsClient.current.publish({
             destination: "/pub/chat/message",
+            headers: {Authorization: window.localStorage.getItem('authorization')!},
             body: JSON.stringify({type: "JOIN", roomId: room.roomId, sender: "tester"})
           })
         }
@@ -93,21 +94,17 @@ const Room = () => {
     }
   }
 
-  const disconnect = () => {
-    if(wsClient.current) {
-      // wsClient.current.send("/pub/chat/message", {}, JSON.stringify({type: "LEAVE", roomId: room.roomId, sender: "tester"}))
-      wsClient.current.deactivate();
-    }
-  }
-
   useEffect(() => {
     connect();
 
     return () => {
       setMessages([])
-      disconnect();
+
+      if(wsClient.current) {
+        wsClient.current.deactivate();
+      }
     }
-  }, [room])
+  }, [room, wsClient.current])
 
 
   return (
@@ -123,7 +120,7 @@ const Room = () => {
         </div>
       </div>
 
-      <div className="border border-black rounded-xl h-[500px] w-[400px] p-5">
+      <div className="border border-black rounded-xl h-[500px] w-[400px] p-5 shadow-lg">
         <div className="h-[400px] border mb-3 overflow-y-auto ">
           {messages.length ? 
             <div>

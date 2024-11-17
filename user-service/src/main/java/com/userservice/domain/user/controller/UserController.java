@@ -47,7 +47,7 @@ public class UserController {
     }
     
     // 유저 검색, 유저 정보 얻기
-    @GetMapping("users")
+    @GetMapping("/users")
     public ResponseEntity<UserResponse> getUser(
             HttpServletRequest request
     ) {

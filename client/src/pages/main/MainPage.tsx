@@ -3,9 +3,7 @@ import MainContent from "../../components/layout/MainContent"
 
 import { getRooms } from "../../api/room";
 
-import { 
-  useLoaderData
-} from "react-router-dom";
+import { useEffect } from "react";
 
 export async function loader() {
   const response = await getRooms();
@@ -15,8 +13,13 @@ export async function loader() {
 }
 
 const MainPage = () => {
+  useEffect(() => {
+    console.log("MainPage Mounted")
 
-  const {rooms} = useLoaderData();
+    return () => {
+      console.log("MainPage UnMounted")
+    }
+  }, [])
 
   return (
     <div className="flex h-screen w-full border"> 
