@@ -31,6 +31,7 @@ public class RefreshTokenService implements RefreshUseCase {
         redisTemplate.expire(jwtProvider.REFRESH_TOKEN_NAME, jwtProvider.getRefreshTokenExpiredTime(), TimeUnit.MILLISECONDS);
     }
 
+    @Override
     public String createRefreshToken(String accessToken) {
 
         String refreshToken = jwtProvider.generateRefreshToken();

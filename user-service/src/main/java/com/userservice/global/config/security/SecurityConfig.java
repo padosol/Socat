@@ -34,7 +34,8 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
 
     private static final String[] SWAGGER_AUTH_WHITELIST = {
-        "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**"
+        "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**",
+        "/actuator/**"
     };
 
     @Bean

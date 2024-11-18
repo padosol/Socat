@@ -1,9 +1,2 @@
-jwt:
-  secret: sackjrmlqwkhjrcklqcqwejrhcnqewjklrhcuwienhrcjkwerchnwlq
-  access_token_expired_time: 3600000 # 시간
-  refresh_token_expired_time: 604800000 # 하루
-  access_token_name: access_token
-  refresh_token_name: refresh_token
-
 bus:
-  test: testtest
+  test: "{cipher}AQCXfvAbhBUiMMC83R33kcnS4RM963QBf4lKoV5pXj3Z25lgc+rj7UIz599KojTUsex6Y34VXCYewh0F84ANTvNvHG6+PLRVJB/6A+Ayr9Flq9wgZSdpm4PdkpZj0UVhNzDVSWqbs9GmFqfvzJURrwjEfR6j/GumhLuy3e7oYc2Efd9uulX0QCD4D3bXsCQi+3GT3LcJXi4yNPWV8vPKDgrH3o3BbIPUVraGpcfKWzTKePCBND0pDcROxoGYriwJkBxi2EdohUiCpApceEU6iyfixAppRWU8RBj6O/lg9cBTP5dqgKB2Kecs3ZKmgjf/imD7ZUGKlDIBv0VDDbC6//CdcozbAL2dK4Vp3a4xyzwUkNS5sYRlhEl8+X7oupTViDc="

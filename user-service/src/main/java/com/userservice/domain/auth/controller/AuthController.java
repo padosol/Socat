@@ -4,6 +4,7 @@ import com.userservice.domain.auth.dto.request.LoginDto;
 import com.userservice.domain.auth.dto.request.RefreshDTO;
 import com.userservice.domain.auth.dto.response.AuthDto;
 import com.userservice.domain.auth.service.RefreshTokenService;
+import com.userservice.domain.auth.service.usecase.RefreshUseCase;
 import com.userservice.global.config.security.JwtFilter;
 import com.userservice.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -29,7 +30,7 @@ public class AuthController {
 
     private final JwtProvider jwtProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final RefreshTokenService refreshTokenService;
+    private final RefreshUseCase refreshUseCase;
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthDto> authorize(
@@ -42,7 +43,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String accessToken = jwtProvider.createJwt(authentication);
-        String refreshToken = refreshTokenService.createRefreshToken(accessToken);
+        String refreshToken = refreshUseCase.createRefreshToken(accessToken);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + accessToken);
@@ -58,7 +59,7 @@ public class AuthController {
     public ResponseEntity<AuthDto> refreshAuthorize(
         @RequestBody RefreshDTO refreshDTO
     ) {
-        AuthDto refresh = refreshTokenService.refresh(refreshDTO.getRefreshToken(), refreshDTO.getAccessToken());
+        AuthDto refresh = refreshUseCase.refresh(refreshDTO.getRefreshToken(), refreshDTO.getAccessToken());
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + refresh.getAccessToken());
