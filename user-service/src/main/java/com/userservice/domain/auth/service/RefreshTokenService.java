@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -56,12 +57,13 @@ public class RefreshTokenService implements RefreshUseCase {
             if (StringUtils.hasText(expired_access_token) && expired_access_token.equals(accessToken) ){
 
                 // 새로발급시 refresh token 초기화 RTR 정책
+                Authentication authentication = jwtProvider.getAuthentication(expired_access_token);
 
-                String new_access_token = jwtProvider.generateAccessToken();
+                String new_access_token = jwtProvider.createJwt(authentication);
                 String new_refresh_token = jwtProvider.generateRefreshToken();
 
                 redisHash.delete(jwtProvider.REFRESH_TOKEN_NAME, refreshToken);
-                redisHash.put(jwtProvider.REFRESH_TOKEN_NAME, refreshToken, new_refresh_token);
+                redisHash.put(jwtProvider.REFRESH_TOKEN_NAME, new_refresh_token, new_access_token);
 
                 return new AuthDto(new_access_token, new_refresh_token);
             }

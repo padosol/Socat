@@ -53,7 +53,7 @@ public class UserController {
     ) {
         String userEmail = jwtProvider.getUserId(request);
 
-        UserResponse userResponse = getUserUseCase.findUserById(userEmail);
+        UserResponse userResponse = getUserUseCase.findUserByEmail(userEmail);
 
         return ResponseEntity.status(200).body(userResponse);
     }

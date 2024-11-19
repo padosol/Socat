@@ -10,7 +10,7 @@ import lombok.Getter;
 public class CreateUserDTO {
 
     @NotBlank(message = "이름을 입력해주세요.")
-    @Size(min = 2, max = 4, message = "이름은 2자 이상 4자 이하입니다.")
+    @Size(min = 2, max = 8, message = "이름은 2자 이상 8자 이하입니다.")
     @Schema(description = "유저 아이디", example = "test")
     private String username;
 

@@ -77,8 +77,15 @@ public class JwtProvider implements InitializingBean {
                 .compact();
     }
 
-    public String generateAccessToken() {
-        return "access-token";
+    public String generateAccessToken(String userEmail) {
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.accessTokenExpiredTime);
+
+        return Jwts.builder()
+                .subject(userEmail)
+                .signWith(key)
+                .expiration(validity)
+                .compact();
     }
 
     public String generateRefreshToken() {
