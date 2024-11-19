@@ -35,7 +35,7 @@ public class RefreshTokenService implements RefreshUseCase {
     @Override
     public String createRefreshToken(String accessToken) {
 
-        String refreshToken = jwtProvider.generateRefreshToken();
+        String refreshToken = jwtProvider.generateRefreshToken(accessToken);
 
         redisHash.put(jwtProvider.REFRESH_TOKEN_NAME, refreshToken, accessToken);
 
@@ -57,10 +57,10 @@ public class RefreshTokenService implements RefreshUseCase {
             if (StringUtils.hasText(expired_access_token) && expired_access_token.equals(accessToken) ){
 
                 // 새로발급시 refresh token 초기화 RTR 정책
-                Authentication authentication = jwtProvider.getAuthentication(expired_access_token);
+                String userEmail = jwtProvider.getUserEmail(refreshToken);
 
-                String new_access_token = jwtProvider.createJwt(authentication);
-                String new_refresh_token = jwtProvider.generateRefreshToken();
+                String new_access_token = jwtProvider.generateAccessToken(userEmail);
+                String new_refresh_token = jwtProvider.generateRefreshToken(new_access_token);
 
                 redisHash.delete(jwtProvider.REFRESH_TOKEN_NAME, refreshToken);
                 redisHash.put(jwtProvider.REFRESH_TOKEN_NAME, new_refresh_token, new_access_token);

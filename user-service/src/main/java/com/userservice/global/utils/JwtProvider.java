@@ -88,12 +88,15 @@ public class JwtProvider implements InitializingBean {
                 .compact();
     }
 
-    public String generateRefreshToken() {
+    public String generateRefreshToken(String token) {
+        String userEmail = getUserEmail(token);
+
         String uuid = UUID.randomUUID().toString();
         Date expirationDate = new Date((new Date()).getTime() + this.refreshTokenExpiredTime);
 
         return Jwts.builder()
-                .subject(uuid)
+                .id(uuid)
+                .subject(userEmail)
                 .signWith(key)
                 .expiration(expirationDate)
                 .compact()
@@ -159,9 +162,12 @@ public class JwtProvider implements InitializingBean {
 
         Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
 
-        String subject = claimsJws.getPayload().getSubject();
+        return claimsJws.getPayload().getSubject();
+    }
 
-        return subject;
+    public String getUserEmail(String jwt) {
+        Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
+        return claimsJws.getPayload().getSubject();
     }
 
     public long getRefreshTokenExpiredTime() {
