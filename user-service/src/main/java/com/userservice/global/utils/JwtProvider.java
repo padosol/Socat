@@ -37,6 +37,8 @@ public class JwtProvider implements InitializingBean {
     public String ACCESS_TOKEN_NAME = "default_access_token_name";
     public String REFRESH_TOKEN_NAME = "default_refresh_token_name";
 
+    public final String BLACK_LIST = "black_list";
+
     public JwtProvider(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.access-token-expired-time}") long accessTokenExpiredTime,
@@ -173,5 +175,6 @@ public class JwtProvider implements InitializingBean {
     public long getRefreshTokenExpiredTime() {
         return refreshTokenExpiredTime;
     }
+    public long getAccessTokenExpiredTime() {return accessTokenExpiredTime;}
 
 }

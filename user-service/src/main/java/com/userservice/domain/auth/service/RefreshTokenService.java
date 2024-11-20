@@ -1,9 +1,11 @@
 package com.userservice.domain.auth.service;
 
 import com.ctc.wstx.util.StringUtil;
+import com.userservice.domain.auth.dto.request.TokenDto;
 import com.userservice.domain.auth.dto.response.AuthDto;
 import com.userservice.domain.auth.exception.AccessTokenNotMatchException;
 import com.userservice.domain.auth.exception.RefreshTokenNotMatchException;
+import com.userservice.domain.auth.service.usecase.LogoutUseCase;
 import com.userservice.domain.auth.service.usecase.RefreshUseCase;
 import com.userservice.global.utils.JwtProvider;
 import jakarta.annotation.PostConstruct;
@@ -19,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenService implements RefreshUseCase {
+public class RefreshTokenService implements RefreshUseCase, LogoutUseCase {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final JwtProvider jwtProvider;
@@ -29,7 +31,8 @@ public class RefreshTokenService implements RefreshUseCase {
     @PostConstruct
     public void init() {
         this.redisHash = redisTemplate.opsForHash();
-        redisTemplate.expire(jwtProvider.REFRESH_TOKEN_NAME, jwtProvider.getRefreshTokenExpiredTime(), TimeUnit.MILLISECONDS);
+        redisTemplate.expire(jwtProvider.REFRESH_TOKEN_NAME, 10000, TimeUnit.MILLISECONDS);
+        redisTemplate.expire(jwtProvider.BLACK_LIST, jwtProvider.getAccessTokenExpiredTime(), TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -72,5 +75,16 @@ public class RefreshTokenService implements RefreshUseCase {
         }
 
         throw new RefreshTokenNotMatchException(HttpStatus.BAD_REQUEST, "유효하지 않는 Refresh Token 입니다.");
+    }
+
+    @Override
+    public void logout(TokenDto tokenDto) {
+        String accessToken = tokenDto.getAccessToken();
+        String refreshToken = tokenDto.getRefreshToken();
+        
+        // black list 관리
+        redisHash.put(jwtProvider.BLACK_LIST, accessToken, accessToken);
+
+        redisHash.delete(jwtProvider.REFRESH_TOKEN_NAME, refreshToken);
     }
 }

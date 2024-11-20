@@ -34,6 +34,11 @@ spring:
         format_sql: true
         show_sql: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 
 # Swagger 설정
 springdoc:

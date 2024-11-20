@@ -2,8 +2,10 @@ package com.userservice.domain.auth.controller;
 
 import com.userservice.domain.auth.dto.request.LoginDto;
 import com.userservice.domain.auth.dto.request.RefreshDTO;
+import com.userservice.domain.auth.dto.request.TokenDto;
 import com.userservice.domain.auth.dto.response.AuthDto;
 import com.userservice.domain.auth.service.RefreshTokenService;
+import com.userservice.domain.auth.service.usecase.LogoutUseCase;
 import com.userservice.domain.auth.service.usecase.RefreshUseCase;
 import com.userservice.global.config.security.JwtFilter;
 import com.userservice.global.utils.JwtProvider;
@@ -31,6 +33,7 @@ public class AuthController {
     private final JwtProvider jwtProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RefreshUseCase refreshUseCase;
+    private final LogoutUseCase logoutUseCase;
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthDto> authorize(
@@ -57,7 +60,7 @@ public class AuthController {
 
     @PostMapping("/refresh-auth")
     public ResponseEntity<AuthDto> refreshAuthorize(
-        @RequestBody RefreshDTO refreshDTO
+        @RequestBody TokenDto refreshDTO
     ) {
         AuthDto refresh = refreshUseCase.refresh(refreshDTO.getRefreshToken(), refreshDTO.getAccessToken());
 
@@ -69,5 +72,15 @@ public class AuthController {
                 .headers(headers)
                 .body(refresh);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+        @RequestBody TokenDto tokenDto
+    ) {
+        logoutUseCase.logout(tokenDto);
+
+        return ResponseEntity.ok().build();
+    }
+
 
 }
