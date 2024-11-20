@@ -22,5 +22,5 @@ interface LoginDTO {
   password: string
 }
 export function login(data: LoginDTO) {
-  return instance.post("/api/user-service/login", data)
+  return instance.post("/api/user-service/authenticate", data)
 }

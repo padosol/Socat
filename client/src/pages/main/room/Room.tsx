@@ -7,6 +7,7 @@ import {
 import * as StompJs from '@stomp/stompjs';
 
 import { getRoom } from "../../../api/room";
+import {getUserInfo} from '@/api/user'  
 
 interface RoomData {
   name: string,
@@ -59,16 +60,22 @@ const Room = () => {
         if(wsClient.current) {
           wsClient.current.subscribe(`/sub/chat/room/${room.roomId}`, (message: StompJs.IMessage) => {
             const newMessage = JSON.parse(message.body);
+
+            console.log(newMessage)
     
             setMessages((messages) => [...messages, newMessage])
-    
           })
+          
+          // 유저 정보가 있는지 확인
+          const userInfo = JSON.parse(localStorage.getItem("user-info"))
+          if (userInfo) {
+            wsClient.current.publish({
+              destination: "/pub/chat/message",
+              headers: {Authorization: window.localStorage.getItem('authorization')!},
+              body: JSON.stringify({type: "JOIN", roomId: room.roomId, sender: userInfo?.userName})
+            })
+          }
 
-          wsClient.current.publish({
-            destination: "/pub/chat/message",
-            headers: {Authorization: window.localStorage.getItem('authorization')!},
-            body: JSON.stringify({type: "JOIN", roomId: room.roomId, sender: "tester"})
-          })
         }
 
       }
@@ -87,11 +94,20 @@ const Room = () => {
       if(wsClient.current) {
         wsClient.current.publish({
           destination: "/pub/chat/message",
+          headers: {Authorization: window.localStorage.getItem('authorization')!},
           body: JSON.stringify({type: "CHAT", roomId: room.roomId, sender: "tester", message: message})
         })
         setMessage("")
       }
     }
+  }
+
+  const handleChatFocus = async () => {
+      try {
+        await getUserInfo();
+      } catch(e) {
+        console.log(e)
+      }
   }
 
   useEffect(() => {
@@ -104,7 +120,7 @@ const Room = () => {
         wsClient.current.deactivate();
       }
     }
-  }, [room, wsClient.current])
+  }, [room])
 
 
   return (
@@ -120,12 +136,18 @@ const Room = () => {
         </div>
       </div>
 
-      <div className="border border-black rounded-xl h-[500px] w-[400px] p-5 shadow-lg">
-        <div className="h-[400px] border mb-3 overflow-y-auto ">
+      <div className="border  rounded-xl h-[700px] w-[400px] p-5 shadow-lg">
+        <div className="h-[600px] mb-3 overflow-y-auto ">
           {messages.length ? 
             <div>
               {messages.map( (message, index) => (
-                <div key={index}>{message.message}</div>
+                message.type == 'JOIN' 
+                ? <div key={index} className="mb-1 p-2">{message.message}</div>
+                : <div key={index}
+                    className="bg-slate-100 mb-1 p-2 rounded-lg"
+                  >
+                    <span>{message.sender}</span>: {message.message}
+                  </div>
               ))}
             </div>
             :
@@ -139,6 +161,7 @@ const Room = () => {
             onChange={handleMessageChange} 
             value={message}
             placeholder="채팅에 참여하려면 로그인을 해주세요."
+            onFocus={handleChatFocus}
             onKeyDown={sendMessage}
           ></input>
         </div>

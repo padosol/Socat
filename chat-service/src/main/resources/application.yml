@@ -10,7 +10,7 @@ spring:
 
   cloud:
     config:
-      name: socat
+      name: chat-service
 
   devtools:
     livereload:
@@ -27,6 +27,12 @@ spring:
       port: 6379
       host: localhost
 
+    mongodb:
+      uri: mongodb://root:1234@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.2
+      database: socat
+
+
+
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
@@ -37,9 +43,13 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
-#jwt:
-#  secret: sackjrmlqwkhjrcklqcqwejrhcnqewjklrhcuwienhrcjkwerchnwlq
-#  access-token-expired-time: 3600000 # 시간
-#  refresh_token_expired_time: 604800000 # 하루
-#  access_token_name: access_token
-#  refresh_token_name: refresh_token
+
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG

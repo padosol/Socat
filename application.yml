@@ -1,6 +1,6 @@
 jwt:
   secret: "{cipher}AQAx/lch53L+WwHJy4Wl3pMUBaaRg2GvlL84ltmaCM/9KT5TKlZ/QRVo5pHkkYP1jo4RDmjgbcb29vQoXhNZHsyIy9dkpvP6vO83N/ka5JVhI/V6zAogE0X/LthDTNM9pXYEafN+ErXbrJtB3X8gbQxM8NNTbr3u5DNQWbDBrLvJnB74PEqiD/ptC1QSm9a+zR1ff02FPyTMuvENkXKi7Vok6/dDrsBetONNldGoKkKV/OESvMwN5BPWsCKT9hoqnINB6Fmo056lhbESyQD3t3aNvzwFfjYEhMdzOUCn4fE91FpPLtIgtx0Hty8uKmMKcwuIemFnMHXJxmibJGIIEa7Kv+fdDF+OLct9vOixz+VyI3PnoP4JRQdVH5hBA69aIEEhrGH6HSMyULS4wSxj3rznVX6i1CPdabyK1QYxp0koOGJIbY4ewpsGEv5DCI6x42E="
-  access_token_expired_time: 3600000 # 시간
-  refresh_token_expired_time: 604800000 # 하루
+  access_token_expired_time: 20000 # 시간 3600000
+  refresh_token_expired_time: 60000 # 하루 604800000
   access_token_name: access_token
   refresh_token_name: refresh_token

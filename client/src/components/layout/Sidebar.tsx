@@ -34,7 +34,7 @@ const Sidebar = () => {
             userInfo 
             ? 
             <div>
-              {userInfo.email}
+              {userInfo.userName}
             </div> 
             :
             <Link to={`/login`}>

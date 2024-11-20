@@ -18,21 +18,23 @@ export async function action(
 
     if (response.status === 200) {
       //header 에 token 추가
-      const access_token  = response.headers['authorization']
+      const access_token  = response.data.accessToken
+      const refresh_token = response.data.refreshToken
+
       localStorage.setItem("authorization", access_token)
+      localStorage.setItem("refresh_token", refresh_token)
 
       const userResponse = await getUserInfo();
 
       if(userResponse.status === 200) {
         localStorage.setItem("user-info", JSON.stringify(userResponse.data));
       }
-      
 
-    }
-    
-    return redirect("/")
-
+      return redirect("/")
+    } 
   } catch(e) {
+    alert("아이디 또는 패스워드가 일치하지 않습니다.")
+
     console.log(e)
     return null;
   }
