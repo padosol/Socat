@@ -35,7 +35,7 @@ public class SecurityConfig {
 
     private static final String[] SWAGGER_AUTH_WHITELIST = {
         "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**",
-        "/actuator/**", "/authenticate", "/refresh-auth"
+        "/actuator/**", "/authenticate", "/refresh-auth", "/logout"
     };
 
     @Bean
@@ -62,6 +62,7 @@ public class SecurityConfig {
                     .requestMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
                     .anyRequest().authenticated()
             )
+            .logout(AbstractHttpConfigurer::disable)
             .authenticationManager(authenticationManager)
             .addFilter(new AuthenticationFilter(authenticationManager, getUserUseCase, env))
 
