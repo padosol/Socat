@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User", description = "User API")
 @RestController
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements SwaggerUserController {
 
     private final GetUserUseCase getUserUseCase;
     private final CreateUserUseCase createUserUseCase;
@@ -58,8 +58,23 @@ public class UserController {
         return ResponseEntity.status(200).body(userResponse);
     }
 
+    @Override
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<UserResponse> getUserByUserId(
+            @PathVariable(value = "userId") String userId
+    ) {
+        UserResponse userResponse = getUserUseCase.findUserById(userId);
+
+        return ResponseEntity.status(200).body(userResponse);
+    }
+
 
     // 유저 수정
+
+    @GetMapping("/users/test")
+    public String test() {
+        return "user controller test";
+    }
 
     // 유저 삭제
 }

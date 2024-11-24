@@ -1,10 +1,10 @@
-package com.room.roomservice.domain.room.dto.response
+package com.room.roomservice.domain.room.dto.request
 
 import java.time.LocalDateTime
 
-data class RoomResponse(
+data class ModifyRoomDTO(
     val roomId: String,
-    val userId: String,
     val roomName: String,
+    val userId: String,
     val createdAt: LocalDateTime
 )

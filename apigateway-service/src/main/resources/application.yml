@@ -91,11 +91,19 @@ spring:
         - id: room-service
           uri: lb://ROOM-SERVICE
           predicates:
-            - Path=/room-service/**
+            - Path=/room-service/rooms
+            - Method=POST,PUT,DELETE
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/room-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+        - id: room-service
+          uri: lb://ROOM-SERVICE
+          predicates:
+            - Path=/room-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/room-service/(?<segment>.*), /$\{segment}
 
         ## chat-service
         - id: chat-service

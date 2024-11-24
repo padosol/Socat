@@ -8,6 +8,7 @@ import com.userservice.domain.auth.service.RefreshTokenService;
 import com.userservice.domain.auth.service.usecase.LogoutUseCase;
 import com.userservice.domain.auth.service.usecase.RefreshUseCase;
 import com.userservice.global.config.security.JwtFilter;
+import com.userservice.global.exception.CustomException;
 import com.userservice.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,15 +63,19 @@ public class AuthController {
     public ResponseEntity<AuthDto> refreshAuthorize(
         @RequestBody TokenDto refreshDTO
     ) {
-        AuthDto refresh = refreshUseCase.refresh(refreshDTO.getRefreshToken(), refreshDTO.getAccessToken());
+        try {
+            AuthDto refresh = refreshUseCase.refresh(refreshDTO.getRefreshToken(), refreshDTO.getAccessToken());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + refresh.getAccessToken());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + refresh.getAccessToken());
 
-        return ResponseEntity
-                .status(200)
-                .headers(headers)
-                .body(refresh);
+            return ResponseEntity
+                    .status(200)
+                    .headers(headers)
+                    .body(refresh);
+        } catch(CustomException e) {
+            return ResponseEntity.status(200).body(null);
+        }
     }
 
     @PostMapping("/logout")

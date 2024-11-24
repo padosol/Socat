@@ -9,6 +9,8 @@ import com.room.roomservice.domain.room.domain.RoomIdGenerator
 import com.room.roomservice.domain.room.dto.response.RoomResponse
 import com.room.roomservice.domain.room.repository.RoomRepository
 import com.room.roomservice.domain.room.service.RoomService
+import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
+import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException
@@ -19,7 +21,7 @@ class RoomServiceImpl(
     private val roomRepository: RoomRepository,
     private val userServiceClient: UserServiceClient,
     private val charServiceClient: ChatServiceClient
-) : RoomService {
+) : RoomService, ModifyRoomUseCase, RemoveRoomUseCase {
 
     override fun createRoom(room: Room): RoomResponse {
 
@@ -32,9 +34,10 @@ class RoomServiceImpl(
         val saveRoom: Room = roomRepository.save(RoomDoc.create(room))
 
         return RoomResponse(
-            roomId =  saveRoom.roomId!!,
-            roomName = saveRoom.roomName,
-            createdAt = saveRoom.createAt!!
+                roomId =  saveRoom.roomId!!,
+                userId = user.id,
+                roomName = saveRoom.roomName,
+                createdAt = saveRoom.createAt!!
         )
     }
 
@@ -48,6 +51,7 @@ class RoomServiceImpl(
 
         return RoomResponse(
             roomId =  findRoom.roomId!!,
+            userId = findRoom.userId,
             roomName = findRoom.roomName,
             createdAt = findRoom.createAt!!
         )
@@ -60,10 +64,39 @@ class RoomServiceImpl(
         return findAllRoom.map {
             RoomResponse(
                 roomId = it.roomId!!,
+                userId = it.roomId,
                 roomName = it.roomName,
                 createdAt = it.createAt!!
             )
         }.toList()
+    }
+
+    override fun modify(room: Room): RoomResponse {
+        val roomId = room.roomId
+
+        val findRoom: Room = roomRepository.findById(roomId) ?: throw RuntimeException()
+        findRoom.modifyRoom(room)
+
+        val saveRoom = roomRepository.save(
+                RoomDoc(
+                        roomId = findRoom.roomId,
+                        userId = findRoom.userId,
+                        roomName = findRoom.roomName,
+                        createdAt = findRoom.createAt,
+                        updatedAt = findRoom.updatedAt
+                )
+        )
+
+        return RoomResponse(
+                roomId = saveRoom.roomId,
+                userId = saveRoom.userId,
+                roomName = saveRoom.roomName,
+                createdAt = saveRoom.createAt
+        )
+    }
+
+    override fun remove(roomId: String) {
+        TODO("Not yet implemented")
     }
 
 }

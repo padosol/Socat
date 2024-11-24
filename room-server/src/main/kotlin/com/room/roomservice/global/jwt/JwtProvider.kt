@@ -1,19 +1,22 @@
-package com.chatservice.global.jwt
+package com.room.roomservice.global.jwt
 
-import io.jsonwebtoken.*
-import io.jsonwebtoken.io.Decoders
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.MalformedJwtException
+import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.Keys
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.lang.IllegalArgumentException
 import java.util.*
 import javax.crypto.SecretKey
 
 @Component
 class JwtProvider(
-    @Value("\${jwt.secret:secret}") private val secret: String,
-    @Value("\${jwt.access-token-expired-time:600}") private val tokenValidityInMilliseconds: Long
-){
+        @Value("\${jwt.secret:secret}") private val secret: String,
+        @Value("\${jwt.access-token-expired-time:600}") private val tokenValidityInMilliseconds: Long
+) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret))
@@ -21,7 +24,9 @@ class JwtProvider(
     fun validateToken(token: String): Boolean {
         try {
             Jwts.parser().verifyWith(secretKey).build()
-                .parseSignedClaims(token)
+                    .parseSignedClaims(token)
+
+
             return true
         } catch(e: MalformedJwtException){
             log.info("잘못된 JWT 서명입니다.")
@@ -34,11 +39,6 @@ class JwtProvider(
         }
 
         return false
-    }
-
-    fun getUserEmail(jwt: String?): String? {
-        val claimsJws: Jws<Claims> = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwt)
-        return claimsJws.payload.subject
     }
 
 }

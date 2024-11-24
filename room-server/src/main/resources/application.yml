@@ -4,13 +4,22 @@ server:
 spring:
   application:
     name: room-service
+
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  cloud:
+    config:
+      name: room-service
+
   data:
     redis:
       port: 6379
       host: localhost
 
     mongodb:
-      uri: mongodb://root:1234@localhost:27017/socat?authSource=admin
+      uri: mongodb://root:1234@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.2
+      database: socat
 
 eureka:
   instance:

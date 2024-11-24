@@ -11,7 +11,8 @@ class RoomDoc(
     val roomId: String,
     val userId: String,
     val roomName: String,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime?
 ) {
 
     companion object {
@@ -20,7 +21,8 @@ class RoomDoc(
                 userId = room.userId,
                 roomId = room.roomId!!,
                 roomName = room.roomName,
-                createdAt = room.createAt!!
+                createdAt = room.createAt!!,
+                updatedAt = null
             )
         }
     }

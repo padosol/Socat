@@ -31,29 +31,45 @@ authInstance.interceptors.request.use(
 );
 
 authInstance.interceptors.response.use(
-  (response) => {
-    return response
-  },
+  (response) => response,
   async (error) => {
-    if (error.status == 401) {
+
+    const originalRequest = error.config;
+
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true
 
       localStorage.removeItem("user-info")
 
       const accessToken = localStorage.getItem("authorization")
       const refreshToken = localStorage.getItem("refresh_token")
 
-      const response = await instance.post("/api/user-service/refresh-auth", {
-        accessToken: accessToken,
-        refreshToken: refreshToken
-      })
+      try {
+          const response = await instance.post("/api/user-service/refresh-auth", {
+            accessToken: accessToken,
+            refreshToken: refreshToken
+          })
 
-      localStorage.setItem("authorization", response.data.accessToken)
-      localStorage.setItem("refresh_token", response.data.refreshToken)
+          if (response.data) {
+            localStorage.setItem("authorization", response.data.accessToken)
+            localStorage.setItem("refresh_token", response.data.refreshToken)
 
-      return;
+            return authInstance(originalRequest);
+          }
+
+      } catch(e) {
+        return Promise.reject(e)
+      }
+
+    } else {
+      return Promise.reject(error)
+
     }
 
-    return Promise.reject(error)
   }
 )
 

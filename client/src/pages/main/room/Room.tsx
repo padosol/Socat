@@ -44,6 +44,8 @@ const Room = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<MyMessage[]>([]);
 
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value)
   }
@@ -106,7 +108,10 @@ const Room = () => {
       try {
         await getUserInfo();
       } catch(e) {
-        console.log(e)
+        alert("로그인 후 채팅 가능합니다.")
+        if (inputRef.current) {
+          inputRef.current.blur();
+        } 
       }
   }
 
@@ -163,6 +168,7 @@ const Room = () => {
             placeholder="채팅에 참여하려면 로그인을 해주세요."
             onFocus={handleChatFocus}
             onKeyDown={sendMessage}
+            ref={inputRef}
           ></input>
         </div>
       </div>

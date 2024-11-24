@@ -47,6 +47,6 @@ class RoomRepositoryImpl(
     }
 
     override fun delete(roomId: String) {
-        TODO("Not yet implemented")
+        roomMongoRepository.deleteById(roomId)
     }
 }
