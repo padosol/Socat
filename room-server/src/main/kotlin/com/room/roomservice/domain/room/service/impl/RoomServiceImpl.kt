@@ -7,10 +7,13 @@ import com.room.roomservice.domain.room.domain.Room
 import com.room.roomservice.domain.room.domain.RoomClockHolder
 import com.room.roomservice.domain.room.domain.RoomIdGenerator
 import com.room.roomservice.domain.room.dto.response.RoomResponse
+import com.room.roomservice.domain.room.exception.RoomNoRightRemoveException
+import com.room.roomservice.domain.room.exception.RoomNotFoundException
 import com.room.roomservice.domain.room.repository.RoomRepository
 import com.room.roomservice.domain.room.service.RoomService
 import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
+import com.room.roomservice.global.exception.CustomExceptionCode
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException
@@ -20,11 +23,9 @@ class RoomServiceImpl(
     private val redisTemplate: RedisTemplate<String, Any>,
     private val roomRepository: RoomRepository,
     private val userServiceClient: UserServiceClient,
-    private val charServiceClient: ChatServiceClient
 ) : RoomService, ModifyRoomUseCase, RemoveRoomUseCase {
 
     override fun createRoom(room: Room): RoomResponse {
-
         val userId = room.userId
         val user = userServiceClient.getUser(userId)
 
@@ -44,10 +45,7 @@ class RoomServiceImpl(
     override fun findRoom(roomId: String): RoomResponse {
 
         val findRoom: Room = roomRepository.findById(roomId)
-            ?: throw IllegalStateException("존재하지 않는 방입니다.")
-
-        val chats = charServiceClient.getChats(findRoom.roomId!!)
-        findRoom.addChats(chats)
+            ?: throw RoomNotFoundException(CustomExceptionCode.ROOM_NOT_FOUND)
 
         return RoomResponse(
             roomId =  findRoom.roomId!!,
@@ -95,8 +93,14 @@ class RoomServiceImpl(
         )
     }
 
-    override fun remove(roomId: String) {
-        TODO("Not yet implemented")
+    override fun remove(roomId: String, userId: String) {
+        val room = roomRepository.findRoomByRoomIdAndUserId(roomId, userId)
+
+        if(room.userId != userId) {
+            throw RoomNoRightRemoveException(CustomExceptionCode.ROOM_NO_RIGHT_DELETE)
+        }
+
+        roomRepository.delete(room.roomId)
     }
 
 }

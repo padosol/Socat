@@ -13,4 +13,6 @@ interface RoomRepository {
 
     fun delete(roomId: String)
 
+    fun findRoomByRoomIdAndUserId(roomId: String, userId: String): Room
+
 }

@@ -1,4 +1,4 @@
-package com.userservice.domain.user.service;
+package com.userservice.domain.user.service.usecase;
 
 
 import com.userservice.domain.user.entity.User;

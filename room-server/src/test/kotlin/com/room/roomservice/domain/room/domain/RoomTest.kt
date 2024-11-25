@@ -1,16 +1,8 @@
 package com.room.roomservice.domain.room.domain
 
-import io.kotest.core.listeners.AfterTestListener
-import io.kotest.core.listeners.BeforeTestListener
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.core.test.TestCase
-import io.kotest.core.test.TestResult
-import io.kotest.matchers.equals.shouldBeEqual
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.Assertions.*
-import java.util.UUID
-import java.util.UUID.*
+import org.assertj.core.api.Assertions
+import java.time.LocalDateTime
 
 
 class RoomIdGenerator(
@@ -26,25 +18,14 @@ class RoomIdGenerator(
 class RoomTest : BehaviorSpec({
 
     Given("방 인스턴스를 만든다.") {
-
         val room = Room(
-            userId = "test",
-            roomName = "testRoom"
+                roomId = "test",
+                userId = "test",
+                roomName = "test",
+                createAt = LocalDateTime.now(),
         )
 
-        When("방을 생성한다.") {
-
-            val roomId = randomUUID().toString()
-
-            val roomIdGenerator = RoomIdGenerator(roomId)
-            room.createRoom(roomIdGenerator)
-
-            Then("방 Id 가 생성된다."){
-                room.roomId shouldNotBe null
-
-                roomId shouldBe roomIdGenerator.id
-            }
-        }
+        Assertions.assertThat(room.roomId).isEqualTo("aaaa")
     }
 })
 

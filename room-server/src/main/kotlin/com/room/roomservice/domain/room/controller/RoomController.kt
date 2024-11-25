@@ -9,9 +9,11 @@ import com.room.roomservice.domain.room.dto.response.RoomResponse
 import com.room.roomservice.domain.room.service.RoomService
 import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
+import com.room.roomservice.global.jwt.JwtProvider
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -26,9 +28,10 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "room", description = "Room API")
 @RestController
 class RoomController(
-    private val roomService: RoomService,
-    private val modifyRoomUseCase: ModifyRoomUseCase,
-    private val removeRoomUseCase: RemoveRoomUseCase
+        private val roomService: RoomService,
+        private val modifyRoomUseCase: ModifyRoomUseCase,
+        private val removeRoomUseCase: RemoveRoomUseCase,
+        private val jwtProvider: JwtProvider
 ) {
 
     @ApiResponse(
@@ -97,10 +100,11 @@ class RoomController(
     @DeleteMapping("/rooms")
     fun delete(
             @RequestBody removeRoomDTO: RemoveRoomDTO,
-            @RequestHeader("authorization") token: String
+            httpServletRequest: HttpServletRequest
     ): ResponseEntity<Void> {
+        val userId = jwtProvider.getUserIdByRequest(httpServletRequest)
 
-        removeRoomUseCase.remove(removeRoomDTO.roomId)
+        removeRoomUseCase.remove(removeRoomDTO.roomId, userId)
 
         return ResponseEntity.status(204).build()
     }

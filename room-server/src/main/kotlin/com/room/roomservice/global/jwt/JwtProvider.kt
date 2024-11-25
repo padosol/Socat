@@ -1,14 +1,13 @@
 package com.room.roomservice.global.jwt
 
-import io.jsonwebtoken.ExpiredJwtException
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.MalformedJwtException
-import io.jsonwebtoken.UnsupportedJwtException
+import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
-import java.lang.IllegalArgumentException
+import org.springframework.util.StringUtils
 import java.util.*
 import javax.crypto.SecretKey
 
@@ -26,7 +25,6 @@ class JwtProvider(
             Jwts.parser().verifyWith(secretKey).build()
                     .parseSignedClaims(token)
 
-
             return true
         } catch(e: MalformedJwtException){
             log.info("잘못된 JWT 서명입니다.")
@@ -39,6 +37,24 @@ class JwtProvider(
         }
 
         return false
+    }
+
+    fun resolveToken(request: HttpServletRequest): String {
+        val bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION)
+        return if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            bearerToken.substring(7)
+        } else throw IllegalStateException("Bearer Token 이 아닙니다.")
+    }
+
+    fun getUserIdByRequest(request: HttpServletRequest): String {
+        val token = resolveToken(request)
+        val claimsJws: Jws<Claims> = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
+        return claimsJws.payload.subject
+    }
+
+    fun getUserId(token: String): String {
+        val claimsJws: Jws<Claims> = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
+        return claimsJws.payload.subject
     }
 
 }

@@ -1,12 +1,14 @@
 package com.userservice.domain.auth.service;
 
-import com.ctc.wstx.util.StringUtil;
 import com.userservice.domain.auth.dto.request.TokenDto;
 import com.userservice.domain.auth.dto.response.AuthDto;
 import com.userservice.domain.auth.exception.AccessTokenNotMatchException;
 import com.userservice.domain.auth.exception.RefreshTokenNotMatchException;
+import com.userservice.domain.auth.service.usecase.AccessUseCase;
 import com.userservice.domain.auth.service.usecase.LogoutUseCase;
 import com.userservice.domain.auth.service.usecase.RefreshUseCase;
+import com.userservice.domain.user.entity.User;
+import com.userservice.domain.user.repository.UserJpaRepository;
 import com.userservice.global.utils.JwtProvider;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -21,8 +24,9 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenService implements RefreshUseCase, LogoutUseCase {
+public class TokenService implements RefreshUseCase, LogoutUseCase, AccessUseCase {
 
+    private final UserJpaRepository userJpaRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final JwtProvider jwtProvider;
 
@@ -31,8 +35,9 @@ public class RefreshTokenService implements RefreshUseCase, LogoutUseCase {
     @PostConstruct
     public void init() {
         this.redisHash = redisTemplate.opsForHash();
-        redisTemplate.expire(jwtProvider.REFRESH_TOKEN_NAME, 10000, TimeUnit.MILLISECONDS);
+        redisTemplate.expire(jwtProvider.REFRESH_TOKEN_NAME, jwtProvider.getRefreshTokenExpiredTime(), TimeUnit.MILLISECONDS);
         redisTemplate.expire(jwtProvider.BLACK_LIST, jwtProvider.getAccessTokenExpiredTime(), TimeUnit.MILLISECONDS);
+        redisTemplate.expire(jwtProvider.ACTIVE_USER, jwtProvider.getAccessTokenExpiredTime(), TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -86,5 +91,23 @@ public class RefreshTokenService implements RefreshUseCase, LogoutUseCase {
         redisHash.put(jwtProvider.BLACK_LIST, accessToken, accessToken);
 
         redisHash.delete(jwtProvider.REFRESH_TOKEN_NAME, refreshToken);
+    }
+
+    @Override
+    public String createAccessToken(Authentication authentication) {
+        String userId = authentication.getName();
+        User user = userJpaRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
+        String id = user.getId();
+
+        String oldAccessToken = (String) redisHash.get(jwtProvider.ACTIVE_USER, id);
+        if (oldAccessToken != null) {
+            redisHash.delete(jwtProvider.ACTIVE_USER, id);
+            redisHash.put(jwtProvider.BLACK_LIST, oldAccessToken, oldAccessToken);
+        }
+
+        String newAccessToken = jwtProvider.createJwt(authentication);
+        redisHash.put(jwtProvider.ACTIVE_USER, id, newAccessToken);
+
+        return newAccessToken;
     }
 }

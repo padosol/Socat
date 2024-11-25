@@ -1,7 +1,7 @@
 package com.room.roomservice.global.exception
 
-sealed class CustomException(
+import org.apache.http.HttpStatus
 
-) : RuntimeException(){
-
-}
+open class CustomException(
+        open val customExceptionCode: CustomExceptionCode
+) : RuntimeException()

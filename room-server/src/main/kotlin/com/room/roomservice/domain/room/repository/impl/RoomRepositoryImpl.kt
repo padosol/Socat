@@ -2,8 +2,10 @@ package com.room.roomservice.domain.room.repository.impl
 
 import com.room.roomservice.domain.room.document.RoomDoc
 import com.room.roomservice.domain.room.domain.Room
+import com.room.roomservice.domain.room.exception.RoomNotFoundException
 import com.room.roomservice.domain.room.repository.RoomMongoRepository
 import com.room.roomservice.domain.room.repository.RoomRepository
+import com.room.roomservice.global.exception.CustomExceptionCode
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
@@ -49,4 +51,18 @@ class RoomRepositoryImpl(
     override fun delete(roomId: String) {
         roomMongoRepository.deleteById(roomId)
     }
+
+    override fun findRoomByRoomIdAndUserId(roomId: String, userId: String): Room {
+        val roomDoc = roomMongoRepository.findByIdOrNull(roomId)
+                ?: throw RoomNotFoundException(CustomExceptionCode.ROOM_NOT_FOUND)
+
+        return Room(
+                roomId = roomDoc.roomId,
+                userId = roomDoc.userId,
+                roomName = roomDoc.roomName,
+                createAt = roomDoc.createdAt
+        )
+    }
+
+
 }
