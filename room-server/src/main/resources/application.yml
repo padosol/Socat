@@ -39,3 +39,6 @@ logging:
           mongodb:
             core:
               MongoTemplate: DEBUG
+springdoc:
+  swagger-ui:
+    operations-sorter: method

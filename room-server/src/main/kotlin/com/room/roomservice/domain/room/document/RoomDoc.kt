@@ -6,7 +6,6 @@ import java.time.LocalDateTime
 
 @Document(collection = "room")
 class RoomDoc(
-
     @org.springframework.data.annotation.Id
     val roomId: String,
     val userId: String,
