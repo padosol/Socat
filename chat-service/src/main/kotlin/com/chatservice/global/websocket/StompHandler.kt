@@ -22,10 +22,10 @@ class StompHandler(
         if (StompCommand.SEND == headerAccessor.command) {
 
             // 로그인 후 채팅 가능
-            val jwt = headerAccessor.getNativeHeader("Authorization")?.get(0) ?: ""
-            if(jwtProvider.validateToken(jwt)) {
-
-            }
+//            val jwt = headerAccessor.getNativeHeader("Authorization")?.get(0) ?: ""
+//            if(jwtProvider.validateToken(jwt)) {
+//
+//            }
 
         }
 
