@@ -5,6 +5,10 @@ import com.userservice.domain.user.entity.User;
 import com.userservice.domain.user.exception.UserAlreadyExistException;
 import com.userservice.domain.user.repository.UserJpaRepository;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
+import com.userservice.domain.user.service.usecase.CreateUserUseCase;
+import com.userservice.domain.user.service.usecase.GetUserUseCase;
+import com.userservice.domain.user.service.usecase.ModifyUserUserCase;
+import com.userservice.domain.user.service.usecase.RemoveUserUserCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
@@ -73,15 +77,11 @@ public class UserService implements
         User user = userJpaRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
 
-//        List<GrantedAuthority> grantedAuthorities = userEntity.getAuthorities().stream()
-//                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
-//                .collect(Collectors.toList());
-
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("USER_ROLE"));
 
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
+                .username(user.getId())
                 .password(user.getPassword())
                 .authorities(grantedAuthorities)
                 .build();

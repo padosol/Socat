@@ -82,13 +82,15 @@ class RoomController(
     @PostMapping("/rooms")
     fun create(
             @RequestBody createRoomDTO: CreateRoomDTO,
-            @RequestHeader("authorization") token: String
+            request: HttpServletRequest
     ): ResponseEntity<RoomResponse> {
+
+        val userId = jwtProvider.getUserIdByRequest(request)
 
         val createdRoom = roomService.createRoom(
             Room.create(
-                createRoomDTO.userId,
-                createRoomDTO.roomName,
+                userId = userId,
+                roomName = createRoomDTO.roomName,
                 RoomIdGenerator()
             )
         )

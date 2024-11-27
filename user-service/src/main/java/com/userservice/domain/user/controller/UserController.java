@@ -2,10 +2,10 @@ package com.userservice.domain.user.controller;
 
 
 import com.userservice.domain.user.entity.User;
-import com.userservice.domain.user.service.CreateUserUseCase;
+import com.userservice.domain.user.service.usecase.CreateUserUseCase;
 import com.userservice.domain.user.controller.dto.request.CreateUserDTO;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
-import com.userservice.domain.user.service.GetUserUseCase;
+import com.userservice.domain.user.service.usecase.GetUserUseCase;
 import com.userservice.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,9 +51,9 @@ public class UserController implements SwaggerUserController {
     public ResponseEntity<UserResponse> getUser(
             HttpServletRequest request
     ) {
-        String userEmail = jwtProvider.getUserId(request);
+        String userId = jwtProvider.getUserId(request);
 
-        UserResponse userResponse = getUserUseCase.findUserByEmail(userEmail);
+        UserResponse userResponse = getUserUseCase.findUserById(userId);
 
         return ResponseEntity.status(200).body(userResponse);
     }

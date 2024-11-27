@@ -39,6 +39,8 @@ public class JwtProvider implements InitializingBean {
 
     public final String BLACK_LIST = "black_list";
 
+    public final String ACTIVE_USER = "active_user";
+
     public JwtProvider(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.access-token-expired-time}") long accessTokenExpiredTime,

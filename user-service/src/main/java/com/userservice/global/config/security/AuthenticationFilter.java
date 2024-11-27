@@ -2,8 +2,7 @@ package com.userservice.global.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
-import com.userservice.domain.user.service.GetUserUseCase;
-import com.userservice.domain.user.service.UserService;
+import com.userservice.domain.user.service.usecase.GetUserUseCase;
 import com.userservice.global.dto.LoginDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

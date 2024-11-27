@@ -58,19 +58,18 @@ const Sidebar = () => {
             >
             </input>
           </Form>
-          <Form>
+          <Link to={'/room/create'}>
             <button className="ml-2 px-[10px] py-[6px] border rounded-xl text-cyan-600 shadow-sm hover:bg-slate-200">
               New
             </button>
-          </Form>
-
+          </Link>
         </div>
         <div className="mt-2">
           {rooms.length ? (
             <ul>
               {rooms.map((room) => (
                 <Link to={`/room/${room.roomId}`} key={room.roomId}>
-                  <li className="p-3 hover:bg-slate-300 cursor-pointer m-2 rounded-lg">{room.name}</li>
+                  <li className="p-3 hover:bg-slate-300 cursor-pointer m-2 rounded-lg">{room.roomName}</li>
                 </Link>
               ))}
             </ul>

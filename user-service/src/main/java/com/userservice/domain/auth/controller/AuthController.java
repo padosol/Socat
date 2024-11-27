@@ -1,16 +1,14 @@
 package com.userservice.domain.auth.controller;
 
 import com.userservice.domain.auth.dto.request.LoginDto;
-import com.userservice.domain.auth.dto.request.RefreshDTO;
 import com.userservice.domain.auth.dto.request.TokenDto;
 import com.userservice.domain.auth.dto.response.AuthDto;
-import com.userservice.domain.auth.service.RefreshTokenService;
+import com.userservice.domain.auth.service.usecase.AccessUseCase;
 import com.userservice.domain.auth.service.usecase.LogoutUseCase;
 import com.userservice.domain.auth.service.usecase.RefreshUseCase;
 import com.userservice.global.config.security.JwtFilter;
 import com.userservice.global.exception.CustomException;
 import com.userservice.global.utils.JwtProvider;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -21,10 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
 
 @Tag(name = "Auth", description = "유저 권한 API")
 @RestController
@@ -35,6 +30,7 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RefreshUseCase refreshUseCase;
     private final LogoutUseCase logoutUseCase;
+    private final AccessUseCase accessUseCase;
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthDto> authorize(
@@ -46,7 +42,9 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String accessToken = jwtProvider.createJwt(authentication);
+        // 재 로그인시 기존에 발급받은 토큰은 사용하지 못하게 처리해야함
+//        String accessToken = jwtProvider.createJwt(authentication);
+        String accessToken = accessUseCase.createAccessToken(authentication);
         String refreshToken = refreshUseCase.createRefreshToken(accessToken);
 
         HttpHeaders headers = new HttpHeaders();

@@ -18,6 +18,10 @@ import Room, {
   loader as roomLoader
 } from "./main/room/Room";
 
+import RoomCreate, {
+  action as roomCreateAction
+} from "./main/room/RoomCreate";
+
 import RoomIndex from "./main/room/RoomIndex";
 import ErrorPage from "./error/ErrorPage";
 
@@ -35,6 +39,12 @@ const router = createBrowserRouter([
         path: "/room/:roomId",
         element: <Room />,
         loader: roomLoader,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: "/room/create",
+        element: <RoomCreate />,
+        action: roomCreateAction,
         errorElement: <ErrorPage />
       }
     ]

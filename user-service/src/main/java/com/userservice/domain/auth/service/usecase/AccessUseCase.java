@@ -1,5 +1,7 @@
 package com.userservice.domain.auth.service.usecase;
 
-public interface AcceessUseCase {
+import org.springframework.security.core.Authentication;
 
+public interface AccessUseCase {
+    String createAccessToken(Authentication authentication);
 }
