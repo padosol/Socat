@@ -6,7 +6,9 @@ import com.room.roomservice.domain.room.domain.Room
 import com.room.roomservice.domain.room.domain.RoomClockHolder
 import com.room.roomservice.domain.room.domain.RoomIdGenerator
 import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
+import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
 import com.room.roomservice.domain.room.dto.response.RoomResponse
+import com.room.roomservice.domain.room.exception.RoomNoRightModifyException
 import com.room.roomservice.domain.room.exception.RoomNoRightRemoveException
 import com.room.roomservice.domain.room.exception.RoomNotFoundException
 import com.room.roomservice.domain.room.repository.RoomRepository
@@ -40,54 +42,33 @@ class RoomService(
         return roomRepository.save(RoomDoc.create(createRoom))
     }
 
-    override fun findRoom(roomId: String): RoomResponse {
-
-        val findRoom: Room = roomRepository.findById(roomId)
+    override fun findRoom(roomId: String): Room {
+        return roomRepository.findById(roomId)
             ?: throw RoomNotFoundException(CustomExceptionCode.ROOM_NOT_FOUND)
-
-        return RoomResponse(
-            roomId = findRoom.roomId,
-            userId = findRoom.userId,
-            roomName = findRoom.roomName,
-            createdAt = findRoom.createAt!!
-        )
     }
 
-    override fun findAllRoom(): List<RoomResponse> {
-
-        val findAllRoom = roomRepository.findAll()
-
-        return findAllRoom.map {
-            RoomResponse(
-                roomId = it.roomId,
-                userId = it.roomId,
-                roomName = it.roomName,
-                createdAt = it.createAt!!
-            )
-        }.toList()
+    override fun findAllRoom(): List<Room> {
+        return roomRepository.findAll()
     }
 
-    override fun modify(room: Room): RoomResponse {
-        val roomId = room.roomId
+    override fun modify(modifyRoomDTO: ModifyRoomDTO, request: HttpServletRequest): Room {
+        val userId = jwtProvider.getUserIdByRequest(request)
+        val findRoom: Room = roomRepository.findById(modifyRoomDTO.roomId) ?: throw RuntimeException()
 
-        val findRoom: Room = roomRepository.findById(roomId) ?: throw RuntimeException()
-        findRoom.modifyRoom(room)
+        if (findRoom.userId != userId) {
+            throw RoomNoRightModifyException(CustomExceptionCode.ROOM_NO_RIGHT_MODIFY)
+        }
 
-        val saveRoom = roomRepository.save(
+        findRoom.modifyRoom(modifyRoomDTO)
+
+        return roomRepository.save(
                 RoomDoc(
                         roomId = findRoom.roomId,
                         userId = findRoom.userId,
                         roomName = findRoom.roomName,
-                        createdAt = findRoom.createAt!!,
+                        createdAt = findRoom.createdAt,
                         updatedAt = findRoom.updatedAt
                 )
-        )
-
-        return RoomResponse(
-                roomId = saveRoom.roomId,
-                userId = saveRoom.userId,
-                roomName = saveRoom.roomName,
-                createdAt = saveRoom.createAt!!
         )
     }
 

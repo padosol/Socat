@@ -1,5 +1,6 @@
 package com.room.roomservice.domain.room.domain
 
+import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
 import com.room.roomservice.domain.room.dto.response.RoomResponse
 import java.time.LocalDateTime
 
@@ -23,8 +24,8 @@ class Room(
 
     }
 
-    fun modifyRoom(room: Room) {
-        roomName = room.roomName
+    fun modifyRoom(modifyRoomDTO: ModifyRoomDTO) {
+        roomName = modifyRoomDTO.roomName
         updatedAt = LocalDateTime.now()
     }
 

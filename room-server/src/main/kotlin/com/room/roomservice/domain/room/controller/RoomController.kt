@@ -34,9 +34,9 @@ class RoomController(
     @GetMapping("/rooms")
     override fun rooms(): ResponseEntity<List<RoomResponse>> {
 
-        val findAllRoom: List<RoomResponse> = findRoomUseCase.findAllRoom()
+        val findAllRoom: List<Room> = findRoomUseCase.findAllRoom()
 
-        return ResponseEntity.status(200).body(findAllRoom)
+        return ResponseEntity.status(200).body(findAllRoom.map { it.toDto() }.toList())
     }
 
 
@@ -45,9 +45,9 @@ class RoomController(
         @PathVariable(value = "roomId") roomId: String
     ): ResponseEntity<RoomResponse> {
 
-        val findRoom = findRoomUseCase.findRoom(roomId)
+        val findRoom: Room = findRoomUseCase.findRoom(roomId)
 
-        return ResponseEntity.ok().body(findRoom)
+        return ResponseEntity.ok().body(findRoom.toDto())
     }
 
 
@@ -81,10 +81,9 @@ class RoomController(
             @RequestBody modifyRoomDTO: ModifyRoomDTO,
             request: HttpServletRequest
     ): ResponseEntity<RoomResponse> {
-
         val modifiedRoom: Room = modifyRoomUseCase.modify(modifyRoomDTO, request)
 
-        return ResponseEntity.status(200).body(modifiedRoom)
+        return ResponseEntity.status(200).body(modifiedRoom.toDto())
     }
 
 }

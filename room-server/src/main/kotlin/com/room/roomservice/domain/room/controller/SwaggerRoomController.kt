@@ -91,7 +91,7 @@ interface SwaggerRoomController {
     @SecurityRequirement(name = "bearerAuth")
     fun modify(
             modifyRoomDTO: ModifyRoomDTO,
-            token: String
+            request: HttpServletRequest
     ): ResponseEntity<RoomResponse>
 
 }
