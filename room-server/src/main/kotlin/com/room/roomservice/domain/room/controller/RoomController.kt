@@ -57,17 +57,9 @@ class RoomController(
             request: HttpServletRequest
     ): ResponseEntity<RoomResponse> {
 
-        val userId = jwtProvider.getUserIdByRequest(request)
+        val createdRoom: Room = createRoomUserCase.createRoom(createRoomDTO, request)
 
-        val createdRoom = createRoomUserCase.createRoom(
-            Room.create(
-                userId = userId,
-                roomName = createRoomDTO.roomName,
-                RoomIdGenerator()
-            )
-        )
-
-        return ResponseEntity.status(201).body(createdRoom)
+        return ResponseEntity.status(201).body(createdRoom.toDto())
     }
     
     @DeleteMapping("/rooms")
@@ -87,16 +79,10 @@ class RoomController(
     @PutMapping("/rooms")
     override fun modify(
             @RequestBody modifyRoomDTO: ModifyRoomDTO,
-            @RequestHeader("authorization") token: String
+            request: HttpServletRequest
     ): ResponseEntity<RoomResponse> {
 
-        val modifiedRoom = modifyRoomUseCase.modify(
-                Room(
-                        roomId = modifyRoomDTO.roomId,
-                        roomName = modifyRoomDTO.roomName,
-                        userId = modifyRoomDTO.userId,
-                )
-        )
+        val modifiedRoom: Room = modifyRoomUseCase.modify(modifyRoomDTO, request)
 
         return ResponseEntity.status(200).body(modifiedRoom)
     }

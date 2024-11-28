@@ -4,6 +4,8 @@ import com.room.roomservice.domain.room.client.UserServiceClient
 import com.room.roomservice.domain.room.document.RoomDoc
 import com.room.roomservice.domain.room.domain.Room
 import com.room.roomservice.domain.room.domain.RoomClockHolder
+import com.room.roomservice.domain.room.domain.RoomIdGenerator
+import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
 import com.room.roomservice.domain.room.dto.response.RoomResponse
 import com.room.roomservice.domain.room.exception.RoomNoRightRemoveException
 import com.room.roomservice.domain.room.exception.RoomNotFoundException
@@ -14,29 +16,28 @@ import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
 import com.room.roomservice.domain.room.vo.UserResponse
 import com.room.roomservice.global.exception.CustomExceptionCode
+import com.room.roomservice.global.jwt.JwtProvider
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Service
 
 @Service
 class RoomService(
     private val roomRepository: RoomRepository,
     private val userServiceClient: UserServiceClient,
+    private val jwtProvider: JwtProvider,
 ) : ModifyRoomUseCase, RemoveRoomUseCase, FindRoomUseCase, CreateRoomUserCase {
 
-    override fun createRoom(room: Room): RoomResponse {
-        val userId = room.userId
+    override fun createRoom(createRoomDTO: CreateRoomDTO, request: HttpServletRequest): Room {
+        val userId = jwtProvider.getUserIdByRequest(request)
         val user: UserResponse = userServiceClient.getUser(userId)
 
-        val roomClockHolder = RoomClockHolder()
-        room.createRoom(roomClockHolder)
-
-        roomRepository.save(RoomDoc.create(room))
-
-        return RoomResponse(
-                roomId = room.roomId,
+        val createRoom = Room.create(
                 userId = user.id,
-                roomName = room.roomName,
-                createdAt = room.createAt!!
+                roomName = createRoomDTO.roomName,
+                RoomIdGenerator()
         )
+
+        return roomRepository.save(RoomDoc.create(createRoom))
     }
 
     override fun findRoom(roomId: String): RoomResponse {

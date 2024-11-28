@@ -1,12 +1,13 @@
 package com.room.roomservice.domain.room.domain
 
+import com.room.roomservice.domain.room.dto.response.RoomResponse
 import java.time.LocalDateTime
 
 class Room(
     val roomId: String,
     val userId: String,
     var roomName: String,
-    var createAt: LocalDateTime? = null,
+    var createdAt: LocalDateTime,
     var updatedAt: LocalDateTime? = null,
 ){
 
@@ -15,19 +16,25 @@ class Room(
             return Room(
                 userId = userId,
                 roomId = idGenerator.createId(),
-                roomName = roomName
+                roomName = roomName,
+                createdAt = LocalDateTime.now()
             )
         }
 
     }
 
-    fun createRoom(clockHolder: ClockHolder) {
-        createAt = LocalDateTime.now()
-    }
-
     fun modifyRoom(room: Room) {
         roomName = room.roomName
         updatedAt = LocalDateTime.now()
+    }
+
+    fun toDto(): RoomResponse {
+        return RoomResponse(
+            roomId = this.roomId ,
+            userId = userId ,
+            roomName = roomName ,
+            createdAt = createdAt
+        )
     }
 
 }
