@@ -1,9 +1,11 @@
 package com.room.roomservice.domain.room.dto.request
 
+import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.util.StringUtils
 
 data class CreateRoomDTO(
-    val roomName: String,
+        @field:Schema(description = "방 제목", defaultValue = "테스트 룸")
+        val roomName: String,
 ) {
     init {
         require(StringUtils.hasText(roomName))

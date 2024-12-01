@@ -12,19 +12,4 @@ class RoomDoc(
     val roomName: String,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime?
-) {
-
-    companion object {
-        fun create(room: Room): RoomDoc {
-            return RoomDoc(
-                userId = room.userId,
-                roomId = room.roomId!!,
-                roomName = room.roomName,
-                createdAt = room.createAt!!,
-                updatedAt = null
-            )
-        }
-    }
-
-
-}
+)

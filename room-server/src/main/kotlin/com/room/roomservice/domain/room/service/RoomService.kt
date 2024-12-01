@@ -27,7 +27,7 @@ class RoomService(
     private val roomRepository: RoomRepository,
     private val userServiceClient: UserServiceClient,
     private val jwtProvider: JwtProvider,
-) : ModifyRoomUseCase, RemoveRoomUseCase, FindRoomUseCase, CreateRoomUserCase {
+) : RemoveRoomUseCase, ModifyRoomUseCase, FindRoomUseCase, CreateRoomUserCase {
 
     override fun createRoom(createRoomDTO: CreateRoomDTO, request: HttpServletRequest): Room {
         val userId = jwtProvider.getUserIdByRequest(request)
@@ -39,7 +39,15 @@ class RoomService(
                 RoomIdGenerator()
         )
 
-        return roomRepository.save(RoomDoc.create(createRoom))
+        return roomRepository.save(
+                RoomDoc(
+                    userId = createRoom.userId,
+                    roomId = createRoom.roomId,
+                    roomName = createRoom.roomName,
+                    createdAt = createRoom.createdAt,
+                    updatedAt = null
+                )
+        )
     }
 
     override fun findRoom(roomId: String): Room {
@@ -51,8 +59,7 @@ class RoomService(
         return roomRepository.findAll()
     }
 
-    override fun modify(modifyRoomDTO: ModifyRoomDTO, request: HttpServletRequest): Room {
-        val userId = jwtProvider.getUserIdByRequest(request)
+    override fun modify(modifyRoomDTO: ModifyRoomDTO, userId: String): Room {
         val findRoom: Room = roomRepository.findById(modifyRoomDTO.roomId) ?: throw RuntimeException()
 
         if (findRoom.userId != userId) {

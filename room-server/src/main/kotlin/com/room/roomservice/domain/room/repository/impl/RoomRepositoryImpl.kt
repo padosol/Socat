@@ -21,7 +21,7 @@ class RoomRepositoryImpl(
             userId = save.userId,
             roomId = save.roomId,
             roomName = save.roomName,
-            createAt = save.createdAt
+            createdAt = save.createdAt
         )
     }
 
@@ -32,7 +32,7 @@ class RoomRepositoryImpl(
                     userId = it.userId,
                     roomId = it.roomId,
                     roomName = it.roomName,
-                    createAt = it.createdAt
+                    createdAt = it.createdAt
                 )
             }
     }
@@ -43,7 +43,7 @@ class RoomRepositoryImpl(
                 userId = it.userId,
                 roomId = it.roomId,
                 roomName = it.roomName,
-                createAt = it.createdAt
+                createdAt = it.createdAt
             )
         }
     }
@@ -60,7 +60,7 @@ class RoomRepositoryImpl(
                 roomId = roomDoc.roomId,
                 userId = roomDoc.userId,
                 roomName = roomDoc.roomName,
-                createAt = roomDoc.createdAt
+                createdAt = roomDoc.createdAt
         )
     }
 

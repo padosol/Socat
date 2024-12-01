@@ -75,7 +75,7 @@ interface SwaggerRoomController {
     @SecurityRequirement(name = "bearerAuth")
     fun delete(
             removeRoomDTO: RemoveRoomDTO,
-            httpServletRequest: HttpServletRequest
+            request: HttpServletRequest
     ): ResponseEntity<Void>
 
     @Operation(summary = "채팅방 수정", description = "채팅방을 수정한다.")

@@ -6,5 +6,5 @@ import com.room.roomservice.domain.room.dto.response.RoomResponse
 import jakarta.servlet.http.HttpServletRequest
 
 interface ModifyRoomUseCase {
-    fun modify(modifyRoomDTO: ModifyRoomDTO, request: HttpServletRequest): Room
+    fun modify(modifyRoomDTO: ModifyRoomDTO, userId: String): Room
 }

@@ -1,5 +1,6 @@
 package com.room.roomservice.domain.room.domain
 
+import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
 import com.room.roomservice.domain.room.mock.TestClockHolder
 import com.room.roomservice.domain.room.mock.TestRoomIdGenerator
 import io.kotest.core.spec.style.FunSpec
@@ -7,6 +8,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import java.time.LocalDateTime
 import java.util.*
 import java.util.UUID.*
 
@@ -29,26 +31,18 @@ class RoomTest : FunSpec({
 
     test("modifyRoom 으로 방을 수정할 수 있다.") {
         // given
-        val roomId = randomUUID().toString()
-        val room = Room.create(
-                userId = "test",
-                roomName = "테스트 룸",
-                TestRoomIdGenerator(roomId)
+        val modifyRoomDTO = ModifyRoomDTO(
+                "test", "test room", "tester"
         )
-        val updateRoom = Room(
-                userId = "test",
-                roomName = "테스트 룸2",
-                roomId = roomId
+        val room = Room(
+                "test", "test", "tester", LocalDateTime.now()
         )
 
         // when
-        room.modifyRoom(updateRoom)
+        room.modifyRoom(modifyRoomDTO)
 
         // then
-        Assertions.assertThat(room.roomName).isEqualTo("테스트 룸2")
-
-
-
+        Assertions.assertThat(room.roomName).isEqualTo("test room")
     }
 
 })
