@@ -5,5 +5,5 @@ import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
 import jakarta.servlet.http.HttpServletRequest
 
 interface CreateRoomUserCase {
-    fun createRoom(createRoomDTO: CreateRoomDTO, request: HttpServletRequest): Room
+    fun createRoom(createRoomDTO: CreateRoomDTO, userId: String): Room
 }

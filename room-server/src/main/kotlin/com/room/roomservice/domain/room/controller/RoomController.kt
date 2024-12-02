@@ -52,12 +52,13 @@ class RoomController(
             @RequestBody createRoomDTO: CreateRoomDTO,
             request: HttpServletRequest
     ): ResponseEntity<RoomResponse> {
+        val userId = jwtProvider.getUserIdByRequest(request)
 
-        val createdRoom: Room = createRoomUserCase.createRoom(createRoomDTO, request)
+        val createdRoom: Room = createRoomUserCase.createRoom(createRoomDTO, userId)
 
         return ResponseEntity.status(201).body(createdRoom.toDto())
     }
-    
+
     @DeleteMapping("/rooms")
     override fun delete(
             @RequestBody removeRoomDTO: RemoveRoomDTO,

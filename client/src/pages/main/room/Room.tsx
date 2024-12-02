@@ -7,24 +7,12 @@ import {
 import * as StompJs from '@stomp/stompjs';
 
 import { getRoom } from "../../../api/room";
-import {getUserInfo} from '@/api/user'  
+import {getUserInfo} from '@/api/user.ts'  
 
-interface RoomData {
-  name: string,
-  roomId: string
-}
-
-interface LoaderData {
-  room: RoomData
-}
-
-interface MyMessage {
-  type: string,
-  roomId: string,
-  sender: string,
-  message: string,
-  userCount: number
-}
+import {
+  LoaderData,
+  MyMessage
+} from './types.ts'
 
 export async function loader({params}: LoaderFunctionArgs ) {
   const roomId= params.roomId

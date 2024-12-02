@@ -3,7 +3,9 @@ package com.room.roomservice.domain.room.domain
 import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
 import com.room.roomservice.domain.room.mock.TestClockHolder
 import com.room.roomservice.domain.room.mock.TestRoomIdGenerator
+import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -13,36 +15,42 @@ import java.util.*
 import java.util.UUID.*
 
 
-class RoomTest : FunSpec({
+class RoomTest : BehaviorSpec({
 
-    test("create 로 룸을 생성할 수 있다.") {
-        // given, when
+    Given("값이 주어졌을때") {
         val roomId = randomUUID().toString()
-        val room = Room.create(
-                userId = "test",
-                roomName = "테스트 룸",
-                TestRoomIdGenerator(roomId)
-        )
+        val roomName = "테스트 룸"
+        val userId = "tester"
 
-        Assertions.assertThat(room.roomId).isEqualTo(roomId)
-        Assertions.assertThat(room.roomName).isEqualTo("테스트 룸")
-        Assertions.assertThat(room.userId).isEqualTo("test")
+        When("Room.create() 함수로 Room 을 생성할 수 있다.") {
+            val room = Room.create(
+                    userId = userId,
+                    roomName = roomName,
+                    TestRoomIdGenerator(roomId)
+            )
+
+            Then("값을 비교한다.") {
+                room.roomId shouldBe roomId
+                room.roomName shouldBe roomName
+                room.userId shouldBe userId
+            }
+        }
     }
 
-    test("modifyRoom 으로 방을 수정할 수 있다.") {
-        // given
+    Given("modifyRoomDTO 가 주어졌을 때") {
         val modifyRoomDTO = ModifyRoomDTO(
                 "test", "test room", "tester"
         )
-        val room = Room(
-                "test", "test", "tester", LocalDateTime.now()
-        )
+        When("Room.modifyRoom() 함수를 사용해서 Room 을 수정할 수 있다.") {
+            val room = Room(
+                    "test", "tester", "tester", LocalDateTime.now()
+            )
+            room.modifyRoom(modifyRoomDTO)
 
-        // when
-        room.modifyRoom(modifyRoomDTO)
-
-        // then
-        Assertions.assertThat(room.roomName).isEqualTo("test room")
+            Then("roomName 이 변경된다.") {
+                room.roomName shouldBe modifyRoomDTO.roomName
+            }
+        }
     }
 
 })

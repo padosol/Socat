@@ -1,10 +1,10 @@
 package com.room.roomservice.domain.room.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.room.roomservice.domain.room.domain.Room
+import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
 import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
-import com.room.roomservice.domain.room.dto.request.RemoveRoomDTO
-import com.room.roomservice.domain.room.dto.response.RoomResponse
 import com.room.roomservice.domain.room.service.usecase.CreateRoomUserCase
 import com.room.roomservice.domain.room.service.usecase.FindRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
@@ -12,23 +12,15 @@ import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
 import com.room.roomservice.global.jwt.JwtProvider
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.*
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import java.time.LocalDateTime
 import java.time.LocalDateTime.*
-import jakarta.servlet.http.HttpServletRequest as HttpServletRequest1
 
 
 @WebMvcTest(RoomController::class)
@@ -43,6 +35,7 @@ class RoomControllerTest: DescribeSpec({
     )
 
     val mockMvc: MockMvc = MockMvcBuilders.standaloneSetup(roomController).build()
+    val objectMapper = ObjectMapper().registerKotlinModule()
 
     describe("/rooms") {
         it ("200 status code 를 반환한다.") {
@@ -82,38 +75,80 @@ class RoomControllerTest: DescribeSpec({
         }
     }
 
-//    describe("PUT: /rooms" ) {
-//        it("방 수정에 성공하면 200 상태코드를 반환 받는다.") {
-//            val now = now()
-//            mockMvc.put("/rooms") {
-//                contentType = MediaType.APPLICATION_JSON
-//                accept = MediaType.APPLICATION_JSON
-//
-//
-//
-//                val modifyRoomDTO = ModifyRoomDTO(
-//                    roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa",
-//                    roomName = "테스트 룸",
-//                    userId = "test"
-//                )
-//
-//                val room = Room(
-//                        roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa",
-//                        roomName = "테스트 룸",
-//                        userId = "test",
-//                        createdAt = now
-//                )
-//                every { modifyRoomUseCase.modify(modifyRoomDTO, "test") } returns room
-//            }.andExpect {
-//                status { MockMvcResultMatchers.status().isOk }
-//            }
-//        }
-//    }
+    describe("POST: /rooms 방생성 API 를 호출") {
+        val roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa"
+        val roomName = "테스트 룸"
+        val userId = "test"
+        val now = now()
+        val createRoomDTO = CreateRoomDTO(
+                roomName = roomName
+        )
+        val room = Room(
+                roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa",
+                roomName = "테스트 룸",
+                userId = "test",
+                createdAt = now
+        )
+        it("CreateRoomDTO 가 유효한 값이면 201 상태코드를 반환한다.") {
+            val response = mockMvc.post("/rooms") {
+                contentType = MediaType.APPLICATION_JSON
+                accept = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(createRoomDTO)
+
+                every { jwtProvider.getUserIdByRequest(any()) } returns userId
+                every { createRoomUseCase.createRoom(createRoomDTO, userId) } returns room
+            }.andReturn().response
+
+            response.status shouldBe 201
+
+            // UseCase 호출 검증
+            verify(exactly = 1) {createRoomUseCase.createRoom(createRoomDTO, userId)}
+
+            // JWT 호출 검증
+            verify {jwtProvider.getUserIdByRequest(any())}
+        }
+    }
+
+    describe("PUT: /rooms" ) {
+        val roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa"
+        val roomName = "테스트 룸"
+        val userId = "test"
+        val now = now()
+        val modifyRoomDTO = ModifyRoomDTO(
+                roomId = roomId,
+                roomName = roomName,
+                userId = userId
+        )
+        val room = Room(
+                roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa",
+                roomName = "테스트 룸",
+                userId = "test",
+                createdAt = now
+        )
+
+        it("방 수정에 성공하면 200 상태코드를 반환 받는다.") {
+            val response = mockMvc.put("/rooms") {
+                contentType = MediaType.APPLICATION_JSON
+                accept = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(modifyRoomDTO)
+
+                every { jwtProvider.getUserIdByRequest(any()) } returns userId
+                every { modifyRoomUseCase.modify(modifyRoomDTO, userId) } returns room
+            }.andReturn().response
+
+            response.status shouldBe 200
+
+            // UseCase 호출 검증
+            verify(exactly = 1) {modifyRoomUseCase.modify(modifyRoomDTO, userId)}
+
+            // JWT 호출 검증
+            verify {jwtProvider.getUserIdByRequest(any())}
+        }
+    }
 
     describe("DELETE: /rooms") {
         val userId = "tester"
         val roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa"
-        val removeRoomDTO = RemoveRoomDTO(roomId)
 
         it("방 삭제에 성공하면 204 상태코드를 반환 받는다.") {
 
@@ -140,7 +175,7 @@ class RoomControllerTest: DescribeSpec({
             verify(exactly = 1) {removeRoomUseCase.remove(roomId, userId)}
             
             // JWT 호출 검증
-            verify(exactly = 1) {jwtProvider.getUserIdByRequest(any())}
+            verify {jwtProvider.getUserIdByRequest(any())}
         }
     }
 

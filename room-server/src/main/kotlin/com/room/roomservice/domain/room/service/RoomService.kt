@@ -29,8 +29,7 @@ class RoomService(
     private val jwtProvider: JwtProvider,
 ) : RemoveRoomUseCase, ModifyRoomUseCase, FindRoomUseCase, CreateRoomUserCase {
 
-    override fun createRoom(createRoomDTO: CreateRoomDTO, request: HttpServletRequest): Room {
-        val userId = jwtProvider.getUserIdByRequest(request)
+    override fun createRoom(createRoomDTO: CreateRoomDTO, userId: String): Room {
         val user: UserResponse = userServiceClient.getUser(userId)
 
         val createRoom = Room.create(

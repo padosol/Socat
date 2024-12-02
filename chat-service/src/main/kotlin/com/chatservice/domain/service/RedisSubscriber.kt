@@ -20,6 +20,7 @@ class RedisSubscriber(
     private val log = LoggerFactory.getLogger(this::class.java)
 
     override fun onMessage(message: Message, pattern: ByteArray?) {
+        log.info("Message: {$message}")
         try {
             val publishMessage = redisTemplate.stringSerializer.deserialize(message.body) as String
             val roomMessage = objectMapper.readValue(publishMessage, ChatMessageDTO::class.java)

@@ -11,5 +11,5 @@ class RoomDoc(
     val userId: String,
     val roomName: String,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime?
+    val updatedAt: LocalDateTime? = null
 )
