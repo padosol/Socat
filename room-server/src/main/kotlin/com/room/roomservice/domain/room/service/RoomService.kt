@@ -3,31 +3,27 @@ package com.room.roomservice.domain.room.service
 import com.room.roomservice.domain.room.client.UserServiceClient
 import com.room.roomservice.domain.room.document.RoomDoc
 import com.room.roomservice.domain.room.domain.Room
-import com.room.roomservice.domain.room.domain.RoomClockHolder
 import com.room.roomservice.domain.room.domain.RoomIdGenerator
 import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
 import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
-import com.room.roomservice.domain.room.dto.response.RoomResponse
 import com.room.roomservice.domain.room.exception.RoomNoRightModifyException
 import com.room.roomservice.domain.room.exception.RoomNoRightRemoveException
 import com.room.roomservice.domain.room.exception.RoomNotFoundException
 import com.room.roomservice.domain.room.repository.RoomRepository
-import com.room.roomservice.domain.room.service.usecase.CreateRoomUserCase
+import com.room.roomservice.domain.room.service.usecase.CreateRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.FindRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
 import com.room.roomservice.domain.room.vo.UserResponse
 import com.room.roomservice.global.exception.CustomExceptionCode
 import com.room.roomservice.global.jwt.JwtProvider
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Service
 
 @Service
 class RoomService(
     private val roomRepository: RoomRepository,
     private val userServiceClient: UserServiceClient,
-    private val jwtProvider: JwtProvider,
-) : RemoveRoomUseCase, ModifyRoomUseCase, FindRoomUseCase, CreateRoomUserCase {
+) : RemoveRoomUseCase, ModifyRoomUseCase, FindRoomUseCase, CreateRoomUseCase {
 
     override fun createRoom(createRoomDTO: CreateRoomDTO, userId: String): Room {
         val user: UserResponse = userServiceClient.getUser(userId)

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.room.roomservice.domain.room.domain.Room
 import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
 import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
-import com.room.roomservice.domain.room.service.usecase.CreateRoomUserCase
+import com.room.roomservice.domain.room.service.usecase.CreateRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.FindRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
@@ -26,7 +26,7 @@ import java.time.LocalDateTime.*
 @WebMvcTest(RoomController::class)
 class RoomControllerTest: DescribeSpec({
     val findRoomUseCase = mockk<FindRoomUseCase>()
-    val createRoomUseCase = mockk<CreateRoomUserCase>()
+    val createRoomUseCase = mockk<CreateRoomUseCase>()
     val modifyRoomUseCase = mockk<ModifyRoomUseCase>()
     val removeRoomUseCase = mockk<RemoveRoomUseCase>()
     val jwtProvider = mockk<JwtProvider>()

@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  config-service:
+    container_name: config-service
+    image: sanghoon/config-service:1.0
+    ports:
+      - "8888:8888"
+    networks:
+      - socat_network
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+    container_name: rabbitmq-server
+    networks:
+      - socat_network
+
+networks:
+  socat_network:
+    external: true
+      

@@ -18,8 +18,7 @@ class StompHandler(
 
     override fun preSend(message: Message<*>, channel: MessageChannel): Message<*>? {
         val headerAccessor: StompHeaderAccessor = StompHeaderAccessor.wrap(message)
-
-        if (StompCommand.SEND == headerAccessor.command) {
+        if (StompCommand.CONNECT == headerAccessor.command) {
 
             // 로그인 후 채팅 가능
 //            val jwt = headerAccessor.getNativeHeader("Authorization")?.get(0) ?: ""

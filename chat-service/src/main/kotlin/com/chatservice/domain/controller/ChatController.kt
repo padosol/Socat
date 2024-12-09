@@ -18,7 +18,7 @@ class ChatController(
     @MessageMapping("/chat/message")
     fun message(message: ChatMessageDTO) {
 
-        log.info("[Chat Message]: {}", message)
+//        log.info("[Chat Message]: {}", message)
 
         if (message.type == ChatMessageDTO.MessageType.JOIN) {
             chatRoomRepository.enterChatRoom(message.roomId)

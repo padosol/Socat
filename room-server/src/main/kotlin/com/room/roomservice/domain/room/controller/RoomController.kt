@@ -5,7 +5,7 @@ import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
 import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
 import com.room.roomservice.domain.room.dto.request.RemoveRoomDTO
 import com.room.roomservice.domain.room.dto.response.RoomResponse
-import com.room.roomservice.domain.room.service.usecase.CreateRoomUserCase
+import com.room.roomservice.domain.room.service.usecase.CreateRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.FindRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class RoomController(
         private val findRoomUseCase: FindRoomUseCase,
-        private val createRoomUserCase: CreateRoomUserCase,
+        private val createRoomUseCase: CreateRoomUseCase,
         private val modifyRoomUseCase: ModifyRoomUseCase,
         private val removeRoomUseCase: RemoveRoomUseCase,
         private val jwtProvider: JwtProvider
@@ -54,7 +54,7 @@ class RoomController(
     ): ResponseEntity<RoomResponse> {
         val userId = jwtProvider.getUserIdByRequest(request)
 
-        val createdRoom: Room = createRoomUserCase.createRoom(createRoomDTO, userId)
+        val createdRoom: Room = createRoomUseCase.createRoom(createRoomDTO, userId)
 
         return ResponseEntity.status(201).body(createdRoom.toDto())
     }
