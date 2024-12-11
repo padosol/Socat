@@ -5,14 +5,15 @@ spring:
   application:
     name: config-service
 
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    username: guest
-    password: guest
-
   profiles:
     active: native
+
+  rabbitmq:
+    host: rabbitmq-dev
+#    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: 1234
 
   cloud:
     config:
@@ -21,9 +22,15 @@ spring:
           search-locations: file:///C:\Users\hzyan\Desktop\socat\config
         git:
           uri: https://github.com/padosol/Socat.git
-          default-label: master
-          username: <github-id>
-          password: <github-access-token>
+          search-paths: config
+          default-label: main
+
+encrypt:
+  key-store:
+#    location: file:///${user.home}/Desktop/keystore/apiEncryptionKey.jks
+    location: file:/apiEncryptionKey.jks
+    password: socat1234
+    alias: apiEncryptionKey
 
 management:
   endpoints:
@@ -31,9 +38,4 @@ management:
       exposure:
         include: refresh,health,beans,httptrace,busrefresh
 
-encrypt:
-  key-store:
-    # location: file:///${user.home}/Desktop/keystore/apiEncryptionKey.jks
-    location: file:/apiEncryptionKey.jks
-    password: socat1234
-    alias: apiEncryptionKey
+

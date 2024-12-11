@@ -1,25 +1,74 @@
 version: "3"
 
 services:
+  discovery-service:
+    image: sanghoon/discovery-service:1.0
+    container_name: discovery-service
+    ports:
+      - 8761:8761
+
+  rabbitmq:
+    depends_on:
+      - discovery-service
+    image: rabbitmq:3.13.3-management
+    container_name: rabbitmq
+    hostname: rabbitmq-dev
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=rabbitmqCookie
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=1234
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  apigateway-service:
+    depends_on:
+      - config-service
+    image: sanghoon/apigateway-service:1.0
+    container_name: apitgateway-service
+    ports:
+      - 8000:8000
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+
   config-service:
+    depends_on:
+      - rabbitmq
     container_name: config-service
     image: sanghoon/config-service:1.0
     ports:
       - "8888:8888"
-    networks:
-      - socat_network
+
+  postgresql:
     depends_on:
-      - rabbitmq
-
-  rabbitmq:
-    image: rabbitmq
+      - discovery-service
+    image: postgres:17
+    container_name: postgresql
     ports:
-      - "5672:5672"
-    container_name: rabbitmq-server
-    networks:
-      - socat_network
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=users
+  
+  redis:
+    depends_on:
+      - discovery-service
+    image: redis:7.4
+    container_name: redis
+    ports:
+      - 6379:6379
 
-networks:
-  socat_network:
-    external: true
+  user-service:
+    depends_on:
+      - postgresql
+      - redis
+      - config-service
+    image: sanghoon/user-service:1.0
+    container_name: user-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/users
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_DATA_REDIS_HOST=redis
+
       
