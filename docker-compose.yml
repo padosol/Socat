@@ -31,14 +31,6 @@ services:
     environment:
       - SPRING_RABBITMQ_HOST=rabbitmq
 
-  config-service:
-    depends_on:
-      - rabbitmq
-    container_name: config-service
-    image: sanghoon/config-service:1.0
-    ports:
-      - "8888:8888"
-
   postgresql:
     depends_on:
       - discovery-service
@@ -59,11 +51,28 @@ services:
     ports:
       - 6379:6379
 
+  config-service:
+    depends_on:
+      - rabbitmq
+    container_name: config-service
+    image: sanghoon/config-service:1.0
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: curl -f http://localhost:8888/actuator/health || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
   user-service:
     depends_on:
-      - postgresql
-      - redis
-      - config-service
+      postgresql:
+        condition: service_started
+      redis:
+        condition: service_started
+      config-service:
+        condition: service_healthy
+
     image: sanghoon/user-service:1.0
     container_name: user-service
     environment:
