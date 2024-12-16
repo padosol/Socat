@@ -1,7 +1,7 @@
 import {instance, authInstance} from ".";
 
 export function getRooms() {
-  return instance.get("/api/room-service/rooms")
+  return instance.get("api/room-service/rooms")
 }
 
 interface RoomData {

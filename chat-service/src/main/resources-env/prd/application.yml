@@ -31,8 +31,6 @@ spring:
       uri: mongodb://root:1234@mongodb:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.2
       database: socat
 
-
-
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}

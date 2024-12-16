@@ -18,7 +18,7 @@ spring:
       host: redis
 
     mongodb:
-      uri: mongodb://root:1234@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.2
+      uri: mongodb://root:1234@mongodb:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.2
       database: socat
 
 eureka:

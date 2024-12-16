@@ -80,4 +80,33 @@ services:
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_DATA_REDIS_HOST=redis
 
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=1234
+
+  room-service:
+    depends_on:
+      mongodb:
+        condition: service_started
+      config-service:
+        condition: service_healthy
+    image: sanghoon/room-service:1.0
+    container_name: room-service
+
+  chat-service:
+    depends_on:
+      mongodb:
+        condition: service_started
+      config-service:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    image: sanghoon/chat-service:1.0
+    container_name: chat-service
+    
       
