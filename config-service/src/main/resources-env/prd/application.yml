@@ -6,24 +6,22 @@ spring:
     name: config-service
 
   rabbitmq:
-    host: 127.0.0.1
+    host: rabbitmq
     port: 5672
-    username: guest
-    password: guest
-
-  profiles:
-    active: native
+    username: admin
+    password: 1234
 
   cloud:
     config:
       server:
-        native:
-          search-locations: file:///C:\Users\hzyan\Desktop\socat\config
-        bootstrap: false
+        git:
+          uri: https://github.com/padosol/Socat.git
+          search-paths: config
+          default-label: main
 
 encrypt:
   key-store:
-    location: file:///${user.home}/Desktop/keystore/apiEncryptionKey.jks
+    location: file:/apiEncryptionKey.jks
     password: socat1234
     alias: apiEncryptionKey
 
