@@ -48,7 +48,7 @@ sourceSets {
             srcDirs = ["src/main/java"]
         }
         resources {
-            srcDirs = ["src/main/resources", "src/main/resources-${profile}"]
+            srcDirs = ["src/main/resources", "src/main/resources-env/${profile}"]
         }
     }
 }
