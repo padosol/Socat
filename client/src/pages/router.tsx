@@ -22,6 +22,10 @@ import RoomCreate, {
   action as roomCreateAction
 } from "./main/room/RoomCreate";
 
+import MyPage, {
+  loader as myPageLoader
+} from "./main/my/MyPage";
+
 import RoomIndex from "./main/room/RoomIndex";
 import ErrorPage from "./error/ErrorPage";
 
@@ -46,6 +50,11 @@ const router = createBrowserRouter([
         element: <RoomCreate />,
         action: roomCreateAction,
         errorElement: <ErrorPage />
+      },
+      {
+        path: "/mypage",
+        element: <MyPage />,
+        loader: myPageLoader
       }
     ]
   },

@@ -19,7 +19,7 @@ const Sidebar = () => {
 
   return (
     <div className="border h-full w-96 flex flex-col justify-between">
-      <div className="order-1 p-4 border-t flex justify-between items-center">
+      <div className="order-1 p-4 border-t flex justify-between items-center h-[70px]">
         <h1 className="flex">
           <span>
             <img src="/src/assets/rocket.svg">
@@ -33,9 +33,13 @@ const Sidebar = () => {
           {
             userInfo 
             ? 
-            <div>
-              {userInfo.userName}
-            </div> 
+            <Link to={'/mypage'}>
+              <div className="rounded-full border p-1 hover:border-black hover:border-2 cursor-pointer"
+
+              >
+                <img src="/src/assets/profile.svg"></img>
+              </div> 
+            </Link>
             :
             <Link to={`/login`}>
               <button className="border p-1 rounded-xl px-2 text-indi-500">
@@ -54,7 +58,7 @@ const Sidebar = () => {
               className="border rounded-xl p-[6px] shadow-sm" 
               type="search"
               name="roomName"
-              placeholder="enter Room Name"
+              placeholder="채팅방 검색"
             >
             </input>
           </Form>
