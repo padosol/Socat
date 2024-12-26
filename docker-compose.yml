@@ -25,6 +25,8 @@ services:
     depends_on:
       config-service:
         condition: service_healthy
+      redis:
+        condition: service_started
     image: sanghoon/apigateway-service:1.0
     container_name: apitgateway-service
     ports:
@@ -109,5 +111,7 @@ services:
         condition: service_started
     image: sanghoon/chat-service:1.0
     container_name: chat-service
+
+
     
       

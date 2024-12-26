@@ -20,7 +20,7 @@ spring:
 
   data:
     redis:
-      host: redis
+      host: localhost
       port: 6379
 
   config:
@@ -82,6 +82,14 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
+            - Path=/user-service/v3/api-docs
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
             - Path=/user-service/**
           filters:
             - AuthorizationHeaderFilter
@@ -97,6 +105,14 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/room-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+        - id: room-service
+          uri: lb://ROOM-SERVICE
+          predicates:
+            - Path=/room-service/v3/api-docs
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/room-service/(?<segment>.*), /$\{segment}
         - id: room-service
           uri: lb://ROOM-SERVICE
           predicates:
@@ -121,6 +137,16 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
+
+springdoc:
+  swagger-ui:
+    urls[0]:
+      name: 유저 서비스
+      url: user-service/v3/api-docs
+    urls[1]:
+      name: 방 서비스
+      url: room-service/v3/api-docs
+    use-root-path: true
 
 management:
   endpoints:

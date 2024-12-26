@@ -1,6 +1,9 @@
 package com.apigateway.apigatewayservice.filter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -53,9 +56,15 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             String jwt = authorizationHeader.replace("Bearer ", "");
 
             // 토큰 검증
+            log.info("jwt: {}", jwt);
             if (!isJwtValid(jwt)) {
                 return onError(exchange, "JWT is not valid", HttpStatus.UNAUTHORIZED);
             }
+
+            if(redisHash.hasKey("black_list", jwt)) {
+                return onError(exchange, "JWT is Black", HttpStatus.UNAUTHORIZED);
+            }
+
             return chain.filter(exchange);
         };
     }
@@ -66,6 +75,9 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         String subject = null;
 
         try {
+
+            log.info("jwt.secret: {}", env.getProperty("jwt.secret"));
+
             subject = Jwts.parser()
                     .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(env.getProperty("jwt.secret"))))
                     .build()
@@ -73,11 +85,21 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                     .getPayload()
                     .getSubject();
 
-            if(redisHash.hasKey("black_list", jwt)) {
-                returnValue = false;
-            }
+            log.info("subject: {}", subject);
 
-        } catch(Exception ex) {
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
+            returnValue = false;
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 토큰입니다.");
+            returnValue = false;
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다.");
+            returnValue = false;
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 토큰이 잘못되었습니다.");
+            returnValue = false;
+        }catch(Exception ex) {
             returnValue = false;
         }
 

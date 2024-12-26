@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 class Chat(
     @Id
     var id: String? = null,
+    val roomId: String,
     val message: String?,
     val sender: String,
     val createdAt: LocalDateTime,

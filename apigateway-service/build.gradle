@@ -48,8 +48,24 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+def profile = project.hasProperty("profile") ? project.property("profile").toString() : "local"
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java"]
+        }
+        resources {
+            srcDirs = ["src/main/resources", "src/main/resources-env/${profile}"]
+        }
+    }
 }
 
 dependencyManagement {

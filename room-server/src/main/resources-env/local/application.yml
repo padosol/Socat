@@ -31,14 +31,35 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      consume: B3
+      produce: B3
+
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,beans,httptrace,busrefresh,env
+
 logging:
   level:
+    com.room.roomservice.domain.room.client: DEBUG
     org:
       springframework:
         data:
           mongodb:
             core:
               MongoTemplate: DEBUG
+  pattern:
+    correlation: '%5p [${spring.application.name:}, %X{traceId:-},%X{spanId-}]'
+
 springdoc:
   swagger-ui:
     operations-sorter: method

@@ -16,7 +16,7 @@ public class SwaggerConfig {
 
 
     @Bean
-    @Profile("!Prod") // 운영 환경에서 swagger 비활성화
+    @Profile("!prd") // 운영 환경에서 swagger 비활성화
     public OpenAPI openAPI() {
         String jwtSchemeName = JwtFilter.AUTHORIZATION_HEADER;
 

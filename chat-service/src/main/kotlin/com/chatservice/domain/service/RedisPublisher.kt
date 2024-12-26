@@ -16,13 +16,13 @@ class RedisPublisher(
     fun publish(topic: ChannelTopic, message: ChatMessageDTO) {
 
         mongoTemplate.insert(
-                Chat(
-                        message = message.message,
-                        sender = message.sender,
-                        createdAt = LocalDateTime.now(),
-                        type = message.type.name,
-
-                )
+            Chat(
+                roomId = message.roomId,
+                message = message.message,
+                sender = message.sender,
+                createdAt = LocalDateTime.now(),
+                type = message.type.name,
+            )
         )
 
         redisTemplate.convertAndSend(topic.topic, message)

@@ -96,14 +96,15 @@ kotlin {
     }
 }
 
-// profile의 기본값 local로 설정
-ext.profile = (!project.hasProperty('profile') || !profile) ? 'local' : profile
+def profile = project.hasProperty("profile") ? project.property("profile").toString() : "local"
 
-// 리소스 디렉토리 추가
 sourceSets {
     main {
+        java {
+            srcDirs = ["src/main/java"]
+        }
         resources {
-            srcDirs "src/main/resources-env/${profile}"
+            srcDirs = ["src/main/resources", "src/main/resources-env/${profile}"]
         }
     }
 }

@@ -34,7 +34,7 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
 
     private static final String[] SWAGGER_AUTH_WHITELIST = {
-        "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**",
+        "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/v3/api-docs",
         "/actuator/**", "/authenticate", "/refresh-auth", "/logout", "/users/test"
     };
 
