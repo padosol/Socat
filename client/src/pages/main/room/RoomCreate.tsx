@@ -1,31 +1,33 @@
 import { Form, redirect, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { createRoom } from "../../../api/room"
-
-interface RoomCreateProps {
-  
-}
+import { IUserInfo } from "@/types/user.ts"
 
 export async function action({request, params}) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
 
   const response = await createRoom(data.roomName);
+  console.log(response)
 
   return redirect("/")
 }
 
-const RoomCreate: FunctionComponent<RoomCreateProps> = () => {
+const RoomCreate = () => {
 
   const [roomName, setRoomName] = useState<string>("");
-  const [userInfo, setUserInfo] = useState();
+  const [userInfo, setUserInfo] = useState<IUserInfo>();
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("user-info"))
-    setUserInfo(userInfo)
+    const userInfo = localStorage.getItem("user-info");
+    if (userInfo) {
+      setUserInfo(JSON.parse(userInfo))
+    } else {
+      return
+    }
   }, [])
 
-  function handleRoomNameChange(e){
+  function handleRoomNameChange(e: ChangeEvent<HTMLInputElement>){
     setRoomName(e.target.value)
   }
 

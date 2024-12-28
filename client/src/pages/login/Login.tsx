@@ -4,7 +4,7 @@ import {
   redirect
 } from "react-router-dom";
 
-import { login } from "../../api/login";
+import { login, IJoinData } from "../../api/login";
 import {getUserInfo} from '@/api/user'  
 
 
