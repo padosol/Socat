@@ -3,6 +3,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { createRoom } from "../../../api/room"
 import { IUserInfo } from "@/types/user.ts"
 
+//test
+
 export async function action({request, params}) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
