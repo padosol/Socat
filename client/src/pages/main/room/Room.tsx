@@ -5,9 +5,9 @@ import {
   LoaderFunctionArgs
 } from "react-router-dom"
 import * as StompJs from '@stomp/stompjs';
-
 import { getRoom } from "../../../api/room";
-import {getUserInfo} from '@/api/user.ts'  
+import { getUserInfo } from "../../../api/user.ts";
+import { IUserInfo } from "../../../types/user.ts";
 
 import {
   LoaderData,
@@ -57,8 +57,11 @@ const Room = () => {
           })
           
           // 유저 정보가 있는지 확인
-          const userInfo = JSON.parse(localStorage.getItem("user-info"))
-          if (userInfo) {
+          const stringUserInfo = localStorage.getItem("user-info");
+
+          if (stringUserInfo) {
+            const userInfo: IUserInfo = JSON.parse(stringUserInfo);
+
             wsClient.current.publish({
               destination: "/pub/chat/message",
               headers: {Authorization: window.localStorage.getItem('authorization')!},
@@ -96,6 +99,7 @@ const Room = () => {
       try {
         await getUserInfo();
       } catch(e) {
+        console.log(e)
         alert("로그인 후 채팅 가능합니다.")
         if (inputRef.current) {
           inputRef.current.blur();

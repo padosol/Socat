@@ -20,9 +20,9 @@ export default defineConfig({
     alias: [
       { find: "@", replacement: path.resolve(__dirname, "src") },
       {
-        find: "@components",
-        replacement: path.resolve(__dirname, "src/components"),
-      },
+        find: "@types",
+        replacement: path.resolve(__dirname, "src/types")
+      }
     ],
   },
   define: {

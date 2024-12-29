@@ -1,7 +1,7 @@
 import { Form, redirect, Link } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 import { createRoom } from "../../../api/room"
-import { IUserInfo } from "@/types/user.ts"
+import { IUserInfo } from "../../../types/user";
 
 export async function action({request, params}) {
   const formData = await request.formData();
