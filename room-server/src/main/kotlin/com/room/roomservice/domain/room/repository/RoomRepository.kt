@@ -5,7 +5,7 @@ import com.room.roomservice.domain.room.domain.Room
 
 interface RoomRepository {
 
-    fun save(roomDoc: RoomDoc): Room
+    fun save(room: Room): Room
 
     fun findById(roomId: String): Room?
 

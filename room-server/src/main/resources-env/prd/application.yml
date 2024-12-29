@@ -21,6 +21,12 @@ spring:
       uri: mongodb://root:1234@mongodb:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.2
       database: socat
 
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgresql:5432/rooms
+    username: postgres
+    password: 1234
+
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}

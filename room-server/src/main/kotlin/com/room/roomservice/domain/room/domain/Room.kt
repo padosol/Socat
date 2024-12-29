@@ -2,6 +2,7 @@ package com.room.roomservice.domain.room.domain
 
 import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
 import com.room.roomservice.domain.room.dto.response.RoomResponse
+import com.room.roomservice.domain.room.entity.RoomEntity
 import java.time.LocalDateTime
 
 class Room(
@@ -35,6 +36,16 @@ class Room(
             userId = userId ,
             roomName = roomName ,
             createdAt = createdAt
+        )
+    }
+
+    fun toEntity(): RoomEntity {
+        return RoomEntity(
+                roomId = roomId,
+                userId = userId,
+                roomName = roomName,
+                createdAt = createdAt,
+                updatedAt = updatedAt
         )
     }
 
