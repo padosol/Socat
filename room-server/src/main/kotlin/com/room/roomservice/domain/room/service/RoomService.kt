@@ -1,7 +1,6 @@
 package com.room.roomservice.domain.room.service
 
 import com.room.roomservice.domain.room.client.UserServiceClient
-import com.room.roomservice.domain.room.document.RoomDoc
 import com.room.roomservice.domain.room.domain.Room
 import com.room.roomservice.domain.room.domain.RoomIdGenerator
 import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
@@ -16,7 +15,6 @@ import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
 import com.room.roomservice.domain.room.vo.UserResponse
 import com.room.roomservice.global.exception.CustomExceptionCode
-import com.room.roomservice.global.jwt.JwtProvider
 import org.springframework.stereotype.Service
 
 @Service
@@ -34,15 +32,7 @@ class RoomService(
                 RoomIdGenerator()
         )
 
-        return roomRepository.save(
-                RoomDoc(
-                    userId = createRoom.userId,
-                    roomId = createRoom.roomId,
-                    roomName = createRoom.roomName,
-                    createdAt = createRoom.createdAt,
-                    updatedAt = null
-                )
-        )
+        return roomRepository.save(createRoom)
     }
 
     override fun findRoom(roomId: String): Room {
@@ -63,15 +53,7 @@ class RoomService(
 
         findRoom.modifyRoom(modifyRoomDTO)
 
-        return roomRepository.save(
-                RoomDoc(
-                        roomId = findRoom.roomId,
-                        userId = findRoom.userId,
-                        roomName = findRoom.roomName,
-                        createdAt = findRoom.createdAt,
-                        updatedAt = findRoom.updatedAt
-                )
-        )
+        return roomRepository.save(findRoom)
     }
 
     override fun remove(roomId: String, userId: String) {

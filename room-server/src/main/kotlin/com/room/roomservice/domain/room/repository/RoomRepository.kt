@@ -1,6 +1,5 @@
 package com.room.roomservice.domain.room.repository
 
-import com.room.roomservice.domain.room.document.RoomDoc
 import com.room.roomservice.domain.room.domain.Room
 
 interface RoomRepository {
