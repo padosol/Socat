@@ -26,11 +26,7 @@ public class UserController implements SwaggerUserController {
     private final CreateUserUseCase createUserUseCase;
     private final JwtProvider jwtProvider;
 
-    @Operation(summary = "유저 회원가입", description = "유저 회원가입을 한다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "회원가입 성공"),
-            @ApiResponse(responseCode = "400", description = "올바르지 않은 파라미터")
-    })
+
     @PostMapping("/users")
     public ResponseEntity<UserResponse> createUser(
             @RequestBody @Valid CreateUserDTO createUserDTO
@@ -46,7 +42,7 @@ public class UserController implements SwaggerUserController {
         return ResponseEntity.status(201).body(user);
     }
     
-    // 유저 검색, 유저 정보 얻기
+    @Override
     @GetMapping("/users")
     public ResponseEntity<UserResponse> getUser(
             HttpServletRequest request
@@ -70,11 +66,6 @@ public class UserController implements SwaggerUserController {
 
 
     // 유저 수정
-
-    @GetMapping("/users/test")
-    public String test() {
-        return "user controller test";
-    }
 
     // 유저 삭제
 }

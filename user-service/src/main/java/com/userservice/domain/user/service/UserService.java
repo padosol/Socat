@@ -62,8 +62,6 @@ public class UserService implements
     public UserResponse modifyUser(User user) {
         // 데이터베이스에서 유저를 찾아서 있으면 수정 없으면 error
 
-
-
         return null;
     }
 
