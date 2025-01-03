@@ -1,5 +1,7 @@
 package com.chatservice.domain.service.usecase
 
-interface EnterChatUseCase {
-    fun enterChatRoom(roomId: String)
+import com.chatservice.domain.dto.ChatMessageDTO
+
+interface EnterChatRoomUseCase {
+    fun enterChatRoom(chatMessageDTO: ChatMessageDTO)
 }

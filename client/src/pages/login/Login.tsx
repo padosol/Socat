@@ -4,17 +4,22 @@ import {
   redirect
 } from "react-router-dom";
 
-import { login, IJoinData } from "../../api/login";
-import {getUserInfo} from '@/api/user'  
-
+import { login, ILoginDTO } from "../../api/login";
+import { getUserInfo, IUserInfoResponse } from "../../api/user";
+import useUserStore from "../../store/userInfo";
 
 export async function action(
-  { request, params }: {request: Request, params: Params<string>}
+  { request }: {request: Request}
 ) {
   const formData = await request.formData();
 
+  const loginDTO: ILoginDTO = {
+    email: formData.get("email") as string,
+    password: formData.get("password") as string
+  } 
+
   try {
-    const response = await login(formData);
+    const response = await login(loginDTO);
 
     if (response.status === 200) {
       //header 에 token 추가
@@ -25,6 +30,9 @@ export async function action(
       localStorage.setItem("refresh_token", refresh_token)
 
       const userResponse = await getUserInfo();
+
+      const setUserInfo = useUserStore.getState().setUserInfo;
+      setUserInfo(userResponse.data);
 
       if(userResponse.status === 200) {
         localStorage.setItem("user-info", JSON.stringify(userResponse.data));

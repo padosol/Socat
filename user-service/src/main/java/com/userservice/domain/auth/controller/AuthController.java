@@ -8,7 +8,6 @@ import com.userservice.domain.auth.service.usecase.LogoutUseCase;
 import com.userservice.domain.auth.service.usecase.RefreshUseCase;
 import com.userservice.global.config.security.JwtFilter;
 import com.userservice.global.exception.CustomException;
-import com.userservice.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

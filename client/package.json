@@ -20,7 +20,8 @@
     "react-router-dom": "^6.27.0",
     "sockjs-client": "^1.6.1",
     "sort-by": "^1.2.0",
-    "websocket": "^1.0.35"
+    "websocket": "^1.0.35",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

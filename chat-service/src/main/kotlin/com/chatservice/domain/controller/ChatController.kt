@@ -2,6 +2,7 @@ package com.chatservice.domain.controller
 
 import com.chatservice.domain.dto.ChatMessageDTO
 import com.chatservice.domain.repository.ChatRoomRepository
+import com.chatservice.domain.service.ChatService
 import com.chatservice.domain.service.RedisPublisher
 import org.slf4j.LoggerFactory
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -10,15 +11,14 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class ChatController(
     private val redisPublisher: RedisPublisher,
-    private val chatRoomRepository: ChatRoomRepository
+    private val chatRoomRepository: ChatRoomRepository,
+    private val chatService: ChatService
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @MessageMapping("/chat/message")
     fun message(message: ChatMessageDTO) {
-
-//        log.info("[Chat Message]: {}", message)
 
         if (message.type == ChatMessageDTO.MessageType.JOIN) {
             chatRoomRepository.enterChatRoom(message.roomId)

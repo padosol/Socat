@@ -5,15 +5,14 @@ import {
   useLoaderData
 } from "react-router-dom";
 
+import useUserStore from "../../store/userInfo";
+
 const Sidebar = () => {
 
-  const [userInfo, setUserInfo] = useState(null);
+  const { userInfo } = useUserStore();
   const {rooms} = useLoaderData();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user-info"));
-
-    setUserInfo(user);
 
   }, [])
 
@@ -31,7 +30,7 @@ const Sidebar = () => {
         </h1>
         <div className="">
           {
-            userInfo 
+            userInfo.isLoggedIn 
             ? 
             <Link to={'/mypage'}>
               <div className="rounded-full border p-1 hover:border-black hover:border-2 cursor-pointer"

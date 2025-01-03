@@ -39,8 +39,6 @@ const Room = () => {
   }
 
   const connect = () => {
-    // const client = new WebSocket("ws://localhost:8000/chat-service/ws-stomp")
-    // wsClient.current = StompJs.Stomp.over(client);
     wsClient.current = new StompJs.Client({
       brokerURL: "ws://localhost:8000/chat-service/ws-stomp",
       connectHeaders: { // 이 부분 새로 추가
@@ -51,8 +49,6 @@ const Room = () => {
           wsClient.current.subscribe(`/sub/chat/room/${room.roomId}`, (message: StompJs.IMessage) => {
             const newMessage = JSON.parse(message.body);
 
-            console.log(newMessage)
-    
             setMessages((messages) => [...messages, newMessage])
           })
           

@@ -1,8 +1,7 @@
 import Sidebar from "../../components/layout/Sidebar"
 import MainContent from "../../components/layout/MainContent"
-
 import { getRooms } from "../../api/room";
-
+import useUserStore from "../../store/userInfo";
 import { useEffect } from "react";
 
 export async function loader() {
@@ -13,13 +12,12 @@ export async function loader() {
 }
 
 const MainPage = () => {
-  useEffect(() => {
-    console.log("MainPage Mounted")
 
-    return () => {
-      console.log("MainPage UnMounted")
-    }
-  }, [])
+  const {userInfo, setUserInfo} = useUserStore()
+
+  useEffect(() => {
+    console.log(userInfo.isLoggedIn)
+  })
 
   return (
     <div className="flex h-screen w-full border"> 
