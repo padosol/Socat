@@ -1,18 +1,35 @@
 import {
-  LoaderFunctionArgs
+  useRouteLoaderData
 } from "react-router-dom"
 
-export async function loader() {
-  console.log(localStorage.getItem("user-info"))
-  
+import { IUserInfo } from "../../../store/userInfo";
+import { getMyRooms } from "../../../api/room";
 
-  return {}
+export function loader() {
+
+  // const response = await getMyRooms();
+
 }
 
 const MyPage = () => {
+  const {userInfo} = useRouteLoaderData("main") as {userInfo: IUserInfo};
+  console.log(userInfo)
+
   return ( 
     <div>
-      MyPage
+      <div>
+        <div>
+          <span>이름: </span>
+          <span>{userInfo.username}</span>
+        </div>
+        <div>
+          <span>이메일:</span>
+          <span>{userInfo.email}</span>
+        </div>
+      </div>
+      <div>
+        내가 생성한 방
+      </div>
     </div>
    );
 }

@@ -1,6 +1,8 @@
+import { useLoaderData } from "react-router-dom"
 import Content from "./Content"
 
 const MainContent = () => {
+
   return (
     <div className="relative w-full h-full">
       <Content />

@@ -23,7 +23,6 @@ import RoomCreate, {
 } from "./main/room/RoomCreate";
 
 import MyPage, {
-  loader as myPageLoader
 } from "./main/my/MyPage";
 
 import RoomIndex from "./main/room/RoomIndex";
@@ -32,6 +31,7 @@ import ErrorPage from "./error/ErrorPage";
 const router = createBrowserRouter([
   {
     path: "/",
+    id: 'main',
     element: <MainPage />,
     errorElement: <ErrorPage />,
     loader: mainPageLoader,
@@ -54,7 +54,6 @@ const router = createBrowserRouter([
       {
         path: "/mypage",
         element: <MyPage />,
-        loader: myPageLoader
       }
     ]
   },

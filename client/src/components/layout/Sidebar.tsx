@@ -30,7 +30,7 @@ const Sidebar = () => {
         </h1>
         <div className="">
           {
-            userInfo.isLoggedIn 
+            userInfo 
             ? 
             <Link to={'/mypage'}>
               <div className="rounded-full border p-1 hover:border-black hover:border-2 cursor-pointer"

@@ -52,7 +52,7 @@ public class UserService implements
         User saveUser = userJpaRepository.save(user);
 
         return UserResponse.builder()
-                .userName(saveUser.getUserName())
+                .username(saveUser.getUserName())
                 .id(saveUser.getId())
                 .email(saveUser.getEmail())
                 .build();
@@ -91,7 +91,7 @@ public class UserService implements
                 .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
 
         return UserResponse.builder()
-                .userName(user.getUserName())
+                .username(user.getUserName())
                 .email(user.getEmail())
                 .id(user.getId())
                 .build();
@@ -104,7 +104,7 @@ public class UserService implements
                 .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
 
         return UserResponse.builder()
-                .userName(user.getUserName())
+                .username(user.getUserName())
                 .email(user.getEmail())
                 .id(user.getId())
                 .build();
