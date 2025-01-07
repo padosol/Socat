@@ -2,7 +2,7 @@ package com.userservice.domain.user.controller;
 
 import com.userservice.domain.user.controller.dto.request.CreateUserDTO;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
-import com.userservice.domain.user.entity.User;
+import com.userservice.domain.user.entity.UserEntity;
 import com.userservice.domain.user.service.usecase.CreateUserUseCase;
 import com.userservice.domain.user.service.usecase.GetUserUseCase;
 import com.userservice.global.utils.JwtProvider;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-class UserControllerTest {
+class UserEntityControllerTest {
 
     private MockMvc mockMvc;
 
@@ -49,9 +49,9 @@ class UserControllerTest {
     @Test
     void testCreateUser() throws Exception {
         CreateUserDTO createUserDTO = new CreateUserDTO("username", "email@example.com", "password");
-        UserResponse userResponse = UserResponse.builder().id("id").userName("username").email("email@example.com").build();
+        UserResponse userResponse = UserResponse.builder().id("id").username("username").email("email@example.com").build();
 
-        when(createUserUseCase.createUser(any(User.class))).thenReturn(userResponse);
+        when(createUserUseCase.createUser(any(UserEntity.class))).thenReturn(userResponse);
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -64,7 +64,7 @@ class UserControllerTest {
 
     @Test
     void testGetUser() throws Exception {
-        UserResponse userResponse = UserResponse.builder().id("id").userName("username").email("email@example.com").build();
+        UserResponse userResponse = UserResponse.builder().id("id").username("username").email("email@example.com").build();
 
         when(jwtProvider.getUserId(any(HttpServletRequest.class))).thenReturn("id");
         when(getUserUseCase.findUserById(anyString())).thenReturn(userResponse);
@@ -78,7 +78,7 @@ class UserControllerTest {
 
     @Test
     void testGetUserByUserId() throws Exception {
-        UserResponse userResponse = UserResponse.builder().id("id").userName("username").email("email@example.com").build();
+        UserResponse userResponse = UserResponse.builder().id("id").username("username").email("email@example.com").build();
 
         when(getUserUseCase.findUserById(anyString())).thenReturn(userResponse);
 

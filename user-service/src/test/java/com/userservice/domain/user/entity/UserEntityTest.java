@@ -1,22 +1,17 @@
 package com.userservice.domain.user.entity;
 
-import com.userservice.domain.user.utils.UserIdGenerator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-class UserTest {
+class UserEntityTest {
 
     @Test
     @DisplayName("유저 생성 테스트")
     void createUser() {
         // given
-        User user = User.builder().build();
+        UserEntity user = UserEntity.builder().build();
 
         // when
         FakeIdGenerator idGenerator = new FakeIdGenerator();
@@ -32,7 +27,7 @@ class UserTest {
 
         // given
         String password = "testtest";
-        User user = User.builder().password(password).build();
+        UserEntity user = UserEntity.builder().password(password).build();
 
         // when
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -46,7 +41,7 @@ class UserTest {
     @DisplayName("유저 삭제 테스트")
     void deleteUser() {
         // given
-        User user = User.builder().build();
+        UserEntity user = UserEntity.builder().build();
         FakeIdGenerator idGenerator = new FakeIdGenerator();
         user.createUser(idGenerator);
 

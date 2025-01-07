@@ -1,7 +1,7 @@
 package com.userservice.domain.user.service;
 
 import com.userservice.domain.user.entity.IdGenerator;
-import com.userservice.domain.user.entity.User;
+import com.userservice.domain.user.entity.UserEntity;
 import com.userservice.domain.user.exception.UserAlreadyExistException;
 import com.userservice.domain.user.repository.UserJpaRepository;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class UserServiceTest {
+class UserEntityServiceTest {
 
         @Mock
         private UserJpaRepository userJpaRepository;
@@ -42,9 +42,9 @@ class UserServiceTest {
         @Test
         @DisplayName("Create User Test")
         void createUser() {
-                User user = User.builder().email("test@example.com").build();
+                UserEntity user = UserEntity.builder().email("test@example.com").build();
                 when(userJpaRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.empty());
-                when(userJpaRepository.save(any(User.class))).thenReturn(user);
+                when(userJpaRepository.save(any(UserEntity.class))).thenReturn(user);
 
                 UserResponse response = userService.createUser(user);
 
@@ -56,7 +56,7 @@ class UserServiceTest {
         @Test
         @DisplayName("Create User Already Exists Test")
         void createUserAlreadyExists() {
-                User user = User.builder().email("test@example.com").build();
+                UserEntity user = UserEntity.builder().email("test@example.com").build();
                 when(userJpaRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
                 assertThrows(UserAlreadyExistException.class, () -> userService.createUser(user));
@@ -79,7 +79,7 @@ class UserServiceTest {
         @Test
         @DisplayName("Load User By Username Test")
         void loadUserByUsername() {
-                User user = User.builder().email("test@example.com").password("password").build();
+                UserEntity user = UserEntity.builder().email("test@example.com").password("password").build();
                 when(userJpaRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
                 UserDetails userDetails = userService.loadUserByUsername(user.getEmail());
@@ -100,7 +100,7 @@ class UserServiceTest {
         @Test
         @DisplayName("Find User By Email Test")
         void findUserByEmail() {
-                User user = User.builder().email("test@example.com").build();
+                UserEntity user = UserEntity.builder().email("test@example.com").build();
                 when(userJpaRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
                 UserResponse response = userService.findUserByEmail(user.getEmail());
@@ -121,7 +121,7 @@ class UserServiceTest {
         @Test
         @DisplayName("Find User By Id Test")
         void findUserById() {
-                User user = User.builder().id("123").build();
+                UserEntity user = UserEntity.builder().id("123").build();
                 when(userJpaRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
                 UserResponse response = userService.findUserById(user.getId());
