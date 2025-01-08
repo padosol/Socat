@@ -1,5 +1,4 @@
 import axios, {AxiosInstance} from 'axios';
-import { IErrorResponse } from './type/error';
 
 const instance: AxiosInstance = axios.create({
   baseURL: "/",

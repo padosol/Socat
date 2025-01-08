@@ -1,7 +1,7 @@
 package com.userservice.domain.user.service;
 
 import com.userservice.domain.user.entity.IdGenerator;
-import com.userservice.domain.user.entity.User;
+import com.userservice.domain.user.entity.UserEntity;
 import com.userservice.domain.user.exception.UserAlreadyExistException;
 import com.userservice.domain.user.repository.UserJpaRepository;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
@@ -38,10 +38,10 @@ public class UserService implements
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse createUser(User user) {
+    public UserResponse createUser(UserEntity user) {
 
         // 해당 이메일로 가입되어 있는 유저 체크
-        Optional<User> findUser = userJpaRepository.findUserByEmail(user.getEmail());
+        Optional<UserEntity> findUser = userJpaRepository.findUserByEmail(user.getEmail());
         if(findUser.isPresent()) {
             throw new UserAlreadyExistException(HttpStatus.BAD_REQUEST, "이미 가입되어 있는 유저 입니다.");
         }
@@ -49,7 +49,7 @@ public class UserService implements
         user.createUser(idGenerator);
         user.encoderPassword(passwordEncoder);
 
-        User saveUser = userJpaRepository.save(user);
+        UserEntity saveUser = userJpaRepository.save(user);
 
         return UserResponse.builder()
                 .username(saveUser.getUserName())
@@ -59,20 +59,20 @@ public class UserService implements
     }
 
     @Override
-    public UserResponse modifyUser(User user) {
+    public UserResponse modifyUser(UserEntity user) {
         // 데이터베이스에서 유저를 찾아서 있으면 수정 없으면 error
 
         return null;
     }
 
     @Override
-    public void removeUser(User user) {
+    public void removeUser(UserEntity user) {
 
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userJpaRepository.findUserByEmail(email)
+        UserEntity user = userJpaRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
@@ -87,7 +87,7 @@ public class UserService implements
 
     @Override
     public UserResponse findUserByEmail(String email) {
-        User user = userJpaRepository.findUserByEmail(email)
+        UserEntity user = userJpaRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
 
         return UserResponse.builder()
@@ -100,7 +100,7 @@ public class UserService implements
     @Override
     public UserResponse findUserById(String id) {
 
-        User user = userJpaRepository.findById(id)
+        UserEntity user = userJpaRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
 
         return UserResponse.builder()

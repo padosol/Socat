@@ -17,7 +17,7 @@ public class UserAuth {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
 
     @Id

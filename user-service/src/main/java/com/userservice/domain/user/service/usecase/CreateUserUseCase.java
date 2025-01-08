@@ -1,8 +1,8 @@
 package com.userservice.domain.user.service.usecase;
 
 import com.userservice.domain.user.controller.dto.response.UserResponse;
-import com.userservice.domain.user.entity.User;
+import com.userservice.domain.user.entity.UserEntity;
 
 public interface CreateUserUseCase {
-    UserResponse createUser(User user);
+    UserResponse createUser(UserEntity user);
 }

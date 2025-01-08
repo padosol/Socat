@@ -1,15 +1,12 @@
 package com.userservice.domain.user.controller;
 
 
-import com.userservice.domain.user.entity.User;
+import com.userservice.domain.user.entity.UserEntity;
 import com.userservice.domain.user.service.usecase.CreateUserUseCase;
 import com.userservice.domain.user.controller.dto.request.CreateUserDTO;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
 import com.userservice.domain.user.service.usecase.GetUserUseCase;
 import com.userservice.global.utils.JwtProvider;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -32,7 +29,7 @@ public class UserController implements SwaggerUserController {
             @RequestBody @Valid CreateUserDTO createUserDTO
     ) {
         UserResponse user = createUserUseCase.createUser(
-                User.builder()
+                UserEntity.builder()
                     .userName(createUserDTO.getUsername())
                     .email(createUserDTO.getEmail())
                     .password(createUserDTO.getPassword())

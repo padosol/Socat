@@ -7,7 +7,7 @@ import com.userservice.domain.auth.exception.RefreshTokenNotMatchException;
 import com.userservice.domain.auth.service.usecase.AccessUseCase;
 import com.userservice.domain.auth.service.usecase.LogoutUseCase;
 import com.userservice.domain.auth.service.usecase.RefreshUseCase;
-import com.userservice.domain.user.entity.User;
+import com.userservice.domain.user.entity.UserEntity;
 import com.userservice.domain.user.repository.UserJpaRepository;
 import com.userservice.global.utils.JwtProvider;
 import jakarta.annotation.PostConstruct;
@@ -96,7 +96,7 @@ public class TokenService implements RefreshUseCase, LogoutUseCase, AccessUseCas
     @Override
     public String createAccessToken(Authentication authentication) {
         String userId = authentication.getName();
-        User user = userJpaRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
+        UserEntity user = userJpaRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
         String id = user.getId();
 
         String oldAccessToken = (String) redisHash.get(jwtProvider.ACTIVE_USER, id);

@@ -1,2 +1,4 @@
-package com.userservice.domain.user.vo;public class RoomResponse {
+package com.userservice.domain.user.vo;
+
+public class RoomResponse {
 }

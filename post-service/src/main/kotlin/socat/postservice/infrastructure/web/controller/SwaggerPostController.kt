@@ -1,5 +1,7 @@
 package socat.postservice.infrastructure.web.controller
 
+import org.springframework.http.ResponseEntity
+
 interface SwaggerPostController {
     // 등록
     // 수정
