@@ -18,6 +18,7 @@ export const links: LinksFunction = () => [
 
 import SideBar from './components/SideBar';
 import Header from './components/Header';
+import ContentSection from "./components/ContentSection";
 
 export default function App() {
 
@@ -31,13 +32,14 @@ export default function App() {
       </head>
       <body>
         <div className="flex h-screen">
-          <SideBar />
+          <Outlet />
+          {/* <SideBar />
           <div className="flex flex-col flex-1">
             <Header />
             <div className="p-4">
-              <Outlet />
+              <ContentSection />
             </div>
-          </div>
+          </div> */}
         </div>
 
         <ScrollRestoration />

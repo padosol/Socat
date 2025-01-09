@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { useLoaderData } from '@remix-run/react';
 import { LoaderFunction } from '@remix-run/node';
 
@@ -18,8 +17,8 @@ const Content = () => {
   };
 
   return (
-    <section className="flex flex-col bg-gray-100 p-4">
-      <div className="flex justify-between items-center mb-4">
+    <section className="flex flex-col  p-4">
+      <div className="flex justify-between items-center mb-4 bg-gray-100 p-4">
         <h2 className="text-xl font-semibold">{type}</h2>
         <button
           className="bg-green-700 text-white px-4 py-2 rounded"

@@ -3,6 +3,28 @@ import {
   Link,
 } from "react-router-dom";
 
+import { ActionFunction } from "@remix-run/node";
+
+import axios from "axios";
+
+
+export const action: ActionFunction = async ({ request }) => {
+
+  const formData = await request.formData();
+  
+  try {
+    const joinResponse = await axios.post('http://localhost:8000/user-service/users', formData);
+
+    console.log(joinResponse)
+    
+  } catch (e) {
+    console.error(e)
+  }
+
+  return {};
+};
+
+
 const Join = () => {
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
