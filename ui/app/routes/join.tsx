@@ -1,31 +1,53 @@
 import { 
   Form,
+  json,
   Link,
+  useActionData,
 } from "react-router-dom";
 
-import { ActionFunction } from "@remix-run/node";
 
-import axios from "axios";
+import { ActionFunctionArgs, redirect } from "@remix-run/node";
 
+import { IJoinData, join } from "~/api/user";
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
 
   const formData = await request.formData();
-  
-  try {
-    const joinResponse = await axios.post('http://localhost:8000/user-service/users', formData);
+  const username = formData.get('username') as string | null;
+  const email = formData.get('email') as string | null;
+  const password = formData.get('password') as string | null;
 
-    console.log(joinResponse)
-    
-  } catch (e) {
-    console.error(e)
+  if (!username || !email || !password) {
+    return json({ error: 'All fields are required' }, { status: 400 });
   }
 
-  return {};
+  const joinData: IJoinData = {
+    username,
+    email,
+    password
+  }
+
+  try {
+    const joinResponse = await join(joinData);
+
+    console.log(joinResponse)
+
+    if (!joinResponse.data.success) {
+      return json({ error: joinResponse.data.message }, { status: 400 });      
+    }
+
+    return redirect("/login");
+  } catch (e) {
+    return json({ status: 500 });   
+  }
 };
 
 
 const Join = () => {
+  
+  const data = useActionData<typeof action>();
+  console.log(data)
+
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
       <div className="w-96 h-[500px] border rounded-2xl shadow-md flex flex-col px-6 bg-gradient-to-b from-white to-gray-50">

@@ -8,6 +8,9 @@ export interface ILoginData {
 export const login = async (loginData: ILoginData) => {
   try {
     const response = await instance.post("/api/user-service/login", loginData);
+
+    console.log(response)
+
     return response.data;
   } catch (e) {
     return Promise.reject(e);
@@ -20,14 +23,6 @@ export interface IJoinData {
   password: string;
 }
 
-export const join = async (joinData: IJoinData) => {
-  try {
-    const response = await instance.post("http://localhost:8000/user-service/users", joinData);
-
-    console.log(response)
-
-    return response.data;
-  } catch (e) {
-    return Promise.reject(e);
-  }
+export const join = (joinData: IJoinData) => {
+  return instance.post("http://localhost:8000/user-service/users", joinData);
 }

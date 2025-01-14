@@ -2,13 +2,23 @@ package org.example.excel;
 
 public class LangExcelData extends ExcelData{
 
-    @ExcelValidation(pattern = "^[a-zA-Z]+$", message = "영문 입력가능", columName = "언어 코드", multi = true)
     private String langCode;
 
-    @ExcelValidation(isRegex = false, message = "공백일 수 없습니다.", columName = "언어 명")
+    @ExcelValidation(message = "test", columName = "네임")
     private String langName;
     private String areaName;
-    private String apiLang;
-    private String airsLangCode;
+
+
+    public void setLangCode(String langCode) {
+        this.langCode = langCode;
+    }
+
+    public void setLangName(String langName) {
+        this.langName = langName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
 
 }
