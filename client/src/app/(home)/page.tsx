@@ -1,5 +1,3 @@
-import Sidenav from "../ui/sidenav";
-
 export default function Page() {
   return (
     <div>

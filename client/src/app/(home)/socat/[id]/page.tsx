@@ -1,8 +1,7 @@
-
 export default function Page() {
-  return (
+  return(
     <div>
-      대시보드
+      상세 정보
     </div>
-  );
+  )
 }
