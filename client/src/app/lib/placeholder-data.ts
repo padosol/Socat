@@ -3,12 +3,14 @@ const rooms = [
     id: "1",
     title: "test1",
     owner: "test1",
+    description: "모두 모여라1",
     createdAt: "2021-09-01",
   },
   {
     id: "2",
     title: "test2",
     owner: "test2",
+    description: "모두 모여라22",
     createdAt: "2021-09-01",
   },
 ];

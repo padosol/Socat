@@ -1,10 +1,22 @@
 import axios from 'axios';
-const axiosInstance = axios.create({
+
+const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  }
 })
 
-axiosInstance.interceptors.request.use(
+const authInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  }
+})
+
+authInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -17,24 +29,29 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-axiosInstance.interceptors.response.use(
+authInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
+
+    console.log(error)
+
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refreshToken');
       try {
-        const { data } = await axiosInstance.post('/auth/refresh-token', { token: refreshToken });
+        const { data } = await authInstance.post('/auth/refresh-token', { token: refreshToken });
         localStorage.setItem('accessToken', data.accessToken);
-        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
-        return axiosInstance(originalRequest);
+        authInstance.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
+        return authInstance(originalRequest);
       } catch (refreshError) {
         // Handle token refresh error (e.g., redirect to login)
+        
+        return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);
   }
 );
 
-export default axiosInstance;
+export { instance, authInstance };
