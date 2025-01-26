@@ -3,8 +3,10 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useActionState } from "react"
-import { JoinState, join } from "@/app/lib/actions/user"
-
+import { 
+  type JoinState, 
+  join 
+} from "@/lib/api/auth/join"
 
 export default function Form() {
   const initialState: JoinState = { message: null, errors: {} };

@@ -1,4 +1,4 @@
-import { Room } from "@/app/lib/definitions"
+import { Room } from "@/lib/definitions"
 
 export default function Card({room}: {room: Room}) {
   return (

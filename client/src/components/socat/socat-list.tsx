@@ -1,4 +1,4 @@
-import { fetchRooms } from '@/app/lib/data';
+import { fetchRooms } from '@/lib/data';
 import Link from 'next/link';
 
 export default async function SocatList() {

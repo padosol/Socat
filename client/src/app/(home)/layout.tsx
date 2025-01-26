@@ -1,6 +1,6 @@
 import Image from "next/image";
-import MenuNav from "../ui/menunav";
-import Sidenav from "../ui/sidenav";
+import MenuNav from "../../components/menunav";
+import Sidenav from "../../components/sidenav";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

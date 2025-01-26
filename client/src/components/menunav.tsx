@@ -1,6 +1,14 @@
+'use client'
+
 import Link from "next/link";
+import { useUserStore } from "@/stores/userInfo-store-provider";
 
 export default function MenuNav() {
+
+  const { active, username } = useUserStore(
+    (state) => state,
+  )
+
   return (
     <div className="h-12  flex items-center justify-between border-b border-gray-300 px-4">
       <div className="flex space-x-4">
@@ -38,9 +46,11 @@ export default function MenuNav() {
           뉴스
         </Link>
       </div>
+
+      {active ? username :       
       <Link href={'/login'} className="text-gray-700 hover:text-gray-900">
         로그인
-      </Link>
+      </Link>}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import SocatList from "@/app/ui/socat/socat-list";
+import SocatList from "@/components/socat/socat-list";
 import Link from "next/link";
 
 const types: {[key: string]: string} = {

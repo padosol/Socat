@@ -1,4 +1,4 @@
-import { fetchSocatById } from "@/app/lib/data";
+import { fetchSocatById } from "@/lib/data";
 
 export default async function Page(props: {params: Promise<{ id: string}>}) {
   

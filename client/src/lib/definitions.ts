@@ -5,3 +5,9 @@ export type Room = {
   owner: string;
   createdAt: string;
 };
+
+export type User = {
+  email: string,
+  id: string,
+  username: string,
+}

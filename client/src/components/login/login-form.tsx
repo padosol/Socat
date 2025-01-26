@@ -1,20 +1,47 @@
 "use client";
 
-import { login, LoginState } from '@/app/lib/actions/user';
+import { login, LoginState } from '@/lib/api/auth/login';
 import { useActionState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import { 
+  type UserState,  
+} from '@/stores/userInfo-store';
+import {
+  useUserStore
+} from '@/stores/userInfo-store-provider'
+import { redirect } from 'next/navigation';
 
 export default function Form() {
-  const initialState: LoginState = { message: null, errors: {} };
+  const initialState: LoginState = { message: null, errors: {}, success: false, userInfo: null };
   const [state, formAction] = useActionState(login, initialState);
 
+  const {updateUserInfo} = useUserStore(
+    (state) => state,
+  )
+
   useEffect(() => {
-    if (state.message) {
-      alert(state.message);
-      state.message = null;
+    if (state.success) {
+      alert("로그인 성공!");
+
+      if (state.userInfo) {
+        const userInfo: UserState = {
+          username: state.userInfo.username,
+          id: state.userInfo.id,
+          email: state.userInfo.email,
+          active: true
+        }
+
+        updateUserInfo(userInfo)
+
+        console.log(userInfo)
+      }
+
+      state.success = false;
+
+      redirect("/")
     }
-  }, [state, state.message]);
+  }, [state, state.success]);
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
