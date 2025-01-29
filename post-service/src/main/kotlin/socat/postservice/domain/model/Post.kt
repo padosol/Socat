@@ -1,9 +1,15 @@
 package socat.postservice.domain.model
 
+import java.time.LocalDateTime
+
 
 class Post(
-        // 도메인 설계
-
-
+    val roomId: String,
+    val postId: String,
+    val postName: String,
+    val postDesc: String,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
+    val userId: String,
 ) {
 }

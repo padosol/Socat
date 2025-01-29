@@ -28,11 +28,19 @@ repositories {
 extra["springCloudVersion"] = "2024.0.0"
 
 dependencies {
+
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+	// spring cloud bus
+	implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp")
+
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
 	implementation("org.springframework.boot:spring-boot-starter-web")
+
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
 	implementation("org.springframework.cloud:spring-cloud-bus")
 	implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
 	implementation("org.springframework.cloud:spring-cloud-starter-config")
@@ -41,6 +49,18 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
+
+	// zipkin
+	implementation("io.micrometer:micrometer-observation")
+	implementation("io.micrometer:micrometer-tracing-bridge-brave")
+	implementation("io.zipkin.brave:brave-instrumentation-spring-web")
+	implementation("io.zipkin.reporter2:zipkin-reporter-brave")
+	implementation("io.github.openfeign:feign-micrometer")
+
+	// springdoc
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
