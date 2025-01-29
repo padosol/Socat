@@ -1,28 +1,42 @@
-import { fetchSocatById } from "@/lib/data";
+import getRoomById from "@/lib/api/rooms/get-room-id";
+import { notFound } from "next/navigation";
+import PostList from "@/components/socat/[id]/post-list";
 
-export default async function Page(props: {params: Promise<{ id: string}>}) {
+export default async function Page(props: {
+  params: Promise<{ 
+    id: string,
+  }>,
+  searchParams: Promise<{
+    query: string,
+    page: string,
+  }>
+}) {
   
   const params = await props.params;
   const id = params.id;
+  const socat = await getRoomById(id);
+  
+  if (!socat) {
+    notFound();
+  }
+  
+  const searchParams = await props.searchParams;
+  const query = searchParams?.query || '';
+  const currentPage = Number(searchParams?.page) || 1;
 
-  const socat = await fetchSocatById(id);
-
-  const relatedPosts = [
-    { id: 1, title: "리그 오브 레전드 게시글 1", content: "리그 오브 레전드 소켓 입니다." },
-    { id: 2, title: "리그 오브 레전드 게시글 2", content: "리그 오브 레전드 업데이트 소식입니다." },
-    { id: 3, title: "리그 오브 레전드 게시글 3", content: "리그 오브 레전드 챔피언 공략입니다." },
-  ];
+  console.log(socat)
 
   return(
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">리그 오브 레전드 관련 게시글</h1>
+      <h1 className="text-2xl font-bold mb-4">{socat.roomName}</h1>
       <div className="space-y-4">
-        {relatedPosts.map((post) => (
+        <PostList id={id} />
+        {/* {relatedPosts.map((post) => (
           <div key={post.id} className="bg-white p-4 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold">{post.title}</h2>
             <p className="text-gray-700">{post.content}</p>
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   )

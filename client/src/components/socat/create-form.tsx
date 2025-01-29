@@ -3,31 +3,32 @@
 import Link from "next/link";
 import { Button } from "@/components/button";
 import { menus } from "@/lib/static-data";
-import { useUserStore } from "@/stores/userInfo-store-provider";
+import { useActionState } from "react";
+
+import { 
+  RoomState,
+  createRoom
+ } from "@/lib/api/rooms/create-room";
+
 
 export default function Form() {
-
-  const { active, username, id } = useUserStore(
-    (state) => state,
-  )
+  const initialState: RoomState = { message: null, errors: {}, success: false };
+  const [state, formAction] = useActionState(createRoom, initialState);
 
   return (
-    <form>
+    <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <div>
-          {id}
-        </div>
 
         {/* Scoat Name */}
         <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+          <label htmlFor="roomName" className="mb-2 block text-sm font-medium">
             소켓명
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="name"
-                name="name"
+                id="roomName"
+                name="roomName"
                 type="text"
                 step="0.01"
                 placeholder="소켓명 입력"
@@ -48,14 +49,14 @@ export default function Form() {
 
         {/* 소켓 설명 */ }
         <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+          <label htmlFor="roomDesc" className="mb-2 block text-sm font-medium">
             소켓 설명
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="desc"
-                name="desc"
+                id="roomDesc"
+                name="roomDesc"
                 type="text"
                 step="0.01"
                 placeholder="소켓 설명 입력"
@@ -75,13 +76,13 @@ export default function Form() {
         </div>
         
         <div className="mb-4">
-          <label htmlFor="customer" className="mb-2 block text-sm font-medium">
+          <label htmlFor="roomType" className="mb-2 block text-sm font-medium">
             카테고리 선택
           </label>
           <div className="relative">
             <select
-              id="customer"
-              name="customerId"
+              id="roomType"
+              name="roomType"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-4 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
               aria-describedby="customer-error"

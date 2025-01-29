@@ -17,10 +17,6 @@ instance.interceptors.request.use(
 
     if (!accessToken) return config;
 
-    console.log("=====================")
-    console.log(accessToken.value)
-    console.log("=====================")
-     
     config.headers.Authorization = `Bearer ${accessToken.value}`;
     return config;
   },

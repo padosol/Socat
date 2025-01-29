@@ -32,7 +32,7 @@ export default async function Page(props: {
         </div>
       </div>
 
-      <SocatList />
+      <SocatList type={type}/>
 
     </div>
   );
