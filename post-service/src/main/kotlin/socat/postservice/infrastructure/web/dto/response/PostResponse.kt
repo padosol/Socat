@@ -8,5 +8,5 @@ data class PostResponse(
         private val title: String,
         private val content: String,
         private val createdAt: LocalDateTime,
-        private val updatedAt: LocalDateTime
+        private val updatedAt: LocalDateTime?
 )

@@ -1,6 +1,7 @@
 import getRoomById from "@/lib/api/rooms/get-room-id";
 import { notFound } from "next/navigation";
 import PostList from "@/components/socat/[id]/post-list";
+import { Button } from "@/components/button";
 
 export default async function Page(props: {
   params: Promise<{ 
@@ -28,7 +29,14 @@ export default async function Page(props: {
 
   return(
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">{socat.roomName}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{socat.roomName}</h1>
+        <div>
+          <Button>
+            게시글 작성
+          </Button>
+        </div>
+      </div>
       <div className="space-y-4">
         <PostList id={id} />
         {/* {relatedPosts.map((post) => (

@@ -1,4 +1,5 @@
 package socat.postservice.global.exception
 
-class PostException {
-}
+open class PostException(
+    open val postExceptionCode: PostExceptionCode
+): RuntimeException()

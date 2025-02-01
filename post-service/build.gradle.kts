@@ -57,6 +57,11 @@ dependencies {
 	implementation("io.zipkin.reporter2:zipkin-reporter-brave")
 	implementation("io.github.openfeign:feign-micrometer")
 
+	// jwt
+	implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+
 	// springdoc
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
