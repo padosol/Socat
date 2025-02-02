@@ -23,6 +23,6 @@ interface SwaggerPostController {
     // 조회
     fun findPostById(postId: String): ResponseEntity<APIResponse<PostResponse>>
     // 전체조회
-    fun findAllPost(searchPostDTO: SearchPostDTO): ResponseEntity<APIResponse<List<PostResponse>>>
+    fun findAllPost(): ResponseEntity<APIResponse<List<PostResponse>>>
 
 }

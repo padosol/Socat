@@ -3,14 +3,14 @@ package socat.postservice.infrastructure.web.controller
 import lombok.extern.slf4j.Slf4j
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import socat.postservice.application.port.input.CreatePostUseCase
 import socat.postservice.application.port.input.FindPostUseCase
 import socat.postservice.application.port.input.ModifyPostUseCase
 import socat.postservice.application.port.input.RemovePostUseCase
 import socat.postservice.domain.model.Post
 import socat.postservice.global.dto.APIResponse
+import socat.postservice.global.utils.JwtProvider
 import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
 import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
 import socat.postservice.infrastructure.web.dto.request.RemovePostDTO
@@ -23,36 +23,47 @@ class PostController(
         private val createPostUseCase: CreatePostUseCase,
         private val modifyPostUseCase: ModifyPostUseCase,
         private val removePostUseCase: RemovePostUseCase,
-        private val findPostUseCase: FindPostUseCase
+        private val findPostUseCase: FindPostUseCase,
+        private val jwtProvider: JwtProvider
 ) : SwaggerPostController{
-    override fun createPost(
-            createPostDTO: CreatePostDTO,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
-    ): ResponseEntity<APIResponse<PostResponse>> {
-        TODO("Not yet implemented")
 
+    @PostMapping("/posts")
+    override fun createPost(
+        @RequestBody createPostDTO: CreatePostDTO,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
+    ): ResponseEntity<APIResponse<PostResponse>> {
+        val userId = jwtProvider.getUserIdWithBearer(token)
+
+        val createPost = createPostUseCase.createPost(createPostDTO, userId)
+
+        return ResponseEntity.ok(APIResponse.ok(createPost.toDTO()))
     }
 
 
+    @PutMapping("/posts")
     override fun modifyPost(modifyPostDTO: ModifyPostDTO): ResponseEntity<APIResponse<PostResponse>> {
         TODO("Not yet implemented")
     }
 
+    @DeleteMapping("/posts")
     override fun removePost(removePostDTO: RemovePostDTO): ResponseEntity<APIResponse<Void>> {
         TODO("Not yet implemented")
     }
 
-    override fun findPostById(postId: String): ResponseEntity<APIResponse<PostResponse>> {
+    @GetMapping("/posts/{postId}")
+    override fun findPostById(
+       @PathVariable("postId") postId: String
+    ): ResponseEntity<APIResponse<PostResponse>> {
 
         val post: Post = findPostUseCase.findById(postId)
 
         return ResponseEntity.ok(APIResponse.ok(post.toDTO()))
     }
 
-    override fun findAllPost(searchPostDTO: SearchPostDTO): ResponseEntity<APIResponse<List<PostResponse>>> {
-
-        TODO("Not yet implemented")
+    @GetMapping("/posts")
+    override fun findAllPost(): ResponseEntity<APIResponse<List<PostResponse>>> {
+        val findAll = findPostUseCase.findAll()
+        return ResponseEntity.ok(APIResponse.ok(findAll.map { it.toDTO() }.toList()))
     }
-
 
 }

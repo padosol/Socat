@@ -12,7 +12,6 @@ import org.springframework.util.StringUtils
 import java.util.*
 import javax.crypto.SecretKey
 
-
 @Slf4j
 @Component
 class JwtProvider(
@@ -59,5 +58,14 @@ class JwtProvider(
         val claimsJws: Jws<Claims> = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
         return claimsJws.payload.subject
     }
+
+    fun getUserIdWithBearer(bearerToken: String): String {
+        return if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            bearerToken.substring(7)
+        } else throw IllegalStateException("Bearer Token 이 아닙니다.")
+    }
+
+
+
 
 }
