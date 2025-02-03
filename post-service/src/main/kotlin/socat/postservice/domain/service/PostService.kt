@@ -39,14 +39,24 @@ class PostService(
         ) ?: throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
 
         val post = Post.createPost(createPostDTO)
-        return postPersistencePort.createPost(post)
+        return postPersistencePort.savePost(post)
     }
 
-    override fun modifyPost(modifyPostDTO: ModifyPostDTO): Post {
-        TODO("Not yet implemented")
+    override fun modifyPost(modifyPostDTO: ModifyPostDTO, userId: String): Post {
+        val findPost: Post = postPersistencePort.findById(modifyPostDTO.postId)
+            ?: throw RoomNotFoundException(PostExceptionCode.POST_NOT_FOUND)
+
+        findPost.modify(modifyPostDTO)
+
+        return postPersistencePort.savePost(findPost)
     }
 
-    override fun removePost(removePostDTO: RemovePostDTO): Post {
+    override fun removePost(removePostDTO: RemovePostDTO, userId: String): Post {
+        val findPost: Post = postPersistencePort.findById(removePostDTO.postId)
+            ?: throw RoomNotFoundException(PostExceptionCode.POST_NOT_FOUND)
+
+
+
         TODO("Not yet implemented")
     }
 

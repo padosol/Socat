@@ -2,6 +2,7 @@ package socat.postservice.domain.model
 
 import socat.postservice.infrastructure.persistence.entity.PostEntity
 import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
+import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
 import socat.postservice.infrastructure.web.dto.response.PostResponse
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -10,10 +11,10 @@ import java.util.*
 class Post(
     val roomId: String,
     val postId: String,
-    val title: String,
-    val content: String,
+    var title: String,
+    var content: String,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime? = null,
+    var updatedAt: LocalDateTime? = null,
     val userId: String,
 ) {
 
@@ -29,7 +30,6 @@ class Post(
             )
         }
     }
-
 
     fun toDTO(): PostResponse {
         return PostResponse(
@@ -52,5 +52,11 @@ class Post(
             updatedAt = updatedAt,
             userId = userId,
         )
+    }
+
+    fun modify(modifyPostDTO: ModifyPostDTO) {
+        title = modifyPostDTO.title
+        content = modifyPostDTO.content
+        updatedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
     }
 }

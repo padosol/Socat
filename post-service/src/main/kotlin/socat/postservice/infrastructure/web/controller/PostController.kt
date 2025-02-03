@@ -5,7 +5,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.*
 import org.springframework.web.bind.annotation.*
 import socat.postservice.application.port.input.CreatePostUseCase
 import socat.postservice.application.port.input.FindPostUseCase
@@ -38,18 +37,31 @@ class PostController(
 
         val createPost = createPostUseCase.createPost(createPostDTO, userId)
 
-        return status(HttpStatus.CREATED).body(APIResponse.ok(createPost.toDTO()))
+        return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.ok(createPost.toDTO()))
     }
 
-
     @PutMapping("/posts")
-    override fun modifyPost(modifyPostDTO: ModifyPostDTO): ResponseEntity<APIResponse<PostResponse>> {
-        TODO("Not yet implemented")
+    override fun modifyPost(
+        @RequestBody modifyPostDTO: ModifyPostDTO,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
+    ): ResponseEntity<APIResponse<PostResponse>> {
+        val userId = jwtProvider.getUserIdWithBearer(token)
+
+        val modifyPost = modifyPostUseCase.modifyPost(modifyPostDTO, userId)
+
+        return ResponseEntity.ok(APIResponse.ok(modifyPost.toDTO()))
     }
 
     @DeleteMapping("/posts")
-    override fun removePost(removePostDTO: RemovePostDTO): ResponseEntity<APIResponse<Void>> {
-        TODO("Not yet implemented")
+    override fun removePost(
+        @RequestBody removePostDTO: RemovePostDTO,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
+    ): ResponseEntity<APIResponse<Void>> {
+        val userId = jwtProvider.getUserIdWithBearer(token)
+
+        removePostUseCase.removePost(removePostDTO, userId)
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(APIResponse.ok(null))
     }
 
     @GetMapping("/posts/{postId}")
@@ -59,7 +71,7 @@ class PostController(
 
         val post: Post = findPostUseCase.findById(postId)
 
-        return ok(APIResponse.ok(post.toDTO()))
+        return ResponseEntity.ok(APIResponse.ok(post.toDTO()))
     }
 
     @GetMapping(value = ["/posts"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -67,7 +79,7 @@ class PostController(
         val findAll = findPostUseCase.findAll()
         val toList: List<PostResponse> = findAll.map { it.toDTO() }.toList()
 
-        return status(HttpStatus.OK).body(APIResponse.ok(toList))
+        return ResponseEntity.status(HttpStatus.OK).body(APIResponse.ok(toList))
     }
 
 }

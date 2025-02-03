@@ -17,9 +17,15 @@ interface SwaggerPostController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
     ): ResponseEntity<APIResponse<PostResponse>>
     // 수정
-    fun modifyPost(modifyPostDTO: ModifyPostDTO): ResponseEntity<APIResponse<PostResponse>>
+    fun modifyPost(
+        modifyPostDTO: ModifyPostDTO,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
+    ): ResponseEntity<APIResponse<PostResponse>>
     // 삭제
-    fun removePost(removePostDTO: RemovePostDTO): ResponseEntity<APIResponse<Void>>
+    fun removePost(
+        removePostDTO: RemovePostDTO,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
+    ): ResponseEntity<APIResponse<Void>>
     // 조회
     fun findPostById(postId: String): ResponseEntity<APIResponse<PostResponse>>
     // 전체조회
