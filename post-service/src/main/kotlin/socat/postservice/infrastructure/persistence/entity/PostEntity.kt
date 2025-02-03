@@ -7,9 +7,10 @@ import java.time.LocalDateTime
 
 @Entity
 class PostEntity(
+
         @Id
-        val roomId: String,
         val postId: String,
+        val roomId: String,
         val title: String,
         val content: String,
         val createdAt: LocalDateTime,

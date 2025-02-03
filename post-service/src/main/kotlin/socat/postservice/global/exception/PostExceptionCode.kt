@@ -7,4 +7,5 @@ enum class PostExceptionCode(
         val message: String,
 ) {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 게시글 입니다."),
+    ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 방 입니다.")
 }

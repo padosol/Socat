@@ -61,7 +61,7 @@ class JwtProvider(
 
     fun getUserIdWithBearer(bearerToken: String): String {
         return if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            bearerToken.substring(7)
+            getUserId(bearerToken.substring(7))
         } else throw IllegalStateException("Bearer Token 이 아닙니다.")
     }
 

@@ -50,6 +50,10 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
 
+	// 코틀린 직렬화
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
 	// zipkin
 	implementation("io.micrometer:micrometer-observation")
 	implementation("io.micrometer:micrometer-tracing-bridge-brave")
