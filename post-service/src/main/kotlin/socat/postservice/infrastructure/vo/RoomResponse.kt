@@ -1,4 +1,4 @@
-package socat.postservice.infrastructure.web.dto.response
+package socat.postservice.infrastructure.vo
 
 import java.time.LocalDateTime
 

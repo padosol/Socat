@@ -2,6 +2,8 @@ import getRoomById from "@/lib/api/rooms/get-room-id";
 import { notFound } from "next/navigation";
 import PostList from "@/components/socat/[id]/post-list";
 import { Button } from "@/components/button";
+import { AuthButton } from "@/components/button";
+import Link from "next/link";
 
 export default async function Page(props: {
   params: Promise<{ 
@@ -32,19 +34,15 @@ export default async function Page(props: {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{socat.roomName}</h1>
         <div>
-          <Button>
-            게시글 작성
-          </Button>
+          <AuthButton >
+            <Link href={`/socat/${id}/posts/create`}>
+              게시글 작성
+            </Link>
+          </AuthButton>
         </div>
       </div>
       <div className="space-y-4">
-        <PostList id={id} />
-        {/* {relatedPosts.map((post) => (
-          <div key={post.id} className="bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold">{post.title}</h2>
-            <p className="text-gray-700">{post.content}</p>
-          </div>
-        ))} */}
+        <PostList roomId={id} />
       </div>
     </div>
   )

@@ -32,3 +32,9 @@ export type Post = {
   postName: string,
   createdAt: string,
 }
+
+export type PostSearch = {
+  page: number,
+  size: number,
+  query: string,
+}

@@ -1,4 +1,4 @@
-package socat.postservice.infrastructure.persistence.vo
+package socat.postservice.infrastructure.vo
 
 data class UserResponse(
     val username: String,

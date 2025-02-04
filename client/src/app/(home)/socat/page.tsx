@@ -1,5 +1,6 @@
 import SocatList from "@/components/socat/socat-list";
 import Link from "next/link";
+import { AuthButton } from "@/components/button";
 
 const types: {[key: string]: string} = {
   all: "전체",
@@ -26,9 +27,11 @@ export default async function Page(props: {
               {types[type] || '전체'}
             </span>
           </div>
-          <Link href="/socat/create" className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-            소켓 생성
-          </Link>
+          <AuthButton className="">
+            <Link href="/socat/create">
+              소켓 생성
+            </Link>
+          </AuthButton>
         </div>
       </div>
 
