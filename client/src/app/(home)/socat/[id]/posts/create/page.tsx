@@ -1,3 +1,5 @@
+import Form from "@/components/socat/[id]/posts/create/create-from";
+
 export default async function Page(props: {
   params: Promise<{ 
     id: string,
@@ -13,9 +15,7 @@ export default async function Page(props: {
 
   return (
     <div>
-      <form>
-        
-      </form>
+      <Form roomId={roomId}/>
     </div>
   )
 }
