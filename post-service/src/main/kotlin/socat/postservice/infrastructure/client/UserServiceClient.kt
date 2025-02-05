@@ -9,6 +9,9 @@ import socat.postservice.infrastructure.vo.UserResponse
 @FeignClient(name = "user-service", url = "http://localhost:8000", configuration = [FeignConfig::class])
 interface UserServiceClient {
 
+    /**
+     * 유저 ID 로 유저 조회 - User-service
+     */
     @GetMapping("/user-service/users/{userId}")
     fun getUser(@PathVariable(value = "userId") userId: String): UserResponse
 }

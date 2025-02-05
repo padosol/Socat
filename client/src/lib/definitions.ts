@@ -38,3 +38,8 @@ export type PostSearch = {
   size: number,
   query: string,
 }
+
+export type TokenDTO = {
+  accessToken: string,
+  refreshToken: string
+}

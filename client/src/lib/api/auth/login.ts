@@ -5,6 +5,7 @@ import { cookies } from 'next/headers'
 import { User } from '@/lib/definitions';
 import { loginFormSchema } from '@/lib/schemas/auth';
 import axios from 'axios';
+import { UserState } from '@/stores/userInfo-store';
 
 const loginForm = loginFormSchema.omit({ username: true })
 
@@ -46,8 +47,6 @@ export async function login(prevState: LoginState, formData: FormData) {
 
     const userInfo: User = await getUserInfoByToken();
 
-    console.log(userInfo)
-
     if (userInfo) {
       return {
         success: true,
@@ -68,7 +67,7 @@ export async function login(prevState: LoginState, formData: FormData) {
   }
 }
 
-export async function getUserInfoByToken() {
+export async function getUserInfoByToken(): Promise<UserState> {
 
   const response = await instance.get(`/user-service/users`)
 

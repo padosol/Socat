@@ -15,6 +15,7 @@ export type UserActions = {
 export type UserStore = UserState & UserActions
 
 export const initUserStore = (): UserState => {
+
   return { 
     email: null,
     id: null,

@@ -21,7 +21,7 @@ export default async function Page(props: {
   return (
     <div>
       <div className="bg-slate-200 p-2"> 
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center">
           <div className="text-lg font-semibold">
             <span>
               {types[type] || '전체'}
@@ -29,7 +29,7 @@ export default async function Page(props: {
           </div>
           <AuthButton className="">
             <Link href="/socat/create">
-              소켓 생성
+              커뮤니티 생성
             </Link>
           </AuthButton>
         </div>

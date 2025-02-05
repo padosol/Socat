@@ -5,6 +5,7 @@ import { useStore } from 'zustand'
 
 import {
   type UserStore,
+  type UserState,
   createUserStore,
   initUserStore
 } from '@/stores/userInfo-store'
@@ -16,15 +17,20 @@ export const UserStoreContext = createContext<UserStoreApi | undefined>(
 )
 
 export interface UserStoreProviderProps {
-  children: ReactNode
+  children: ReactNode,
+  initialUser: UserState
 }
 
 export const UserStoreProvider = ({
-  children,
+  children, initialUser
 }: UserStoreProviderProps) => {
+
+  console.log(initialUser)
+
   const storeRef = useRef<UserStoreApi>(null)
+
   if (!storeRef.current) {
-    storeRef.current = createUserStore(initUserStore())
+    storeRef.current = createUserStore(initialUser)
   }
 
   return (

@@ -10,6 +10,9 @@ import socat.postservice.infrastructure.vo.RoomResponse
 @FeignClient(name = "room-service", url = "http://localhost:8000", configuration = [FeignConfig::class])
 interface RoomServiceClient {
 
+    /**
+     * 방 Id 로 방 조회 - Room-service
+     */
     @GetMapping("/room-service/rooms/{roomId}")
-    fun getRoom(@PathVariable(value = "roomId") roomId: String): APIResponse<RoomResponse>
+    fun getRoom(@PathVariable("roomId") roomId: String): APIResponse<RoomResponse>
 }
