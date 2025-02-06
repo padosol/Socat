@@ -5,11 +5,8 @@ import { useUserStore } from "@/stores/userInfo-store-provider";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { logout } from "@/lib/api/auth/logout";
-import { useRouter } from "next/navigation";
 
 export default function MenuNav() {
-  const router = useRouter();
-
   const { active, username } = useUserStore(
     (state) => state,
   )

@@ -43,16 +43,25 @@ export default async function RootLayout({
   if (accessToken) {
     const response = await authenticate();
 
+    let flag = true;
     if (!response) {
-      await refresh();
+      const refresh_response = await refresh();
+      console.log(refresh_response)
+
+      if (!refresh_response) {
+        flag = false;
+      }
     } 
 
-    const user_response = await getUserInfoByToken();
+    if (flag) {
+      const user_response = await getUserInfoByToken();
+  
+      userState.username = user_response.username;
+      userState.id = user_response.id;
+      userState.email = user_response.email;
+      userState.active = true;
+    }
 
-    userState.username = user_response.username;
-    userState.id = user_response.id;
-    userState.email = user_response.email;
-    userState.active = true;
   }
 
   return (

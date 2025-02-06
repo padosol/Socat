@@ -8,9 +8,11 @@ interface PostPersistencePort {
 
     fun modifyPost(post: Post): Post
 
-    fun removePost(post: Post): Post
+    fun removePost(post: Post)
 
     fun findById(postId: String): Post?
 
     fun findAll(): List<Post>
+
+    fun findPostInRoomByRoomId(roomId: String): List<Post>
 }

@@ -7,7 +7,6 @@ import {
   type UserStore,
   type UserState,
   createUserStore,
-  initUserStore
 } from '@/stores/userInfo-store'
 
 export type UserStoreApi = ReturnType<typeof createUserStore>
@@ -24,8 +23,6 @@ export interface UserStoreProviderProps {
 export const UserStoreProvider = ({
   children, initialUser
 }: UserStoreProviderProps) => {
-
-  console.log(initialUser)
 
   const storeRef = useRef<UserStoreApi>(null)
 

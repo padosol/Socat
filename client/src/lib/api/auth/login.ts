@@ -6,6 +6,7 @@ import { User } from '@/lib/definitions';
 import { loginFormSchema } from '@/lib/schemas/auth';
 import axios from 'axios';
 import { UserState } from '@/stores/userInfo-store';
+import { redirect } from 'next/navigation';
 
 const loginForm = loginFormSchema.omit({ username: true })
 
@@ -40,23 +41,12 @@ export async function login(prevState: LoginState, formData: FormData) {
   try {
     const response = await axios.post("http://localhost:8000/user-service/authenticate", { email, password });
 
+    console.log(response)
+
     // 로그인 후 token 저장 => 유저 정보 가져와서 zustand 에 넣기
     const cookieStore = await cookies();
     cookieStore.set("accessToken", response.data.accessToken)
     cookieStore.set("refreshToken", response.data.refreshToken)
-
-    const userInfo: User = await getUserInfoByToken();
-
-    if (userInfo) {
-      return {
-        success: true,
-        userInfo: userInfo,
-      }
-    }
-
-    return {
-      success: false,
-    }
 
   } catch (error) {
     console.error(error);
@@ -65,6 +55,8 @@ export async function login(prevState: LoginState, formData: FormData) {
       success: false
     }
   }
+
+  redirect("/")
 }
 
 export async function getUserInfoByToken(): Promise<UserState> {

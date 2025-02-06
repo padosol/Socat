@@ -29,8 +29,10 @@ export type ErrorResponse = {
 export type Post = {
   roomId: string,
   postId: string,
-  postName: string,
+  title: string,
+  content: string,
   createdAt: string,
+  updatedAt?: string | null
 }
 
 export type PostSearch = {

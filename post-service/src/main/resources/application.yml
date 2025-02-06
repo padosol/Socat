@@ -12,6 +12,11 @@ spring:
     config:
       name: post-service
 
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+
   rabbitmq:
     host: localhost
     port: 5672
@@ -46,6 +51,7 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
+
 
 
 management:

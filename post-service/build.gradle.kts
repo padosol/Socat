@@ -34,7 +34,13 @@ dependencies {
 	// spring cloud bus
 	implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp")
 
+	// jpa
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+	// QueryDSL
+	implementation("com.querydsl:querydsl-jpa:5.0.0")
+
+	// Kotlin Annotation Processing (KAPT) 사용
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 

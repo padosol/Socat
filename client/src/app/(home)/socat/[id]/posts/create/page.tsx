@@ -1,4 +1,4 @@
-import Form from "@/components/socat/[id]/posts/create/create-from";
+import Form from "@/components/socat/[id]/posts/create/create-form";
 
 export default async function Page(props: {
   params: Promise<{ 

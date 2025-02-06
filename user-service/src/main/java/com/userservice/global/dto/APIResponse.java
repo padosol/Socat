@@ -3,25 +3,25 @@ package com.userservice.global.dto;
 import lombok.Getter;
 
 @Getter
-public class ApiResponse<T> {
+public class APIResponse<T> {
     private boolean success;
     private T data;
     private ErrorResponse error;
 
-    private ApiResponse(){}
+    private APIResponse(){}
 
-    public ApiResponse(T data, boolean success, ErrorResponse error){
+    public APIResponse(T data, boolean success, ErrorResponse error){
         this.data = data;
         this.success = success;
         this.error = error;
     }
 
-    public static <T> ApiResponse<T> ok(T data) {
-        return new ApiResponse<>(data, true, null);
+    public static <T> APIResponse<T> ok(T data) {
+        return new APIResponse<>(data, true, null);
     }
 
-    public static <T> ApiResponse<T> fail(ErrorResponse error) {
-        return new ApiResponse<>(null, false, error);
+    public static <T> APIResponse<T> fail(ErrorResponse error) {
+        return new APIResponse<>(null, false, error);
     }
 
 

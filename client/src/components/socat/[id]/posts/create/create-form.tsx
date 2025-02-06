@@ -16,6 +16,12 @@ export default function Form({
     router.push(`/socat/${roomId}`)
   }
 
+  const handleImageUpload = async (blob: File, callback: (url: string) => void) => {
+    console.log(blob)
+
+    callback("test")
+  }
+
   return (
     <div className="p-4 flex justify-center">
       <form className="text-center">
@@ -26,16 +32,10 @@ export default function Form({
           <Editor
             ref={editorRef}
             height="100%"
-            hideModeSwitch={true}
             initialEditType="wysiwyg"
-            initialValue=" "
-            toolbarItems={
-              [
-                ['heading', 'bold'],
-                ['ul', 'ol'],
-                ['code', 'codeblock'],
-              ]
-            }
+            previewStyle='vertical'
+            hooks={{addImageBlobHook: handleImageUpload}}
+
           />
         </div>
         <button 

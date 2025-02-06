@@ -10,7 +10,7 @@ class APIResponse<T>(
             return APIResponse(true, data, null)
         }
 
-        fun <T> fail(error: ErrorResponse): APIResponse<T> {
+        fun <T> fail(error: ErrorResponse?): APIResponse<T> {
             return APIResponse(false, null, error)
         }
     }

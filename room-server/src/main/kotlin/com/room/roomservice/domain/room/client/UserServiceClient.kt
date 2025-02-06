@@ -1,7 +1,7 @@
 package com.room.roomservice.domain.room.client
 
 import com.room.roomservice.domain.room.vo.UserResponse
-import com.room.roomservice.global.Feign.FeignConfig
+import com.room.roomservice.global.config.FeignConfig
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

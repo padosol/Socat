@@ -16,33 +16,6 @@ export default function Form() {
   const initialState: LoginState = { message: null, errors: {}, success: false, userInfo: null };
   const [state, formAction] = useActionState(login, initialState);
 
-  const {updateUserInfo} = useUserStore(
-    (state) => state,
-  )
-
-  useEffect(() => {
-    if (state.success) {
-      alert("로그인 성공!");
-
-      if (state.userInfo) {
-        const userInfo: UserState = {
-          username: state.userInfo.username,
-          id: state.userInfo.id,
-          email: state.userInfo.email,
-          active: true
-        }
-
-        updateUserInfo(userInfo)
-
-        console.log(userInfo)
-      }
-
-      state.success = false;
-
-      redirect("/")
-    }
-  }, [state, state.success]);
-
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
       <div className="w-96 h-[430px] border rounded-2xl shadow-md flex flex-col px-6 bg-gradient-to-b from-white to-gray-50">

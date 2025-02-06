@@ -11,7 +11,7 @@ import socat.postservice.infrastructure.persistence.entity.PostEntity
 class PostRepository(
         private val jpaPostRepository: JpaPostRepository
 ) : PostPersistencePort{
-        override fun createPost(post: Post): Post {
+        override fun savePost(post: Post): Post {
                 val postEntity = post.toEntity()
 
                 val save = jpaPostRepository.save(postEntity)
@@ -20,14 +20,20 @@ class PostRepository(
         }
 
         override fun modifyPost(post: Post): Post {
-                TODO("Not yet implemented")
+                val postEntity = post.toEntity()
+
+                val save = jpaPostRepository.save(postEntity)
+
+                return save.toDomain()
         }
 
-        override fun removePost(post: Post): Post {
-                TODO("Not yet implemented")
+        override fun removePost(post: Post) {
+                val postEntity = post.toEntity()
+
+                jpaPostRepository.delete(postEntity)
         }
 
-        override fun findById(postId: String): Post {
+        override fun findById(postId: String): Post? {
                 TODO("Not yet implemented")
         }
 
@@ -35,5 +41,11 @@ class PostRepository(
                 val findAll: List<PostEntity> = jpaPostRepository.findAll()
 
                 return findAll.map { it.toDomain() }.toList()
+        }
+
+        override fun findPostInRoomByRoomId(roomId: String): List<Post> {
+                val posts: List<PostEntity> = jpaPostRepository.findPostEntitiesByRoomId(roomId)
+
+                return posts.map { it.toDomain() }.toList()
         }
 }

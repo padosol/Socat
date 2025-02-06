@@ -1,6 +1,6 @@
 package com.userservice.global.exception;
 
-import com.userservice.global.dto.ApiResponse;
+import com.userservice.global.dto.APIResponse;
 import com.userservice.global.dto.ErrorResponse;
 import com.userservice.global.dto.ErrorResult;
 import org.springframework.http.HttpStatus;
@@ -39,11 +39,11 @@ public class CustomExceptionAdvice{
     }
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ApiResponse<?>> handleCustomException(CustomException e) {
+    public ResponseEntity<APIResponse<?>> handleCustomException(CustomException e) {
 
         ErrorResponse errorResponse = new ErrorResponse(e.getStatus().value(), e.getMessage());
 
-        return ResponseEntity.ok(ApiResponse.fail(errorResponse));
+        return ResponseEntity.ok(APIResponse.fail(errorResponse));
     }
 
 }

@@ -55,6 +55,8 @@ public class TokenService implements RefreshUseCase, LogoutUseCase, AccessUseCas
     public AuthDto refresh(String refreshToken, String accessToken) {
 
         if(jwtProvider.validateToken(refreshToken)) {
+
+            Boolean aBoolean = redisHash.hasKey(jwtProvider.REFRESH_TOKEN_NAME, refreshToken);
             if(!redisHash.hasKey(jwtProvider.REFRESH_TOKEN_NAME, refreshToken)) {
                 // token 일치하지 않습니다.
                 throw new RefreshTokenNotMatchException(HttpStatus.BAD_REQUEST, "유효하지 않은 Refresh Token 입니다.");

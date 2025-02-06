@@ -17,13 +17,9 @@ spring:
       port: 6379
       host: localhost
 
-    mongodb:
-      uri: mongodb://root:1234@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.2
-      database: socat
-
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/rooms
+    url: jdbc:postgresql://localhost:5432/msa
     username: postgres
     password: 1234
 

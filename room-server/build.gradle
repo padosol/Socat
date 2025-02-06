@@ -45,6 +45,9 @@ dependencies {
     // feign client
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+    // resilience4j
+    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
@@ -67,6 +70,7 @@ dependencies {
 
     // springdoc
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
     compileOnly 'org.projectlombok:lombok'
@@ -75,13 +79,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // zipkin
-    implementation "io.micrometer:micrometer-observation"
-    implementation "io.micrometer:micrometer-tracing-bridge-brave"
-    implementation "io.zipkin.brave:brave-instrumentation-spring-web"
-    implementation "io.zipkin.reporter2:zipkin-reporter-brave"
-    implementation "io.github.openfeign:feign-micrometer"
 
     // MockK 라이브러리
     testImplementation("io.mockk:mockk:1.13.8")

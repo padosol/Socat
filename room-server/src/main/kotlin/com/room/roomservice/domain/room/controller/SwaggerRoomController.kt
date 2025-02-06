@@ -4,17 +4,14 @@ import com.room.roomservice.domain.room.dto.request.CreateRoomDTO
 import com.room.roomservice.domain.room.dto.request.ModifyRoomDTO
 import com.room.roomservice.domain.room.dto.request.RemoveRoomDTO
 import com.room.roomservice.domain.room.dto.response.RoomResponse
+import com.room.roomservice.global.dto.APIResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
 
 @Tag(name = "room", description = "Room API")
 interface SwaggerRoomController {
@@ -29,7 +26,7 @@ interface SwaggerRoomController {
                 )
             ]
     )
-    fun rooms(): ResponseEntity<List<RoomResponse>>
+    fun rooms(): ResponseEntity<APIResponse<List<RoomResponse>>>
 
     @Operation(summary = "채팅방 조회", description = "roomId 를 통해 채팅방을 조회한다.")
     @ApiResponse(
@@ -43,7 +40,7 @@ interface SwaggerRoomController {
     )
     fun getRoom(
             roomId: String
-    ): ResponseEntity<RoomResponse>
+    ): ResponseEntity<APIResponse<RoomResponse>>
 
     @Operation(summary = "채팅방 등록", description = "채팅방을 등록한다.")
     @ApiResponse(
@@ -59,7 +56,7 @@ interface SwaggerRoomController {
     fun create(
             createRoomDTO: CreateRoomDTO,
             request: HttpServletRequest
-    ): ResponseEntity<RoomResponse>
+    ): ResponseEntity<APIResponse<RoomResponse>>
 
     @Operation(summary = "채팅방 삭제", description = "채팅방을 삭제한다.")
     @ApiResponse(
@@ -92,6 +89,6 @@ interface SwaggerRoomController {
     fun modify(
             modifyRoomDTO: ModifyRoomDTO,
             request: HttpServletRequest
-    ): ResponseEntity<RoomResponse>
+    ): ResponseEntity<APIResponse<RoomResponse>>
 
 }

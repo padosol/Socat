@@ -23,7 +23,7 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://postgresql:5432/rooms
+    url: jdbc:postgresql://postgresql:5432/msa
     username: postgres
     password: 1234
 

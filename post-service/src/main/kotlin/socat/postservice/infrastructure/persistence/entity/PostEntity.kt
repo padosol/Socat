@@ -2,10 +2,12 @@ package socat.postservice.infrastructure.persistence.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 import socat.postservice.domain.model.Post
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "posts")
 class PostEntity(
 
         @Id

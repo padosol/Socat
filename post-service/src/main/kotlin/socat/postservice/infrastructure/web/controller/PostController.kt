@@ -28,6 +28,9 @@ class PostController(
         private val jwtProvider: JwtProvider
 ) : SwaggerPostController{
 
+    /**
+     * 게시글 등록
+     */
     @PostMapping("/posts")
     override fun createPost(
         @RequestBody createPostDTO: CreatePostDTO,
@@ -40,6 +43,9 @@ class PostController(
         return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.ok(createPost.toDTO()))
     }
 
+    /**
+     * 게시글 수정
+     */
     @PutMapping("/posts")
     override fun modifyPost(
         @RequestBody modifyPostDTO: ModifyPostDTO,
@@ -52,6 +58,9 @@ class PostController(
         return ResponseEntity.ok(APIResponse.ok(modifyPost.toDTO()))
     }
 
+    /**
+     * 게시글 삭제
+     */
     @DeleteMapping("/posts")
     override fun removePost(
         @RequestBody removePostDTO: RemovePostDTO,
@@ -64,6 +73,9 @@ class PostController(
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(APIResponse.ok(null))
     }
 
+    /**
+     * 게시글 ID 로 게시글 조회
+     */
     @GetMapping("/posts/{postId}")
     override fun findPostById(
        @PathVariable("postId") postId: String
@@ -74,12 +86,30 @@ class PostController(
         return ResponseEntity.ok(APIResponse.ok(post.toDTO()))
     }
 
+    /**
+     * 게시글 전체 조회
+     */
     @GetMapping(value = ["/posts"], produces = [MediaType.APPLICATION_JSON_VALUE])
     override fun findAllPost(): ResponseEntity<APIResponse<List<PostResponse>>> {
         val findAll = findPostUseCase.findAll()
         val toList: List<PostResponse> = findAll.map { it.toDTO() }.toList()
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponse.ok(toList))
+    }
+
+    /**
+     * 소켓에 등록된 게시글 조회
+     */
+    @GetMapping("/{roomId}/posts")
+    override fun findPostInRoomByRoomId(
+        @PathVariable("roomId") roomId: String,
+        @RequestParam("page") page: Int,
+        @RequestParam("query") query: String,
+    ): ResponseEntity<APIResponse<List<PostResponse>>> {
+
+        val posts: List<Post> = findPostUseCase.findPostInRoomByRoomId(roomId)
+
+        return ResponseEntity.ok(APIResponse.ok(posts.map { it.toDTO() }.toList()))
     }
 
 }

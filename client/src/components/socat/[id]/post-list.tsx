@@ -22,11 +22,11 @@ export default async function PostList({
         </thead>
         <tbody>
           {posts.map(post => (
-            <tr key={post.id} className="hover:bg-gray-100">
-              <td className="py-2 px-4 border-b">{post.id}</td>
+            <tr key={post.postId} className="hover:bg-gray-100">
+              <td className="py-2 px-4 border-b">{post.postId}</td>
               <td className="py-2 px-4 border-b">{post.title}</td>
-              <td className="py-2 px-4 border-b">{post.author}</td>
-              <td className="py-2 px-4 border-b">{post.date}</td>
+              <td className="py-2 px-4 border-b">{post.content}</td>
+              <td className="py-2 px-4 border-b">{post.createdAt}</td>
             </tr>
           ))}
         </tbody>

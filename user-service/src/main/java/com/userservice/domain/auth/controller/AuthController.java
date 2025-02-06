@@ -7,8 +7,11 @@ import com.userservice.domain.auth.service.usecase.AccessUseCase;
 import com.userservice.domain.auth.service.usecase.LogoutUseCase;
 import com.userservice.domain.auth.service.usecase.RefreshUseCase;
 import com.userservice.global.config.security.JwtFilter;
+import com.userservice.global.dto.APIResponse;
 import com.userservice.global.exception.CustomException;
+import com.userservice.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Auth", description = "유저 권한 API")
@@ -29,6 +33,7 @@ public class AuthController {
     private final RefreshUseCase refreshUseCase;
     private final LogoutUseCase logoutUseCase;
     private final AccessUseCase accessUseCase;
+    private final JwtProvider jwtProvider;
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthDto> authorize(
@@ -56,7 +61,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-auth")
-    public ResponseEntity<AuthDto> refreshAuthorize(
+    public ResponseEntity<APIResponse<AuthDto>> refreshAuthorize(
         @RequestBody TokenDto refreshDTO
     ) {
         try {
@@ -68,9 +73,9 @@ public class AuthController {
             return ResponseEntity
                     .status(200)
                     .headers(headers)
-                    .body(refresh);
+                    .body(APIResponse.ok(refresh));
         } catch(CustomException e) {
-            return ResponseEntity.status(200).body(null);
+            return ResponseEntity.status(200).body(APIResponse.fail(null));
         }
     }
 
@@ -81,5 +86,15 @@ public class AuthController {
         logoutUseCase.logout(tokenDto);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/auth/accessToken")
+    public ResponseEntity<APIResponse<Boolean>> accessTokenAuth(
+        HttpServletRequest request
+    ) {
+        String resolveToken = jwtProvider.resolveToken(request);
+        boolean b = jwtProvider.validateToken(resolveToken);
+
+        return ResponseEntity.ok(APIResponse.ok(b));
     }
 }

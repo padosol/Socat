@@ -50,6 +50,14 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
+            - Path=/user-service/auth/accessToken
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
             - Path=/user-service/logout
             - Method=POST
           filters:
@@ -138,6 +146,25 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
 
+        ## post-service
+        - id: post-service
+          uri: lb://POST-SERVICE
+          predicates:
+            - Path=/post-service/**
+            - Method=POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+            - RewritePath=/post-service/(?<segment>.*), /$\{segment}
+
+        - id: post-service
+          uri: lb://POST-SERVICE
+          predicates:
+            - Path=/post-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/post-service/(?<segment>.*), /$\{segment}
+
 springdoc:
   swagger-ui:
     urls[0]:
@@ -146,6 +173,10 @@ springdoc:
     urls[1]:
       name: 방 서비스
       url: room-service/v3/api-docs
+    urls[2]:
+      name: 게시글 서비스
+      url: post-service/v3/api-docs
+
     use-root-path: true
 
 management:

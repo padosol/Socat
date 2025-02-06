@@ -5,4 +5,6 @@ import socat.postservice.domain.model.Post
 interface FindPostUseCase {
     fun findById(postId: String): Post
     fun findAll(): List<Post>
+
+    fun findPostInRoomByRoomId(roomId: String): List<Post>
 }
