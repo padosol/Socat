@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import socat.postservice.application.port.input.CreatePostUseCase
 import socat.postservice.application.port.input.FindPostUseCase
 import socat.postservice.application.port.input.ModifyPostUseCase
@@ -110,6 +111,13 @@ class PostController(
         val posts: List<Post> = findPostUseCase.findPostInRoomByRoomId(roomId)
 
         return ResponseEntity.ok(APIResponse.ok(posts.map { it.toDTO() }.toList()))
+    }
+
+    @PostMapping("/upload")
+    override fun fileUpload(
+        @RequestParam("file") file: MultipartFile
+    ): ResponseEntity<APIResponse<String>> {
+        return ResponseEntity.ok(APIResponse.ok("test"))
     }
 
 }

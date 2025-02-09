@@ -3,11 +3,10 @@ package socat.postservice.domain.service
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import socat.postservice.application.port.input.CreatePostUseCase
-import socat.postservice.application.port.input.FindPostUseCase
-import socat.postservice.application.port.input.ModifyPostUseCase
-import socat.postservice.application.port.input.RemovePostUseCase
+import org.springframework.web.multipart.MultipartFile
+import socat.postservice.application.port.input.*
 import socat.postservice.application.port.output.PostPersistencePort
 import socat.postservice.domain.model.Post
 import socat.postservice.domain.service.exception.PostNotFoundException
@@ -28,9 +27,12 @@ class PostService(
     private val userServiceClient: UserServiceClient,
     private val roomServiceClient: RoomServiceClient,
     private val circuitBreakerRegistry: CircuitBreakerRegistry
-) : CreatePostUseCase, ModifyPostUseCase, RemovePostUseCase, FindPostUseCase{
+) : CreatePostUseCase, ModifyPostUseCase, RemovePostUseCase, FindPostUseCase, UploadFileUseCase{
 
     private val log = LoggerFactory.getLogger(PostService::class.java)
+
+    @Value("\${rootDir.path:Default 'D:\\'}")
+    lateinit var rootDir: String
 
     override fun createPost(createPostDTO: CreatePostDTO, userId: String): Post {
         val roomId = createPostDTO.roomId
@@ -86,5 +88,12 @@ class PostService(
         return runCatching { decoratedSupplier.get() }
                 .recover { APIResponse.fail(null) }
                 .getOrThrow()
+    }
+
+    override fun uploadFile(file: MultipartFile): String {
+
+
+
+        TODO("Not yet implemented")
     }
 }

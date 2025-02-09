@@ -36,7 +36,7 @@ interface SwaggerPostController {
         query: String,
     ): ResponseEntity<APIResponse<List<PostResponse>>>
 
-    fun imageUpload(
+    fun fileUpload(
         file: MultipartFile
     ): ResponseEntity<APIResponse<String>>
 

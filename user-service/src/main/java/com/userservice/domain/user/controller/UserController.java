@@ -6,6 +6,7 @@ import com.userservice.domain.user.service.usecase.CreateUserUseCase;
 import com.userservice.domain.user.controller.dto.request.CreateUserDTO;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
 import com.userservice.domain.user.service.usecase.GetUserUseCase;
+import com.userservice.global.dto.APIResponse;
 import com.userservice.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,12 +54,12 @@ public class UserController implements SwaggerUserController {
 
     @Override
     @GetMapping("/users/{userId}")
-    public ResponseEntity<UserResponse> getUserByUserId(
+    public ResponseEntity<APIResponse<UserResponse>> getUserByUserId(
             @PathVariable(value = "userId") String userId
     ) {
         UserResponse userResponse = getUserUseCase.findUserById(userId);
 
-        return ResponseEntity.status(200).body(userResponse);
+        return ResponseEntity.status(200).body(APIResponse.ok(userResponse));
     }
 
 
