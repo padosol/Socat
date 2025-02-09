@@ -14,6 +14,7 @@ import socat.postservice.application.port.input.RemovePostUseCase
 import socat.postservice.domain.model.Post
 import socat.postservice.global.dto.APIResponse
 import socat.postservice.global.utils.JwtProvider
+import socat.postservice.infrastructure.s3.S3FileManagement
 import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
 import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
 import socat.postservice.infrastructure.web.dto.request.RemovePostDTO
@@ -22,11 +23,12 @@ import socat.postservice.infrastructure.web.dto.response.PostResponse
 @Slf4j
 @RestController
 class PostController(
-        private val createPostUseCase: CreatePostUseCase,
-        private val modifyPostUseCase: ModifyPostUseCase,
-        private val removePostUseCase: RemovePostUseCase,
-        private val findPostUseCase: FindPostUseCase,
-        private val jwtProvider: JwtProvider
+    private val createPostUseCase: CreatePostUseCase,
+    private val modifyPostUseCase: ModifyPostUseCase,
+    private val removePostUseCase: RemovePostUseCase,
+    private val findPostUseCase: FindPostUseCase,
+    private val jwtProvider: JwtProvider,
+    private val s3FileManagement: S3FileManagement
 ) : SwaggerPostController{
 
     /**
@@ -117,7 +119,10 @@ class PostController(
     override fun fileUpload(
         @RequestParam("file") file: MultipartFile
     ): ResponseEntity<APIResponse<String>> {
-        return ResponseEntity.ok(APIResponse.ok("test"))
+
+        val fileURL = s3FileManagement.uploadFile(file)
+
+        return ResponseEntity.ok(APIResponse.ok(fileURL))
     }
 
 }
