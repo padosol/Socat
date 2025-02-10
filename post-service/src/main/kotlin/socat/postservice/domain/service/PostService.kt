@@ -27,7 +27,7 @@ class PostService(
     private val userServiceClient: UserServiceClient,
     private val roomServiceClient: RoomServiceClient,
     private val circuitBreakerRegistry: CircuitBreakerRegistry
-) : CreatePostUseCase, ModifyPostUseCase, RemovePostUseCase, FindPostUseCase, UploadFileUseCase{
+) : CreatePostUseCase, ModifyPostUseCase, RemovePostUseCase, FindPostUseCase{
 
     private val log = LoggerFactory.getLogger(PostService::class.java)
 
@@ -43,7 +43,7 @@ class PostService(
             throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
         }
 
-        val post = Post.createPost(createPostDTO)
+        val post = Post.createPost(createPostDTO, userId)
         return postPersistencePort.savePost(post)
     }
 
@@ -90,10 +90,4 @@ class PostService(
                 .getOrThrow()
     }
 
-    override fun uploadFile(file: MultipartFile): String {
-
-
-
-        TODO("Not yet implemented")
-    }
 }

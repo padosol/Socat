@@ -19,14 +19,14 @@ class Post(
 ) {
 
     companion object {
-        fun createPost(createPostDTO: CreatePostDTO): Post {
+        fun createPost(createPostDTO: CreatePostDTO, userId: String): Post {
             return Post(
                 roomId = createPostDTO.roomId,
                 postId = UUID.randomUUID().toString(),
                 title = createPostDTO.title,
                 content = createPostDTO.content,
                 createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul")),
-                userId = createPostDTO.userId
+                userId = userId
             )
         }
     }

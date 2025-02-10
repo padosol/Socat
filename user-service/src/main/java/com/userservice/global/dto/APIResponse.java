@@ -23,6 +23,4 @@ public class APIResponse<T> {
     public static <T> APIResponse<T> fail(ErrorResponse error) {
         return new APIResponse<>(null, false, error);
     }
-
-
 }
