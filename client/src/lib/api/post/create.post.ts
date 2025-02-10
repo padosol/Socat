@@ -14,7 +14,8 @@ export async function createPost(createPostDto: PostForm) {
 
   if (response.data.success) {
     return response.data.data;
+  } else {
+    throw new Error("게시글 등록 실패")
   }
 
-  return null;
 }

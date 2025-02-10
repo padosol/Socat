@@ -7,5 +7,7 @@ export default async function getAllPostByRoomId(roomId: string, postSearch: Pos
     params: postSearch
   })
 
+  console.log(response)
+
   return response.data.data;
 }

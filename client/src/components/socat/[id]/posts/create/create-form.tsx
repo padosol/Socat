@@ -2,8 +2,10 @@
 
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css"; // 기본 스타일
-import { useRef } from "react";
+import { FormEventHandler, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { uploadFile } from "@/lib/api/post/upload";
+import { createPost } from "@/lib/api/post/create.post";
 
 export default function Form({
   roomId
@@ -17,16 +19,33 @@ export default function Form({
   }
 
   const handleImageUpload = async (blob: File, callback: (url: string) => void) => {
-    console.log(blob)
+    const formData = new FormData();
+    formData.append("file", blob)
 
-    callback("test")
+    const response = await uploadFile(formData)
+
+    callback(`https://d25hmvjcsah1ye.cloudfront.net/${response}`)
+  }
+
+  const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
+    const form = event.currentTarget
+    const formData = new FormData(form)
+
+    const title = formData.get("title") as string
+    const content = editorRef.current?.getInstance().getHTML();
+
+    const response = await createPost({
+      roomId, title, content
+    });
+
+
   }
 
   return (
     <div className="p-4 flex justify-center">
-      <form className="text-center">
+      <form className="text-center" onSubmit={onSubmit}>
         <div className="w-full">
-          <input className="w-[750px] h-[40px] border mb-2 p-2" placeholder="제목"/>
+          <input className="w-[750px] h-[40px] border mb-2 p-2" placeholder="제목" name="title"/>
         </div>
         <div className="bg-white h-[500px] w-[750px] text-left">
           <Editor

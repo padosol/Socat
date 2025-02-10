@@ -24,6 +24,8 @@ export async function createRoom(prevState: RoomState, formData: FormData) {
     roomDesc: formData.get("roomDesc"),
     roomType: formData.get("roomType"),
   })
+  
+  console.log(validatedFields)
 
   if (!validatedFields.success) {
     return {

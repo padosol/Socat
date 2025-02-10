@@ -22,7 +22,7 @@ export default function Form() {
         {/* Scoat Name */}
         <div className="mb-4">
           <label htmlFor="roomName" className="mb-2 block text-sm font-medium">
-            소켓명
+            커뮤니티명
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -50,7 +50,7 @@ export default function Form() {
         {/* 소켓 설명 */ }
         <div className="mb-4">
           <label htmlFor="roomDesc" className="mb-2 block text-sm font-medium">
-            소켓 설명
+            커뮤니티 설명
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
