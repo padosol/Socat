@@ -1,27 +1,36 @@
 package com.room.roomservice.global.config
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
-import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
+import io.github.resilience4j.timelimiter.TimeLimiterConfig
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder
+import org.springframework.cloud.client.circuitbreaker.Customizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.time.Duration
 
 @Configuration
-class CircuitBreakerConfig {
+class Resilience4jConfig {
 
     @Bean
-    fun circuitBreakerRegistry(): CircuitBreakerRegistry {
-        return CircuitBreakerRegistry.of(configurationCircuitBreaker())
-    }
-
-    private fun configurationCircuitBreaker(): CircuitBreakerConfig {
-        return CircuitBreakerConfig.custom()
-            .failureRateThreshold(40F) // 실패율 임계값
-            .waitDurationInOpenState(Duration.ofMillis(10000)) // open -> Half-Open 으로 전환되지 전 대기 시간
-            .permittedNumberOfCallsInHalfOpenState(3) // Half-Open 상태에서 허용되는 호출 수
-            .slidingWindowSize(10) // 슬라이딩 윈도우 크기
-            .recordExceptions(RuntimeException::class.java)
+    fun globalCustomConfiguration(): Customizer<Resilience4JCircuitBreakerFactory>? {
+        val circuitBreakerConfig = CircuitBreakerConfig.custom()
+            .failureRateThreshold(4f)
+            .waitDurationInOpenState(Duration.ofMillis(1000))
+            .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.COUNT_BASED)
+            .slidingWindowSize(2)
             .build()
+        val timeLimiterConfig = TimeLimiterConfig.custom()
+            .timeoutDuration(Duration.ofSeconds(4))
+            .build()
+        return Customizer { factory: Resilience4JCircuitBreakerFactory ->
+            factory.configureDefault { id: String? ->
+                Resilience4JConfigBuilder(id)
+                    .circuitBreakerConfig(circuitBreakerConfig)
+                    .timeLimiterConfig(timeLimiterConfig)
+                    .build()
+            }
+        }
     }
 
 }

@@ -18,23 +18,25 @@ import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
 import com.room.roomservice.domain.room.vo.PostResponse
 import com.room.roomservice.domain.room.vo.UserResponse
 import com.room.roomservice.global.dto.APIResponse
+import com.room.roomservice.global.exception.CustomException
 import com.room.roomservice.global.exception.CustomExceptionCode
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory
 import org.springframework.stereotype.Service
+import java.util.function.Supplier
 
 @Service
 class RoomService(
     private val roomRepository: RoomRepository,
     private val userServiceClient: UserServiceClient,
     private val postServiceClient: PostServiceClient,
-    private val circuitBreakerFactory: CircuitBreakerFactory<*, *>
+    private val factory: CircuitBreakerFactory<*, *>
 ) : RemoveRoomUseCase, ModifyRoomUseCase, FindRoomUseCase, CreateRoomUseCase {
 
     override fun createRoom(createRoomDTO: CreateRoomDTO, userId: String): Room {
-        val user: UserResponse = userServiceClient.getUser(userId)
+        val userResponse: UserResponse = getUserResponse(userId) ?: throw CustomException(CustomExceptionCode.USER_NOT_FOUND)
 
         val createRoom = Room.create(
-                userId = user.id,
+                userId = userResponse.id,
                 roomName = createRoomDTO.roomName,
                 roomDesc = createRoomDTO.roomDesc,
                 roomType = createRoomDTO.roomType,
@@ -75,4 +77,22 @@ class RoomService(
         roomRepository.delete(room.roomId)
     }
 
+    private fun getUserResponse(userId: String): UserResponse? {
+
+        val circuitBreaker = factory.create("userCircuitBreaker")
+        val user: APIResponse<UserResponse> = userServiceClient.getUser(userId)
+
+        var supplier: Supplier<APIResponse<UserResponse>> = Supplier { userServiceClient.getUser(userId) }
+
+        val result: APIResponse<UserResponse> = circuitBreaker.run(
+            supplier
+        ) { throwable ->
+            print("Fallback 실행: ${throwable.message}")
+            APIResponse.fail(null)
+        }
+
+        return result.data
+    }
+
 }
+
