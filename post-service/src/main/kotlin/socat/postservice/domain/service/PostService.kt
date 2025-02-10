@@ -12,6 +12,7 @@ import socat.postservice.domain.model.Post
 import socat.postservice.domain.service.exception.PostNotFoundException
 import socat.postservice.domain.service.exception.RoomNotFoundException
 import socat.postservice.global.dto.APIResponse
+import socat.postservice.global.exception.PostException
 import socat.postservice.global.exception.PostExceptionCode
 import socat.postservice.infrastructure.client.RoomServiceClient
 import socat.postservice.infrastructure.client.UserServiceClient
@@ -19,6 +20,7 @@ import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
 import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
 import socat.postservice.infrastructure.web.dto.request.RemovePostDTO
 import socat.postservice.infrastructure.vo.RoomResponse
+import socat.postservice.infrastructure.vo.UserResponse
 import java.util.function.Supplier
 
 @Service
@@ -35,10 +37,13 @@ class PostService(
     lateinit var rootDir: String
 
     override fun createPost(createPostDTO: CreatePostDTO, userId: String): Post {
+        val userResponse = getUserResponse(userId)
+        if (!userResponse.success) {
+            throw PostException(PostExceptionCode.USER_NOT_FOUND)
+        }
+
         val roomId = createPostDTO.roomId
-
         val roomResponse: APIResponse<RoomResponse> = getRoomResponse(roomId)
-
         if (!roomResponse.success) {
             throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
         }
@@ -86,8 +91,17 @@ class PostService(
         val decoratedSupplier = CircuitBreaker.decorateSupplier(circuitBreaker, supplier)
 
         return runCatching { decoratedSupplier.get() }
-                .recover { APIResponse.fail(null) }
-                .getOrThrow()
+            .recover { APIResponse.fail(null) }
+            .getOrThrow()
+    }
+    fun getUserResponse(userId: String): APIResponse<UserResponse> {
+        val circuitBreaker = circuitBreakerRegistry.circuitBreaker("userCircuitBreaker")
+        val supplier = Supplier { userServiceClient.getUser(userId) }
+        val decoratedSupplier = CircuitBreaker.decorateSupplier(circuitBreaker, supplier)
+
+        return runCatching { decoratedSupplier.get() }
+            .recover { APIResponse.fail(null) }
+            .getOrThrow()
     }
 
 }

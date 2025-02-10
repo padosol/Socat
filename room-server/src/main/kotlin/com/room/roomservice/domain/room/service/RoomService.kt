@@ -80,7 +80,6 @@ class RoomService(
     private fun getUserResponse(userId: String): UserResponse? {
 
         val circuitBreaker = factory.create("userCircuitBreaker")
-        val user: APIResponse<UserResponse> = userServiceClient.getUser(userId)
 
         var supplier: Supplier<APIResponse<UserResponse>> = Supplier { userServiceClient.getUser(userId) }
 

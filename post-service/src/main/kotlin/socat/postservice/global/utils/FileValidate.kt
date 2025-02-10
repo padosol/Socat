@@ -4,7 +4,6 @@ import socat.postservice.global.exception.PostException
 import socat.postservice.global.exception.PostExceptionCode
 
 class FileValidate {
-
     companion object {
         private val IMAGE_EXTENSIONS: List<String> = listOf("jpg", "png", "gif", "webp")
         fun checkImageFormat(fileName: String) {
