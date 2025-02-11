@@ -28,17 +28,29 @@ export default function Form({
   }
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+
     const form = event.currentTarget
     const formData = new FormData(form)
 
     const title = formData.get("title") as string
     const content = editorRef.current?.getInstance().getHTML();
 
-    const response = await createPost({
-      roomId, title, content
-    });
+    try {
+      const response = await createPost({
+        roomId, title, content
+      });
 
+      console.log(response)
 
+    } catch(e) {
+      console.log(e)
+    }
+
+    // if (response.data.success) {
+    //   revalidatePath(`/socat/${roomId}`)
+    //   redirect(`/socat/${roomId}`)
+    // }
   }
 
   return (

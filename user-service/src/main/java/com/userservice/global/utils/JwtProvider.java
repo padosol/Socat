@@ -34,8 +34,8 @@ public class JwtProvider implements InitializingBean {
     private final long refreshTokenExpiredTime;
     private SecretKey key;
 
-    public String ACCESS_TOKEN_NAME = "default_access_token_name";
     public String REFRESH_TOKEN_NAME = "default_refresh_token_name";
+    public String ACCESS_TOKEN_NAME = "default_access_token_name";
 
     public final String BLACK_LIST = "black_list";
 

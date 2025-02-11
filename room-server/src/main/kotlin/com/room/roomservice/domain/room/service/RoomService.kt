@@ -20,6 +20,8 @@ import com.room.roomservice.domain.room.vo.UserResponse
 import com.room.roomservice.global.dto.APIResponse
 import com.room.roomservice.global.exception.CustomException
 import com.room.roomservice.global.exception.CustomExceptionCode
+import io.github.resilience4j.circuitbreaker.CircuitBreaker
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory
 import org.springframework.stereotype.Service
 import java.util.function.Supplier
@@ -29,14 +31,18 @@ class RoomService(
     private val roomRepository: RoomRepository,
     private val userServiceClient: UserServiceClient,
     private val postServiceClient: PostServiceClient,
-    private val factory: CircuitBreakerFactory<*, *>
+    private val circuitBreakerRegistry: CircuitBreakerRegistry
 ) : RemoveRoomUseCase, ModifyRoomUseCase, FindRoomUseCase, CreateRoomUseCase {
 
     override fun createRoom(createRoomDTO: CreateRoomDTO, userId: String): Room {
-        val userResponse: UserResponse = getUserResponse(userId) ?: throw CustomException(CustomExceptionCode.USER_NOT_FOUND)
+        val userResponse = getUserResponse(userId)
+        if (userResponse.data == null) {
+            throw CustomException(CustomExceptionCode.USER_NOT_FOUND)
+        }
 
+        val user = userResponse.data
         val createRoom = Room.create(
-                userId = userResponse.id,
+                userId = user.id,
                 roomName = createRoomDTO.roomName,
                 roomDesc = createRoomDTO.roomDesc,
                 roomType = createRoomDTO.roomType,
@@ -77,20 +83,14 @@ class RoomService(
         roomRepository.delete(room.roomId)
     }
 
-    private fun getUserResponse(userId: String): UserResponse? {
+    fun getUserResponse(userId: String): APIResponse<UserResponse> {
+        val circuitBreaker = circuitBreakerRegistry.circuitBreaker("userCircuitBreaker")
+        val supplier = Supplier { userServiceClient.getUser(userId) }
+        val decoratedSupplier = CircuitBreaker.decorateSupplier(circuitBreaker, supplier)
 
-        val circuitBreaker = factory.create("userCircuitBreaker")
-
-        var supplier: Supplier<APIResponse<UserResponse>> = Supplier { userServiceClient.getUser(userId) }
-
-        val result: APIResponse<UserResponse> = circuitBreaker.run(
-            supplier
-        ) { throwable ->
-            print("Fallback 실행: ${throwable.message}")
-            APIResponse.fail(null)
-        }
-
-        return result.data
+        return runCatching { decoratedSupplier.get() }
+            .recover { APIResponse.fail(null) }
+            .getOrThrow()
     }
 
 }

@@ -1,11 +1,13 @@
 package com.userservice.domain.user.controller;
 
 
+import com.userservice.domain.user.controller.dto.request.ModifyUserDTO;
 import com.userservice.domain.user.entity.UserEntity;
 import com.userservice.domain.user.service.usecase.CreateUserUseCase;
 import com.userservice.domain.user.controller.dto.request.CreateUserDTO;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
 import com.userservice.domain.user.service.usecase.GetUserUseCase;
+import com.userservice.domain.user.service.usecase.ModifyUserUserCase;
 import com.userservice.global.dto.APIResponse;
 import com.userservice.global.utils.JwtProvider;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +25,7 @@ public class UserController implements SwaggerUserController {
     private final GetUserUseCase getUserUseCase;
     private final CreateUserUseCase createUserUseCase;
     private final JwtProvider jwtProvider;
+    private final ModifyUserUserCase modifyUserUserCase;
 
 
     @PostMapping("/users")
@@ -64,6 +67,22 @@ public class UserController implements SwaggerUserController {
 
 
     // 유저 수정
+    @Override
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<APIResponse<UserResponse>> modifyUser(
+            @PathVariable(value = "userId") String userId,
+            @RequestBody @Valid ModifyUserDTO modifyUserDTO
+    ) {
+        UserResponse userResponse = modifyUserUserCase.modifyUser(
+                UserEntity.builder()
+                        .id(userId)
+                        .userName(modifyUserDTO.getUsername())
+                        .email(modifyUserDTO.getEmail())
+                        .password(modifyUserDTO.getPassword())
+                        .build()
+        );
+        return ResponseEntity.status(200).body(APIResponse.ok(userResponse));
+    }
 
     // 유저 삭제
 }

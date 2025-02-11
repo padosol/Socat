@@ -23,7 +23,7 @@ public class CreateUserDTO {
     @Schema(description = "유저 패스워드", example = "test1234")
     private String password;
 
-    private CreateUserDTO(){}
+    public CreateUserDTO(){}
 
     public CreateUserDTO(String username, String email, String password) {
         this.username = username;

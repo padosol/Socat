@@ -1,6 +1,7 @@
 package com.userservice.domain.user.controller;
 
 import com.userservice.domain.user.controller.dto.request.CreateUserDTO;
+import com.userservice.domain.user.controller.dto.request.ModifyUserDTO;
 import com.userservice.domain.user.controller.dto.response.UserResponse;
 import com.userservice.global.dto.APIResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,5 +35,15 @@ public interface SwaggerUserController {
     })
     ResponseEntity<UserResponse> createUser(
             CreateUserDTO createUserDTO
+    );
+
+    @Operation(summary = "유저 정보 수정", description = "유저 정보를 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "올바르지 않은 파라미터")
+    })
+    ResponseEntity<APIResponse<UserResponse>> modifyUser(
+            String userId,
+            ModifyUserDTO modifyUserDTO
     );
 }
