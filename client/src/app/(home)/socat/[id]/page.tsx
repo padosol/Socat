@@ -1,3 +1,5 @@
+"use server"
+
 import getRoomById from "@/lib/api/rooms/get-room-id";
 import { notFound } from "next/navigation";
 import PostList from "@/components/socat/[id]/post-list";
@@ -26,8 +28,6 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-
-  console.log(socat)
 
   return(
     <div className="p-4">

@@ -1,11 +1,11 @@
 "use client"
 
 import { Editor } from "@toast-ui/react-editor";
-import "@toast-ui/editor/dist/toastui-editor.css"; // 기본 스타일
 import { FormEventHandler, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { uploadFile } from "@/lib/api/post/upload";
 import { createPost } from "@/lib/api/post/create.post";
+import TuiEditor from "./tui-editor";
 
 export default function Form({
   roomId
@@ -41,7 +41,7 @@ export default function Form({
         roomId, title, content
       });
 
-      console.log(response)
+      router.push(`/socat/${roomId}`)
 
     } catch(e) {
       console.log(e)
@@ -60,13 +60,13 @@ export default function Form({
           <input className="w-[750px] h-[40px] border mb-2 p-2" placeholder="제목" name="title"/>
         </div>
         <div className="bg-white h-[500px] w-[750px] text-left">
-          <Editor
+          <TuiEditor
             ref={editorRef}
             height="100%"
-            initialEditType="wysiwyg"
             previewStyle='vertical'
             hooks={{addImageBlobHook: handleImageUpload}}
-
+            initialValue="내용을 입력해주세요."
+            initialEditType="WYSIWYG"
           />
         </div>
         <button 

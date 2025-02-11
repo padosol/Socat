@@ -28,7 +28,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  // 여기서 유저 정보 가져오는 로직 구현현
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken");
 
@@ -61,7 +60,6 @@ export default async function RootLayout({
       userState.email = user_response.email;
       userState.active = true;
     }
-
   }
 
   return (
@@ -73,4 +71,5 @@ export default async function RootLayout({
       </body>
     </html>
   );
+
 }

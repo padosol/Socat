@@ -1,4 +1,7 @@
+"use server"
+
 import getAllPostByRoomId from "@/lib/api/post/get-all-post-by-id";
+import CurrentDate from "@/components/currentdate";
 
 export default async function PostList({
   roomId
@@ -26,7 +29,7 @@ export default async function PostList({
               <td className="py-2 px-4 border-b">{post.postId}</td>
               <td className="py-2 px-4 border-b">{post.title}</td>
               <td className="py-2 px-4 border-b">{post.title}</td>
-              <td className="py-2 px-4 border-b">{post.createdAt}</td>
+              <td className="py-2 px-4 border-b"><CurrentDate date={post.createdAt} /></td>
             </tr>
           ))}
         </tbody>

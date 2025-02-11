@@ -1,6 +1,5 @@
 import Image from "next/image";
 import MenuNav from "../../components/menunav";
-import Sidenav from "../../components/sidenav";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,8 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           Socat 
         </span>
       </div>
-      <div className="flex h-full px-56">
-        <Sidenav />
+      <div className="flex h-full px-32">
         <div className="flex flex-col flex-1 border">
           <MenuNav />
           <div className="flex-1 p-4">

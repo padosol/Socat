@@ -20,7 +20,6 @@ export type LoginState = {
   userInfo?: User | null;
 };
 
-
 export async function login(prevState: LoginState, formData: FormData) {
   const validatedFields = loginForm.safeParse({
     email: formData.get("email"),
@@ -40,8 +39,6 @@ export async function login(prevState: LoginState, formData: FormData) {
 
   try {
     const response = await axios.post("http://localhost:8000/user-service/authenticate", { email, password });
-
-    console.log(response)
 
     // 로그인 후 token 저장 => 유저 정보 가져와서 zustand 에 넣기
     const cookieStore = await cookies();
