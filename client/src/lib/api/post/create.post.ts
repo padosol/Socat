@@ -1,7 +1,8 @@
 "use server"
 
 import { instance } from "@/lib/axios/axiosInstance"
-
+import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 
 export type PostForm = {
   roomId: string,
@@ -10,5 +11,11 @@ export type PostForm = {
 }
 
 export async function createPost(createPostDto: PostForm) {
-  return await instance.post(`/post-service/posts`, createPostDto)
+  const response =  await instance.post(`/post-service/posts`, createPostDto)
+  if (!response.data.success) {
+    return response.data;
+  }
+
+  revalidatePath(`/socat/${createPostDto.roomId}`)
+  redirect(`/socat/${createPostDto.roomId}`)
 }

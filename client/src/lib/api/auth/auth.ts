@@ -3,7 +3,6 @@
 import { instance } from "@/lib/axios/axiosInstance"
 import { ApiResponse, TokenDTO } from "@/lib/definitions";
 import { cookies } from 'next/headers'
-import { NextResponse } from "next/server";
 
 export async function authenticate() {
   try {

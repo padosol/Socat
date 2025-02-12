@@ -28,7 +28,7 @@ export default async function PostList({
             <tr key={post.postId} className="hover:bg-gray-100">
               <td className="py-2 px-4 border-b">{post.postId}</td>
               <td className="py-2 px-4 border-b">{post.title}</td>
-              <td className="py-2 px-4 border-b">{post.title}</td>
+              <td className="py-2 px-4 border-b">{post.postId}</td>
               <td className="py-2 px-4 border-b"><CurrentDate date={post.createdAt} /></td>
             </tr>
           ))}

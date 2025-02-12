@@ -1,11 +1,11 @@
 "use client"
 
 import { Editor } from "@toast-ui/react-editor";
-import { FormEventHandler, useRef } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import { uploadFile } from "@/lib/api/post/upload";
-import { createPost } from "@/lib/api/post/create.post";
 import TuiEditor from "./tui-editor";
+import { createPost } from "@/lib/api/post/create.post";
 
 export default function Form({
   roomId
@@ -27,37 +27,28 @@ export default function Form({
     callback(`https://d25hmvjcsah1ye.cloudfront.net/${response}`)
   }
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
 
-    const title = formData.get("title") as string
+    const title = formData.get("title") as string;
     const content = editorRef.current?.getInstance().getHTML();
+    const response = await createPost({
+      roomId,
+      title,
+      content
+    })
 
-    try {
-      const response = await createPost({
-        roomId, title, content
-      });
-
-      router.push(`/socat/${roomId}`)
-
-    } catch(e) {
-      console.log(e)
-    }
-
-    // if (response.data.success) {
-    //   revalidatePath(`/socat/${roomId}`)
-    //   redirect(`/socat/${roomId}`)
-    // }
+    console.log(response)
   }
 
   return (
     <div className="p-4 flex justify-center">
       <form className="text-center" onSubmit={onSubmit}>
         <div className="w-full">
-          <input className="w-[750px] h-[40px] border mb-2 p-2" placeholder="제목" name="title"/>
+          <input className="w-[750px] h-[40px] border mb-2 p-2" placeholder="제목" name="title" />
         </div>
         <div className="bg-white h-[500px] w-[750px] text-left">
           <TuiEditor

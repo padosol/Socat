@@ -4,10 +4,27 @@ import { login, LoginState } from '@/lib/api/auth/login';
 import { useActionState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from 'react';
+import { useUserStore } from "@/stores/userInfo-store-provider";
+import { useRouter } from 'next/navigation';
 
 export default function Form() {
+  const router = useRouter();
   const initialState: LoginState = { message: null, errors: {}, success: false, userInfo: null };
   const [state, formAction] = useActionState(login, initialState);
+
+  const { updateUserInfo } = useUserStore(
+    (state) => state,
+  )
+
+  useEffect(() => {
+    if (state.success) {
+      if (state.userInfo) {
+        updateUserInfo(state.userInfo)
+        router.push("/")
+      }
+    }
+  }, [state])
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
