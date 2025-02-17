@@ -17,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @Tag(name = "User", description = "User API")
 @RestController
 @RequiredArgsConstructor
@@ -84,7 +87,15 @@ public class UserController implements SwaggerUserController {
         return ResponseEntity.status(200).body(APIResponse.ok(userResponse));
     }
 
-    // 유저 삭제
+    @Override
+    @GetMapping(value = "/users/multi")
+    public ResponseEntity<APIResponse<Map<String, UserResponse>>> getUserInfoListByUserIdForMap(List<String> userIds) {
+
+        Map<String, UserResponse> userInfoByIdMulti = getUserUseCase.findUserInfoByIdMulti(userIds);
+
+        return ResponseEntity.status(200).body(APIResponse.ok(userInfoByIdMulti));
+    }
+
 }
 
 

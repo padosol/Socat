@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+import java.util.Map;
+
 public interface SwaggerUserController {
 
     @Operation(summary = "유저 아이디로 유저 조회", description = "유저 아이디로 유저를 조회한다.")
@@ -46,4 +49,11 @@ public interface SwaggerUserController {
             String userId,
             ModifyUserDTO modifyUserDTO
     );
+
+
+    @Operation(summary = "멀티 유저 정보 조회", description = "다수 유저정보를 조회 하고 Map<UserId, UserInfo> 형태로 리턴한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공")
+    })
+    ResponseEntity<APIResponse<Map<String, UserResponse>>> getUserInfoListByUserIdForMap(List<String> userIds);
 }

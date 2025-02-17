@@ -40,7 +40,9 @@ export default async function PostList({
         </tbody>
       </table>
 
-      <Pagination totalPages={response.total}/>
+      <div className="flex w-full justify-center items-center py-2">
+        <Pagination totalPages={response.total}/>
+      </div>
     </div>
   )
 }

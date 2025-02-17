@@ -19,9 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -108,5 +106,22 @@ public class UserService implements
                 .email(user.getEmail())
                 .id(user.getId())
                 .build();
+    }
+
+    @Override
+    public Map<String, UserResponse> findUserInfoByIdMulti(List<String> userIds) {
+
+        List<UserEntity> userInfos = userJpaRepository.findAllById(userIds);
+
+        Map<String, UserResponse> responseMap = new HashMap<>();
+        for (UserEntity userInfo : userInfos) {
+            responseMap.put(userInfo.getId(), UserResponse.builder()
+                    .username(userInfo.getUserName())
+                    .email(userInfo.getEmail())
+                    .id(userInfo.getId())
+                    .build());
+        }
+
+        return responseMap;
     }
 }
