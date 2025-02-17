@@ -2,6 +2,7 @@
 
 import getAllPostByRoomId from "@/lib/api/post/get-all-post-by-id";
 import CurrentDate from "@/components/currentdate";
+import Pagination from "../pagination";
 
 export default async function PostList({
   roomId,
@@ -14,7 +15,7 @@ export default async function PostList({
 }) {
   const defaultSearch = {query: query, page: currentPage};
 
-  const posts = await getAllPostByRoomId(roomId, defaultSearch);
+  const response = await getAllPostByRoomId(roomId, defaultSearch);
 
   return (
     <div className="container mx-auto p-4">
@@ -28,7 +29,7 @@ export default async function PostList({
           </tr>
         </thead>
         <tbody>
-          {posts.map(post => (
+          {response?.posts && response.posts.map(post => (
             <tr key={post.postId} className="hover:bg-gray-100">
               <td className="py-2 px-4 border-b">{post.postId}</td>
               <td className="py-2 px-4 border-b">{post.title}</td>
@@ -38,6 +39,8 @@ export default async function PostList({
           ))}
         </tbody>
       </table>
+
+      <Pagination totalPages={response.total}/>
     </div>
   )
 }

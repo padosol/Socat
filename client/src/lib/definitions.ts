@@ -44,3 +44,10 @@ export type TokenDTO = {
   accessToken: string,
   refreshToken: string
 }
+
+export type PostWithPage = {
+  posts: Post[],
+  total: number,
+  pageNumber: number,
+  pageSize: number,
+}
