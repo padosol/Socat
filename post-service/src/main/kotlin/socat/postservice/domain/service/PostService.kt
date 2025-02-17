@@ -21,6 +21,7 @@ import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
 import socat.postservice.infrastructure.web.dto.request.RemovePostDTO
 import socat.postservice.infrastructure.vo.RoomResponse
 import socat.postservice.infrastructure.vo.UserResponse
+import socat.postservice.infrastructure.web.dto.response.PostWithPage
 import java.util.function.Supplier
 
 @Service
@@ -74,7 +75,11 @@ class PostService(
     }
 
     override fun findAll(): List<Post> {
-        return  postPersistencePort.findAll()
+        return postPersistencePort.findAll()
+    }
+
+    override fun findAllBySearch(page: Int, query: String): List<Post> {
+        return postPersistencePort.findAllBySearch(page, query)
     }
 
     override fun findPostInRoomByRoomId(roomId: String): List<Post> {
@@ -83,6 +88,14 @@ class PostService(
         if (!roomResponse.success) throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
 
         return postPersistencePort.findPostInRoomByRoomId(roomId)
+    }
+
+    override fun findPostInRoomByRoomIdAndPageAndQuery(roomId: String, page: Int, query: String): PostWithPage {
+        val roomResponse: APIResponse<RoomResponse> = getRoomResponse(roomId)
+
+        if (!roomResponse.success) throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
+
+        return postPersistencePort.findPostInRoomByRoomIdAndPageAndQuery(roomId, page, query)
     }
 
     fun getRoomResponse(roomId: String): APIResponse<RoomResponse> {

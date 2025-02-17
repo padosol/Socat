@@ -42,7 +42,7 @@ export default async function Page(props: {
         </div>
       </div>
       <div className="space-y-4">
-        <PostList roomId={id} />
+        <PostList roomId={id} query={query} currentPage={currentPage}/>
       </div>
     </div>
   )

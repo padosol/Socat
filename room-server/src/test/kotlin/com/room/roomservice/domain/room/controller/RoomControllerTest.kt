@@ -9,6 +9,7 @@ import com.room.roomservice.domain.room.service.usecase.CreateRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.FindRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.ModifyRoomUseCase
 import com.room.roomservice.domain.room.service.usecase.RemoveRoomUseCase
+import com.room.roomservice.domain.room.vo.PostResponse
 import com.room.roomservice.global.jwt.JwtProvider
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import java.time.LocalDateTime
 import java.time.LocalDateTime.*
 
 
@@ -62,12 +64,16 @@ class RoomControllerTest: DescribeSpec({
                 accept = MediaType.APPLICATION_JSON
 
                 val room = Room(
-                        roomId = roomId,
-                        userId = "test",
-                        roomName = "테스트 룸",
-                        createdAt = now
+                    roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa",
+                    roomName = "테스트 룸",
+                    userId = "test",
+                    createdAt = now,
+                    roomType = "PUBLIC",
+                    roomDesc = "테스트 방입니다.",
+                    updatedAt = now,
+                    posts = mutableListOf(),
                 )
-                every { findRoomUseCase.findRoom(roomId) } returns room
+                every { findRoomUseCase.findRoomById(roomId) } returns room
 
             }.andExpect {
                 MockMvcResultMatchers.status().isOk
@@ -79,15 +85,23 @@ class RoomControllerTest: DescribeSpec({
         val roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa"
         val roomName = "테스트 룸"
         val userId = "test"
+        val roomDesc = "테스트 방입니다."
+        val roomType = "PUBLIC"
         val now = now()
         val createRoomDTO = CreateRoomDTO(
-                roomName = roomName
+                roomName = roomName,
+                roomDesc = roomDesc,
+                roomType = roomType,
         )
         val room = Room(
-                roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa",
-                roomName = "테스트 룸",
-                userId = "test",
-                createdAt = now
+            roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa",
+            roomName = "테스트 룸",
+            userId = "test",
+            createdAt = now,
+            roomType = roomType,
+            roomDesc = roomDesc,
+            updatedAt = now,
+            posts = mutableListOf(),
         )
         it("CreateRoomDTO 가 유효한 값이면 201 상태코드를 반환한다.") {
             val response = mockMvc.post("/rooms") {
@@ -120,10 +134,14 @@ class RoomControllerTest: DescribeSpec({
                 userId = userId
         )
         val room = Room(
-                roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa",
-                roomName = "테스트 룸",
-                userId = "test",
-                createdAt = now
+            roomId = "aaaaaa-aaaaaa-aaaaaa-aaaaaa",
+            roomName = "테스트 룸",
+            userId = "test",
+            createdAt = now,
+            roomType = "PUBLIC",
+            roomDesc = "테스트 방입니다.",
+            updatedAt = now,
+            posts = mutableListOf(),
         )
 
         it("방 수정에 성공하면 200 상태코드를 반환 받는다.") {

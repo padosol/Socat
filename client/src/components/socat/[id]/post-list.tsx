@@ -4,11 +4,15 @@ import getAllPostByRoomId from "@/lib/api/post/get-all-post-by-id";
 import CurrentDate from "@/components/currentdate";
 
 export default async function PostList({
-  roomId
+  roomId,
+  query,
+  currentPage
 }: {
-  roomId: string
+  roomId: string;
+  query: string;
+  currentPage: number;
 }) {
-  const defaultSearch = {page: 0, size: 10, query: ""};
+  const defaultSearch = {query: query, page: currentPage};
 
   const posts = await getAllPostByRoomId(roomId, defaultSearch);
 

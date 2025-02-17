@@ -1,10 +1,14 @@
 package socat.postservice.infrastructure.persistence
 
 import lombok.extern.slf4j.Slf4j
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import socat.postservice.application.port.output.PostPersistencePort
 import socat.postservice.domain.model.Post
 import socat.postservice.infrastructure.persistence.entity.PostEntity
+import socat.postservice.infrastructure.web.dto.response.PostWithPage
 
 @Slf4j
 @Repository
@@ -47,5 +51,29 @@ class PostRepository(
                 val posts: List<PostEntity> = jpaPostRepository.findPostEntitiesByRoomId(roomId)
 
                 return posts.map { it.toDomain() }.toList()
+        }
+
+        override fun findPostInRoomByRoomIdAndPageAndQuery(roomId: String, page: Int, query: String): PostWithPage {
+                val pageable: Pageable = PageRequest.of(page - 1, 10)
+                val result: Page<PostEntity> = jpaPostRepository.findAllByRoomIdOrderByCreatedAtDesc(roomId, pageable)
+
+                return PostWithPage(
+                        posts = result.content.map { it.toDomain() }.map { it.toDTO() },
+                        total = result.totalPages,
+                        pageNumber = result.number,
+                        pageSize = result.size,
+                )
+        }
+
+        override fun findAllBySearch(page: Int, query: String): List<Post> {
+                val pageable: Pageable = PageRequest.of(page, 10)
+
+                val result: Page<PostEntity> = jpaPostRepository.findAllByOrderByCreatedAtDesc(pageable)
+
+                return result.toList().map { it.toDomain() }
+        }
+
+        override fun totalCount(query: String): Int {
+                TODO("Not yet implemented")
         }
 }

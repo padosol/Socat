@@ -19,6 +19,7 @@ import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
 import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
 import socat.postservice.infrastructure.web.dto.request.RemovePostDTO
 import socat.postservice.infrastructure.web.dto.response.PostResponse
+import socat.postservice.infrastructure.web.dto.response.PostWithPage
 
 @Slf4j
 @RestController
@@ -92,9 +93,12 @@ class PostController(
     /**
      * 게시글 전체 조회
      */
-    @GetMapping(value = ["/posts"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    override fun findAllPost(): ResponseEntity<APIResponse<List<PostResponse>>> {
-        val findAll = findPostUseCase.findAll()
+    @GetMapping(value = ["/posts"])
+    override fun findAllPost(
+        @RequestParam(value = "page", defaultValue = "0", required = false) page: Int,
+        @RequestParam(value = "query", required = false) query: String,
+    ): ResponseEntity<APIResponse<List<PostResponse>>> {
+        val findAll = findPostUseCase.findAllBySearch(page, query)
         val toList: List<PostResponse> = findAll.map { it.toDTO() }.toList()
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponse.ok(toList))
@@ -108,11 +112,11 @@ class PostController(
         @PathVariable("roomId") roomId: String,
         @RequestParam("page") page: Int,
         @RequestParam("query") query: String,
-    ): ResponseEntity<APIResponse<List<PostResponse>>> {
+    ): ResponseEntity<APIResponse<PostWithPage>> {
 
-        val posts: List<Post> = findPostUseCase.findPostInRoomByRoomId(roomId)
+        val posts: PostWithPage = findPostUseCase.findPostInRoomByRoomIdAndPageAndQuery(roomId, page, query)
 
-        return ResponseEntity.ok(APIResponse.ok(posts.map { it.toDTO() }.toList()))
+        return ResponseEntity.ok(APIResponse.ok(posts))
     }
 
     @PostMapping("/upload")

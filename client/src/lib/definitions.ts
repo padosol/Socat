@@ -37,7 +37,6 @@ export type Post = {
 
 export type PostSearch = {
   page: number,
-  size: number,
   query: string,
 }
 
