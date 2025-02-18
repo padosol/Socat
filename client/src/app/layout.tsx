@@ -53,12 +53,16 @@ export default async function RootLayout({
     } 
 
     if (flag) {
-      const user_response = await getUserInfoByToken();
-  
-      userState.username = user_response.username;
-      userState.id = user_response.id;
-      userState.email = user_response.email;
-      userState.active = true;
+      try {
+        const user_response = await getUserInfoByToken();
+    
+        userState.username = user_response.username;
+        userState.id = user_response.id;
+        userState.email = user_response.email;
+        userState.active = true;
+      } catch(e) {
+        console.log("권한이 없습니다.")
+      }
     }
   }
 

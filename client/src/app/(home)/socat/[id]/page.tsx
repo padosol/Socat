@@ -3,7 +3,6 @@
 import getRoomById from "@/lib/api/rooms/get-room-id";
 import { notFound } from "next/navigation";
 import PostList from "@/components/socat/[id]/post-list";
-import { Button } from "@/components/button";
 import { AuthButton } from "@/components/button";
 import Link from "next/link";
 

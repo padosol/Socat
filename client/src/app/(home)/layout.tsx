@@ -10,11 +10,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           Socat 
         </span>
       </div>
-      <div className="flex h-full px-32">
-        <div className="flex flex-col flex-1 border">
-          <MenuNav />
-          <div className="flex-1 p-4">
-            {children}
+      <div className="h-full border w-full flex justify-center">
+        <div className="w-[1000px]">
+          <div className="flex flex-col flex-1 border h-full">
+            <MenuNav />
+            <div className="flex-1 p-4">
+              {children}
+            </div>
           </div>
         </div>
       </div>

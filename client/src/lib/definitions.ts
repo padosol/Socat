@@ -32,7 +32,9 @@ export type Post = {
   title: string,
   content: string,
   createdAt: string,
-  updatedAt?: string | null
+  updatedAt?: string | null,
+  username: string,
+
 }
 
 export type PostSearch = {
