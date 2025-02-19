@@ -31,6 +31,18 @@ class Post(
         }
     }
 
+    fun toDTO(username: String): PostResponse {
+        return PostResponse(
+            postId = postId,
+            userId = userId,
+            title = title,
+            content = content,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            username = username
+        )
+    }
+
     fun toDTO(): PostResponse {
         return PostResponse(
             postId = postId,

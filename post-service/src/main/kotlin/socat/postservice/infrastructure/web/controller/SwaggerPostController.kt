@@ -26,7 +26,7 @@ interface SwaggerPostController {
     fun removePost(
         removePostDTO: RemovePostDTO,
         @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
-    ): ResponseEntity<APIResponse<Void>>
+    ): ResponseEntity<APIResponse<Nothing?>>
 
     fun findPostById(postId: String): ResponseEntity<APIResponse<PostResponse>>
 

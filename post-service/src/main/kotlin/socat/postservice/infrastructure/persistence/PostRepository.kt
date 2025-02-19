@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import socat.postservice.application.port.output.PostPersistencePort
 import socat.postservice.domain.model.Post
@@ -38,7 +39,8 @@ class PostRepository(
         }
 
         override fun findById(postId: String): Post? {
-                TODO("Not yet implemented")
+                return jpaPostRepository.findByIdOrNull(postId)
+                        ?.toDomain()
         }
 
         override fun findAll(): List<Post> {
@@ -53,16 +55,10 @@ class PostRepository(
                 return posts.map { it.toDomain() }.toList()
         }
 
-        override fun findPostInRoomByRoomIdAndPageAndQuery(roomId: String, page: Int, query: String): PostWithPage {
+        override fun findPostInRoomByRoomIdAndPageAndQuery(roomId: String, page: Int, query: String): Page<Post> {
                 val pageable: Pageable = PageRequest.of(page - 1, 10)
                 val result: Page<PostEntity> = jpaPostRepository.findAllByRoomIdOrderByCreatedAtDesc(roomId, pageable)
-
-                return PostWithPage(
-                        posts = result.content.map { it.toDomain() }.map { it.toDTO() },
-                        total = result.totalPages,
-                        pageNumber = result.number,
-                        pageSize = result.size,
-                )
+                return result.map { it.toDomain() }
         }
 
         override fun findAllBySearch(page: Int, query: String): List<Post> {

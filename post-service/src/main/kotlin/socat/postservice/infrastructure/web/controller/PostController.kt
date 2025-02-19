@@ -69,7 +69,7 @@ class PostController(
     override fun removePost(
         @RequestBody removePostDTO: RemovePostDTO,
         @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
-    ): ResponseEntity<APIResponse<Void>> {
+    ): ResponseEntity<APIResponse<Nothing?>> {
         val userId = jwtProvider.getUserIdWithBearer(token)
 
         removePostUseCase.removePost(removePostDTO, userId)

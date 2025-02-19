@@ -21,6 +21,7 @@ import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
 import socat.postservice.infrastructure.web.dto.request.RemovePostDTO
 import socat.postservice.infrastructure.vo.RoomResponse
 import socat.postservice.infrastructure.vo.UserResponse
+import socat.postservice.infrastructure.web.dto.response.PostResponse
 import socat.postservice.infrastructure.web.dto.response.PostWithPage
 import java.util.function.Supplier
 
@@ -95,7 +96,29 @@ class PostService(
 
         if (!roomResponse.success) throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
 
-        return postPersistencePort.findPostInRoomByRoomIdAndPageAndQuery(roomId, page, query)
+        val response =
+            postPersistencePort.findPostInRoomByRoomIdAndPageAndQuery(roomId, page, query)
+
+        val userIds = response.content.map { it.userId }.toList()
+
+        var postResponse: List<PostResponse> = mutableListOf()
+        val userResponseMulti = getUserResponseMulti(userIds)
+        if (userResponseMulti.success) {
+            val data = userResponseMulti.data!!
+            val result: List<PostResponse> = response.content.map {
+                data[it.userId]
+                    ?.let { userResponse -> it.toDTO(userResponse.username) }
+                    ?: it.toDTO("익명")
+            }
+            postResponse = result
+        }
+
+        return PostWithPage(
+            posts = postResponse,
+            total = response.numberOfElements,
+            pageNumber = response.number,
+            pageSize = response.size,
+        )
     }
 
     fun getRoomResponse(roomId: String): APIResponse<RoomResponse> {
@@ -110,6 +133,16 @@ class PostService(
     fun getUserResponse(userId: String): APIResponse<UserResponse> {
         val circuitBreaker = circuitBreakerRegistry.circuitBreaker("userCircuitBreaker")
         val supplier = Supplier { userServiceClient.getUser(userId) }
+        val decoratedSupplier = CircuitBreaker.decorateSupplier(circuitBreaker, supplier)
+
+        return runCatching { decoratedSupplier.get() }
+            .recover { APIResponse.fail(null) }
+            .getOrThrow()
+    }
+
+    fun getUserResponseMulti(userIds: List<String>): APIResponse<Map<String, UserResponse>> {
+        val circuitBreaker = circuitBreakerRegistry.circuitBreaker("userCircuitBreaker")
+        val supplier = Supplier { userServiceClient.getUserMulti(userIds) }
         val decoratedSupplier = CircuitBreaker.decorateSupplier(circuitBreaker, supplier)
 
         return runCatching { decoratedSupplier.get() }

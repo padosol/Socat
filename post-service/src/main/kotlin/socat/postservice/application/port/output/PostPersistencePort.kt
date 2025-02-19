@@ -1,5 +1,6 @@
 package socat.postservice.application.port.output
 
+import org.springframework.data.domain.Page
 import socat.postservice.domain.model.Post
 import socat.postservice.infrastructure.web.dto.response.PostWithPage
 
@@ -17,7 +18,7 @@ interface PostPersistencePort {
 
     fun findPostInRoomByRoomId(roomId: String): List<Post>
 
-    fun findPostInRoomByRoomIdAndPageAndQuery(roomId: String, page: Int, query: String): PostWithPage
+    fun findPostInRoomByRoomIdAndPageAndQuery(roomId: String, page: Int, query: String): Page<Post>
 
     fun findAllBySearch(page: Int, query: String): List<Post>
 
