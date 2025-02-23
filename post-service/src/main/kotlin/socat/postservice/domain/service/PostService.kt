@@ -5,8 +5,12 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import socat.postservice.application.port.input.*
+import socat.postservice.application.port.input.post.CreatePostUseCase
+import socat.postservice.application.port.input.post.FindPostUseCase
+import socat.postservice.application.port.input.post.ModifyPostUseCase
+import socat.postservice.application.port.input.post.RemovePostUseCase
+import socat.postservice.application.port.output.CategoryPersistencePort
 import socat.postservice.application.port.output.PostPersistencePort
 import socat.postservice.domain.model.Post
 import socat.postservice.domain.service.exception.PostNotFoundException
@@ -30,8 +34,9 @@ class PostService(
     private val postPersistencePort: PostPersistencePort,
     private val userServiceClient: UserServiceClient,
     private val roomServiceClient: RoomServiceClient,
-    private val circuitBreakerRegistry: CircuitBreakerRegistry
-) : CreatePostUseCase, ModifyPostUseCase, RemovePostUseCase, FindPostUseCase{
+    private val circuitBreakerRegistry: CircuitBreakerRegistry,
+    private val categoryPersistencePort: CategoryPersistencePort,
+) : CreatePostUseCase, ModifyPostUseCase, RemovePostUseCase, FindPostUseCase {
 
     private val log = LoggerFactory.getLogger(PostService::class.java)
 
@@ -50,7 +55,9 @@ class PostService(
             throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
         }
 
-        val post = Post.createPost(createPostDTO, userId)
+        val category = categoryPersistencePort.findById(createPostDTO.categoryId)
+
+        val post = Post.createPost(createPostDTO, category, userId)
         return postPersistencePort.savePost(post)
     }
 
@@ -103,15 +110,15 @@ class PostService(
 
         var postResponse: List<PostResponse> = mutableListOf()
         val userResponseMulti = getUserResponseMulti(userIds)
-        if (userResponseMulti.success) {
-            val data = userResponseMulti.data!!
-            val result: List<PostResponse> = response.content.map {
-                data[it.userId]
-                    ?.let { userResponse -> it.toDTO(userResponse.username) }
-                    ?: it.toDTO("익명")
-            }
-            postResponse = result
-        }
+//        if (userResponseMulti.success) {
+//            val data = userResponseMulti.data!!
+//            val result: List<PostResponse> = response.content.map {
+//                data[it.userId]
+//                    ?.let { userResponse -> it.toDTO(userResponse.username) }
+//                    ?: it.toDTO("익명")
+//            }
+//            postResponse = result
+//        }
 
         return PostWithPage(
             posts = postResponse,

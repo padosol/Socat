@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import socat.postservice.infrastructure.persistence.entity.PostEntity
 
-interface JpaPostRepository :JpaRepository<PostEntity, String> {
+interface JpaPostRepository : JpaRepository<PostEntity, String> {
 
     fun findPostEntitiesByRoomId(roomId: String): List<PostEntity>
 

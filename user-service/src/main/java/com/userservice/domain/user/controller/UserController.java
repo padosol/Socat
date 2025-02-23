@@ -89,7 +89,9 @@ public class UserController implements SwaggerUserController {
 
     @Override
     @GetMapping(value = "/users/multi")
-    public ResponseEntity<APIResponse<Map<String, UserResponse>>> getUserInfoListByUserIdForMap(List<String> userIds) {
+    public ResponseEntity<APIResponse<Map<String, UserResponse>>> getUserInfoListByUserIdForMap(
+            @RequestParam List<String> userIds
+    ) {
 
         Map<String, UserResponse> userInfoByIdMulti = getUserUseCase.findUserInfoByIdMulti(userIds);
 

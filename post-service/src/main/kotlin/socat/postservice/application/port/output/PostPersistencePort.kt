@@ -2,7 +2,6 @@ package socat.postservice.application.port.output
 
 import org.springframework.data.domain.Page
 import socat.postservice.domain.model.Post
-import socat.postservice.infrastructure.web.dto.response.PostWithPage
 
 interface PostPersistencePort {
 

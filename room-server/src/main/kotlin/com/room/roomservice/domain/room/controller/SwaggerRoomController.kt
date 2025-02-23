@@ -91,4 +91,5 @@ interface SwaggerRoomController {
             request: HttpServletRequest
     ): ResponseEntity<APIResponse<RoomResponse>>
 
+
 }

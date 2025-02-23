@@ -1,4 +1,4 @@
-package socat.postservice.application.port.input
+package socat.postservice.application.port.input.post
 
 import socat.postservice.domain.model.Post
 import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
