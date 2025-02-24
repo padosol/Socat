@@ -5,10 +5,10 @@ import com.community.communityservice.domain.community.dto.request.CreateCommuni
 import com.community.communityservice.domain.community.dto.request.ModifyCommunityDTO
 import com.community.communityservice.domain.community.dto.request.RemoveCommunityDTO
 import com.community.communityservice.domain.community.dto.response.CommunityResponse
-import com.community.communityservice.domain.community.service.usecase.CreateRoomUseCase
-import com.community.communityservice.domain.community.service.usecase.FindRoomUseCase
-import com.community.communityservice.domain.community.service.usecase.ModifyRoomUseCase
-import com.community.communityservice.domain.community.service.usecase.RemoveRoomUseCase
+import com.community.communityservice.domain.community.service.usecase.CreateCommunityUseCase
+import com.community.communityservice.domain.community.service.usecase.FindCommunityUseCase
+import com.community.communityservice.domain.community.service.usecase.ModifyCommunityUseCase
+import com.community.communityservice.domain.community.service.usecase.RemoveCommunityUseCase
 import com.community.communityservice.global.dto.APIResponse
 import com.community.communityservice.global.jwt.JwtProvider
 import jakarta.servlet.http.HttpServletRequest
@@ -19,23 +19,25 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@RequestMapping("/community")
 class CommunityController(
-        private val findRoomUseCase: FindRoomUseCase,
-        private val createRoomUseCase: CreateRoomUseCase,
-        private val modifyRoomUseCase: ModifyRoomUseCase,
-        private val removeRoomUseCase: RemoveRoomUseCase,
-        private val jwtProvider: JwtProvider
+    private val findCommunityUseCase: FindCommunityUseCase,
+    private val createCommunityUseCase: CreateCommunityUseCase,
+    private val modifyCommunityUseCase: ModifyCommunityUseCase,
+    private val removeCommunityUseCase: RemoveCommunityUseCase,
+    private val jwtProvider: JwtProvider
 ) : SwaggerController{
 
     /**
      * 방 전체 조회
      */
-    @GetMapping("/rooms")
-    override fun rooms(): ResponseEntity<APIResponse<List<CommunityResponse>>> {
-        val findAllCommunity: List<Community> = findRoomUseCase.findAllRoom()
+    @GetMapping()
+    override fun communities(): ResponseEntity<APIResponse<List<CommunityResponse>>> {
+        val findAllCommunity: List<Community> = findCommunityUseCase.findAll()
 
         return ResponseEntity.status(200).body(APIResponse.ok(findAllCommunity.map { it.toDto() }.toList()))
     }
@@ -43,12 +45,12 @@ class CommunityController(
     /**
      * 방 상세 정보
      */
-    @GetMapping("/rooms/{roomId}")
-    override fun getRoom(
-        @PathVariable(value = "roomId") roomId: String
+    @GetMapping("/{communityId}")
+    override fun getCommunity(
+        @PathVariable(value = "communityId") communityId: String
     ): ResponseEntity<APIResponse<CommunityResponse>> {
 
-        val findCommunity: Community = findRoomUseCase.findRoomById(roomId)
+        val findCommunity: Community = findCommunityUseCase.findById(communityId)
 
         return ResponseEntity.ok().body(APIResponse.ok(findCommunity.toDto()))
     }
@@ -56,14 +58,14 @@ class CommunityController(
     /**
      * 방 생성
      */
-    @PostMapping("/rooms")
+    @PostMapping("")
     override fun create(
         @RequestBody createCommunityDTO: CreateCommunityDTO,
         request: HttpServletRequest
     ): ResponseEntity<APIResponse<CommunityResponse>> {
         val userId = jwtProvider.getUserIdByRequest(request)
 
-        val createdCommunity: Community = createRoomUseCase.createRoom(createCommunityDTO, userId)
+        val createdCommunity: Community = createCommunityUseCase.create(createCommunityDTO, userId)
 
         return ResponseEntity.status(201).body(APIResponse.ok(createdCommunity.toDto()))
     }
@@ -71,14 +73,14 @@ class CommunityController(
     /**
      * 방 삭제
      */
-    @DeleteMapping("/rooms")
+    @DeleteMapping("")
     override fun delete(
         @RequestBody removeCommunityDTO: RemoveCommunityDTO,
         request: HttpServletRequest
     ): ResponseEntity<Void> {
         val userId = jwtProvider.getUserIdByRequest(request)
 
-        removeRoomUseCase.remove(removeCommunityDTO.roomId, userId)
+        removeCommunityUseCase.remove(removeCommunityDTO.roomId, userId)
 
         return ResponseEntity.status(204).build()
     }
@@ -86,14 +88,14 @@ class CommunityController(
     /**
      * 방 수정
      */
-    @PutMapping("/rooms")
+    @PutMapping("")
     override fun modify(
         @RequestBody modifyCommunityDTO: ModifyCommunityDTO,
         request: HttpServletRequest
     ): ResponseEntity<APIResponse<CommunityResponse>> {
         val userId = jwtProvider.getUserIdByRequest(request)
 
-        val modifiedCommunity: Community = modifyRoomUseCase.modify(modifyCommunityDTO, userId)
+        val modifiedCommunity: Community = modifyCommunityUseCase.modify(modifyCommunityDTO, userId)
 
         return ResponseEntity.status(200).body(APIResponse.ok(modifiedCommunity.toDto()))
     }

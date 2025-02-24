@@ -26,7 +26,7 @@ interface SwaggerController {
                 )
             ]
     )
-    fun rooms(): ResponseEntity<APIResponse<List<CommunityResponse>>>
+    fun communities(): ResponseEntity<APIResponse<List<CommunityResponse>>>
 
     @Operation(summary = "채팅방 조회", description = "roomId 를 통해 채팅방을 조회한다.")
     @ApiResponse(
@@ -38,8 +38,8 @@ interface SwaggerController {
                 )
             ]
     )
-    fun getRoom(
-            roomId: String
+    fun getCommunity(
+        communityId: String
     ): ResponseEntity<APIResponse<CommunityResponse>>
 
     @Operation(summary = "채팅방 등록", description = "채팅방을 등록한다.")
@@ -87,7 +87,7 @@ interface SwaggerController {
     )
     @SecurityRequirement(name = "bearerAuth")
     fun modify(
-        modifyRoomDTO: ModifyCommunityDTO,
+        modifyCommunityDTO: ModifyCommunityDTO,
         request: HttpServletRequest
     ): ResponseEntity<APIResponse<CommunityResponse>>
 

@@ -10,10 +10,10 @@ import com.community.communityservice.domain.community.exception.CommunityNoRigh
 import com.community.communityservice.domain.community.exception.CommunityNoRightRemoveException
 import com.community.communityservice.domain.community.exception.CommunityNotFoundException
 import com.community.communityservice.domain.community.repository.CommunityRepository
-import com.community.communityservice.domain.community.service.usecase.CreateRoomUseCase
-import com.community.communityservice.domain.community.service.usecase.FindRoomUseCase
-import com.community.communityservice.domain.community.service.usecase.ModifyRoomUseCase
-import com.community.communityservice.domain.community.service.usecase.RemoveRoomUseCase
+import com.community.communityservice.domain.community.service.usecase.CreateCommunityUseCase
+import com.community.communityservice.domain.community.service.usecase.FindCommunityUseCase
+import com.community.communityservice.domain.community.service.usecase.ModifyCommunityUseCase
+import com.community.communityservice.domain.community.service.usecase.RemoveCommunityUseCase
 import com.community.communityservice.domain.community.vo.UserResponse
 import com.community.communityservice.global.dto.APIResponse
 import com.community.communityservice.global.exception.CustomException
@@ -29,7 +29,7 @@ class CommunityService(
     private val userServiceClient: UserServiceClient,
     private val postServiceClient: PostServiceClient,
     private val circuitBreakerRegistry: CircuitBreakerRegistry
-) : RemoveRoomUseCase, ModifyRoomUseCase, FindRoomUseCase, CreateRoomUseCase {
+) : RemoveCommunityUseCase, ModifyCommunityUseCase, FindCommunityUseCase, CreateCommunityUseCase {
 
     override fun createRoom(createCommunityDTO: CreateCommunityDTO, userId: String): Community {
         val userResponse = getUserResponse(userId)
