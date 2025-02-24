@@ -1,4 +1,4 @@
-package com.community.communityservice.domain.community.repository
+package com.community.communityservice.domain.community.repository.community
 
 import com.community.communityservice.domain.community.domain.Community
 

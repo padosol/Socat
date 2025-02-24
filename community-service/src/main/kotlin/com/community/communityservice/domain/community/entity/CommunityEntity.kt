@@ -9,13 +9,13 @@ import java.time.LocalDateTime
 @Table(name = "community")
 class CommunityEntity(
     @Id
-    val roomId: String,
+    val communityId: String,
     val userId: String,
-    val roomName: String,
-    val roomDesc: String?,
+    val communityName: String,
+    val communityDesc: String?,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime? = null,
-    val roomType: String
+    val communityTopic: String
 ) {
 
 }

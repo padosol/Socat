@@ -1,9 +1,9 @@
-export type Room = {
-  roomId: string;
+export type Community = {
+  communityId: string;
   userId: string;
-  roomName: string;
-  roomDesc: string;
-  roomType: string;
+  communityName: string;
+  communityDesc: string;
+  communityType: string;
   createdAt: string;
 };
 

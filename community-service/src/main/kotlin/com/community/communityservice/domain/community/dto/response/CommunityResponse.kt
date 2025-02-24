@@ -4,11 +4,11 @@ import com.community.communityservice.domain.community.vo.PostResponse
 import java.time.LocalDateTime
 
 data class CommunityResponse(
-    val roomId: String,
+    val communityId: String,
     val userId: String,
-    val roomName: String,
-    val roomDesc: String?,
+    val communityName: String,
+    val communityDesc: String?,
     val createdAt: LocalDateTime,
-    val roomType: String,
+    val communityTopic: String,
     val posts: List<PostResponse> = listOf()
 )

@@ -7,57 +7,34 @@ import com.community.communityservice.domain.community.vo.PostResponse
 import java.time.LocalDateTime
 
 class Community(
-    val roomId: String,
+    val communityId: String,
     val userId: String,
-    var roomName: String,
-    var roomDesc: String?,
+    var communityName: String,
+    var communityDesc: String?,
     var createdAt: LocalDateTime,
     var updatedAt: LocalDateTime? = null,
     var posts: MutableList<PostResponse> = mutableListOf(),
-    var roomType: String,
+    var communityTopic: String,
 ){
 
     companion object {
-        fun create(userId: String, roomName: String, roomDesc: String, roomType: String, idGenerator: IdGenerator): Community {
+        fun create(userId: String, communityName: String, communityDesc: String, communityTopic: String, idGenerator: IdGenerator): Community {
             return Community(
                 userId = userId,
-                roomId = idGenerator.createId(),
-                roomName = roomName,
-                roomDesc = roomDesc,
+                communityId = idGenerator.createId(),
+                communityName = communityName,
+                communityDesc = communityDesc,
                 createdAt = LocalDateTime.now(),
-                roomType = roomType,
+                communityTopic = communityTopic,
             )
         }
     }
 
-    fun modifyRoom(modifyRoomDTO: ModifyCommunityDTO) {
-        roomName = modifyRoomDTO.roomName
+    fun modifyRoom(modifyCommunityDTO: ModifyCommunityDTO) {
+        communityName = modifyCommunityDTO.communityName
         updatedAt = LocalDateTime.now()
     }
 
-    fun toDto(): CommunityResponse {
-        return CommunityResponse(
-            roomId = roomId ,
-            userId = userId ,
-            roomName = roomName ,
-            createdAt = createdAt,
-            roomType = roomType,
-            roomDesc = roomDesc,
-            posts = posts
-        )
-    }
-
-    fun toEntity(): CommunityEntity {
-        return CommunityEntity(
-                roomId = roomId,
-                userId = userId,
-                roomName = roomName,
-                roomDesc = roomDesc,
-                createdAt = createdAt,
-                updatedAt = updatedAt,
-                roomType = roomType,
-        )
-    }
 
     fun equalsUserId(userId: String): Boolean {
         return this.userId == userId

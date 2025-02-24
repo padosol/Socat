@@ -4,12 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.util.StringUtils
 
 data class CreateCommunityDTO(
-        @field:Schema(description = "방 제목", defaultValue = "테스트 룸")
-        val roomName: String,
-        val roomDesc: String,
-        val roomType: String,
+        val communityName: String,
+        val communityDesc: String,
+        val communityTopic: String,
 ) {
     init {
-        require(StringUtils.hasText(roomName))
+        require(StringUtils.hasText(communityName))
     }
 }

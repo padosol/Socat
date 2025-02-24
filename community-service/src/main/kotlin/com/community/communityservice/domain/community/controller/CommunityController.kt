@@ -5,10 +5,11 @@ import com.community.communityservice.domain.community.dto.request.CreateCommuni
 import com.community.communityservice.domain.community.dto.request.ModifyCommunityDTO
 import com.community.communityservice.domain.community.dto.request.RemoveCommunityDTO
 import com.community.communityservice.domain.community.dto.response.CommunityResponse
-import com.community.communityservice.domain.community.service.usecase.CreateCommunityUseCase
-import com.community.communityservice.domain.community.service.usecase.FindCommunityUseCase
-import com.community.communityservice.domain.community.service.usecase.ModifyCommunityUseCase
-import com.community.communityservice.domain.community.service.usecase.RemoveCommunityUseCase
+import com.community.communityservice.domain.community.mapper.CommunityMapper
+import com.community.communityservice.domain.community.service.community.usecase.CreateCommunityUseCase
+import com.community.communityservice.domain.community.service.community.usecase.FindCommunityUseCase
+import com.community.communityservice.domain.community.service.community.usecase.ModifyCommunityUseCase
+import com.community.communityservice.domain.community.service.community.usecase.RemoveCommunityUseCase
 import com.community.communityservice.global.dto.APIResponse
 import com.community.communityservice.global.jwt.JwtProvider
 import jakarta.servlet.http.HttpServletRequest
@@ -39,7 +40,7 @@ class CommunityController(
     override fun communities(): ResponseEntity<APIResponse<List<CommunityResponse>>> {
         val findAllCommunity: List<Community> = findCommunityUseCase.findAll()
 
-        return ResponseEntity.status(200).body(APIResponse.ok(findAllCommunity.map { it.toDto() }.toList()))
+        return ResponseEntity.status(200).body(APIResponse.ok(findAllCommunity.map { CommunityMapper.domainToDTO(it) }.toList()))
     }
 
     /**
@@ -52,7 +53,7 @@ class CommunityController(
 
         val findCommunity: Community = findCommunityUseCase.findById(communityId)
 
-        return ResponseEntity.ok().body(APIResponse.ok(findCommunity.toDto()))
+        return ResponseEntity.ok().body(APIResponse.ok( CommunityMapper.domainToDTO(findCommunity)))
     }
 
     /**
@@ -67,7 +68,7 @@ class CommunityController(
 
         val createdCommunity: Community = createCommunityUseCase.create(createCommunityDTO, userId)
 
-        return ResponseEntity.status(201).body(APIResponse.ok(createdCommunity.toDto()))
+        return ResponseEntity.status(201).body(APIResponse.ok(CommunityMapper.domainToDTO(createdCommunity)))
     }
 
     /**
@@ -97,7 +98,7 @@ class CommunityController(
 
         val modifiedCommunity: Community = modifyCommunityUseCase.modify(modifyCommunityDTO, userId)
 
-        return ResponseEntity.status(200).body(APIResponse.ok(modifiedCommunity.toDto()))
+        return ResponseEntity.status(200).body(APIResponse.ok( CommunityMapper.domainToDTO(modifiedCommunity) ))
     }
 
 }
