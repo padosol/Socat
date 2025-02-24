@@ -7,7 +7,7 @@ interface TopicRepository {
 
     fun save(topic: Topic): Topic
 
-    fun findById(topicId: String): Topic
+    fun findById(topicId: String): Topic?
 
     fun findAll(): List<Topic>
 

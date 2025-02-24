@@ -20,6 +20,8 @@ import com.community.communityservice.global.exception.CustomException
 import com.community.communityservice.global.exception.CustomExceptionCode
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.function.Supplier
 
@@ -30,6 +32,8 @@ class CommunityService(
     private val postServiceClient: PostServiceClient,
     private val circuitBreakerRegistry: CircuitBreakerRegistry
 ) : RemoveCommunityUseCase, ModifyCommunityUseCase, FindCommunityUseCase, CreateCommunityUseCase {
+
+    private val logger: Logger = LoggerFactory.getLogger(CommunityService::class.java)
 
     override fun create(createCommunityDTO: CreateCommunityDTO, userId: String): Community {
         val userResponse = getUserResponse(userId)

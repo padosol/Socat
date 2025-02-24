@@ -8,6 +8,6 @@ import jakarta.persistence.Table
 @Table(name = "topics")
 class TopicEntity(
     @Id
-    private val topicId: Long,
+    private val topicId: String,
     private var topicName: String,
 )

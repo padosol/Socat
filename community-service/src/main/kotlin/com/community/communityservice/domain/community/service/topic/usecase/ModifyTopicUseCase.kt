@@ -4,5 +4,5 @@ import com.community.communityservice.domain.community.domain.Topic
 import com.community.communityservice.domain.community.dto.request.topic.ModifyTopicDTO
 
 interface ModifyTopicUseCase {
-    fun modify(modifyTopicDTO: ModifyTopicDTO): Topic
+    fun modify(topicId: String, modifyTopicDTO: ModifyTopicDTO): Topic
 }

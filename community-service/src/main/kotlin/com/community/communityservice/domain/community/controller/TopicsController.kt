@@ -32,20 +32,21 @@ class TopicsController(
         }
     }
 
-    @PutMapping
+    @PutMapping("/{topicId}")
     fun modify(
+        @PathVariable("topicId") topicId: String,
         @RequestBody modifyTopicDTO: ModifyTopicDTO
     ) : ResponseEntity<APIResponse<TopicResponse>> {
-        return topicService.modify(modifyTopicDTO).let {
+        return topicService.modify(topicId, modifyTopicDTO).let {
             ResponseEntity.ok(APIResponse.ok(TopicMapper.domainToResponse(it)))
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{topicId}")
     fun remove(
-        @RequestBody removeTopicDTO: RemoveTopicDTO
+        @PathVariable("topicId") topicId: String,
     ) : ResponseEntity<APIResponse<Void>> {
-        return topicService.remove(removeTopicDTO).let {
+        return topicService.remove(topicId).let {
             ResponseEntity.status(204).body(null)
         }
     }
