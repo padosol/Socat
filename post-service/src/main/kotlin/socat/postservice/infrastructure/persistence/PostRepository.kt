@@ -10,7 +10,6 @@ import socat.postservice.application.port.output.PostPersistencePort
 import socat.postservice.domain.model.Post
 import socat.postservice.infrastructure.mapper.PostMapper
 import socat.postservice.infrastructure.persistence.entity.PostEntity
-import socat.postservice.infrastructure.web.dto.response.PostWithPage
 
 @Slf4j
 @Repository

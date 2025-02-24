@@ -3,19 +3,18 @@ package socat.postservice.infrastructure.web.controller
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
 import socat.postservice.global.dto.APIResponse
-import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
-import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
-import socat.postservice.infrastructure.web.dto.request.RemovePostDTO
-import socat.postservice.infrastructure.web.dto.response.PostResponse
-import socat.postservice.infrastructure.web.dto.response.PostWithPage
+import socat.postservice.infrastructure.web.dto.request.post.CreatePostDTO
+import socat.postservice.infrastructure.web.dto.request.post.ModifyPostDTO
+import socat.postservice.infrastructure.web.dto.request.post.RemovePostDTO
+import socat.postservice.infrastructure.web.dto.response.post.PostResponse
+import socat.postservice.infrastructure.web.dto.response.post.PostWithPage
 
 interface SwaggerPostController {
     fun createPost(
-            createPostDTO: CreatePostDTO,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
+        createPostDTO: CreatePostDTO,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
     ): ResponseEntity<APIResponse<PostResponse>>
 
     fun modifyPost(

@@ -13,12 +13,13 @@ import socat.postservice.application.port.input.post.RemovePostUseCase
 import socat.postservice.domain.model.Post
 import socat.postservice.global.dto.APIResponse
 import socat.postservice.global.utils.JwtProvider
+import socat.postservice.infrastructure.mapper.PostMapper
 import socat.postservice.infrastructure.s3.S3FileManagement
-import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
-import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
-import socat.postservice.infrastructure.web.dto.request.RemovePostDTO
-import socat.postservice.infrastructure.web.dto.response.PostResponse
-import socat.postservice.infrastructure.web.dto.response.PostWithPage
+import socat.postservice.infrastructure.web.dto.request.post.CreatePostDTO
+import socat.postservice.infrastructure.web.dto.request.post.ModifyPostDTO
+import socat.postservice.infrastructure.web.dto.request.post.RemovePostDTO
+import socat.postservice.infrastructure.web.dto.response.post.PostResponse
+import socat.postservice.infrastructure.web.dto.response.post.PostWithPage
 
 @Slf4j
 @RestController
@@ -43,7 +44,7 @@ class PostController(
 
         val createPost = createPostUseCase.createPost(createPostDTO, userId)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.ok(createPost.toDTO()))
+        return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.ok(PostMapper.domainToDTO(createPost)))
     }
 
     /**
@@ -58,7 +59,7 @@ class PostController(
 
         val modifyPost = modifyPostUseCase.modifyPost(modifyPostDTO, userId)
 
-        return ResponseEntity.ok(APIResponse.ok(modifyPost.toDTO()))
+        return ResponseEntity.ok(APIResponse.ok(PostMapper.domainToDTO(modifyPost)))
     }
 
     /**
@@ -86,7 +87,7 @@ class PostController(
 
         val post: Post = findPostUseCase.findById(postId)
 
-        return ResponseEntity.ok(APIResponse.ok(post.toDTO()))
+        return ResponseEntity.ok(APIResponse.ok(PostMapper.domainToDTO(post)))
     }
 
     /**
@@ -98,7 +99,7 @@ class PostController(
         @RequestParam(value = "query", required = false) query: String,
     ): ResponseEntity<APIResponse<List<PostResponse>>> {
         val findAll = findPostUseCase.findAllBySearch(page, query)
-        val toList: List<PostResponse> = findAll.map { it.toDTO() }.toList()
+        val toList: List<PostResponse> = findAll.map { PostMapper.domainToDTO(it) }.toList()
 
         return ResponseEntity.status(HttpStatus.OK).body(APIResponse.ok(toList))
     }

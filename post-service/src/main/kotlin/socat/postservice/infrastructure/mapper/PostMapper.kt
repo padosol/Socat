@@ -1,11 +1,8 @@
 package socat.postservice.infrastructure.mapper
 
-import jakarta.persistence.ManyToOne
 import socat.postservice.domain.model.Post
-import socat.postservice.infrastructure.persistence.entity.CategoryEntity
 import socat.postservice.infrastructure.persistence.entity.PostEntity
-import socat.postservice.infrastructure.web.dto.response.PostResponse
-import java.time.LocalDateTime
+import socat.postservice.infrastructure.web.dto.response.post.PostResponse
 
 class PostMapper {
 
@@ -49,6 +46,17 @@ class PostMapper {
                 createdAt = post.createdAt,
                 updatedAt = post.updatedAt,
                 username = username
+            )
+        }
+
+        fun domainToDTO(post: Post): PostResponse {
+            return PostResponse(
+                postId = post.postId,
+                userId = post.userId,
+                title = post.title,
+                content = post.content,
+                createdAt = post.createdAt,
+                updatedAt = post.updatedAt,
             )
         }
 

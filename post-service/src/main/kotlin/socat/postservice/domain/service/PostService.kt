@@ -20,13 +20,13 @@ import socat.postservice.global.exception.PostException
 import socat.postservice.global.exception.PostExceptionCode
 import socat.postservice.infrastructure.client.RoomServiceClient
 import socat.postservice.infrastructure.client.UserServiceClient
-import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
-import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
-import socat.postservice.infrastructure.web.dto.request.RemovePostDTO
+import socat.postservice.infrastructure.web.dto.request.post.CreatePostDTO
+import socat.postservice.infrastructure.web.dto.request.post.ModifyPostDTO
+import socat.postservice.infrastructure.web.dto.request.post.RemovePostDTO
 import socat.postservice.infrastructure.vo.RoomResponse
 import socat.postservice.infrastructure.vo.UserResponse
-import socat.postservice.infrastructure.web.dto.response.PostResponse
-import socat.postservice.infrastructure.web.dto.response.PostWithPage
+import socat.postservice.infrastructure.web.dto.response.post.PostResponse
+import socat.postservice.infrastructure.web.dto.response.post.PostWithPage
 import java.util.function.Supplier
 
 @Service

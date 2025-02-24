@@ -1,7 +1,7 @@
 package socat.postservice.domain.model
 
-import socat.postservice.infrastructure.web.dto.request.CreatePostDTO
-import socat.postservice.infrastructure.web.dto.request.ModifyPostDTO
+import socat.postservice.infrastructure.web.dto.request.post.CreatePostDTO
+import socat.postservice.infrastructure.web.dto.request.post.ModifyPostDTO
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*

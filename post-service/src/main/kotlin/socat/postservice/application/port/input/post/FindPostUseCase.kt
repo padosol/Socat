@@ -1,7 +1,7 @@
 package socat.postservice.application.port.input.post
 
 import socat.postservice.domain.model.Post
-import socat.postservice.infrastructure.web.dto.response.PostWithPage
+import socat.postservice.infrastructure.web.dto.response.post.PostWithPage
 
 interface FindPostUseCase {
     fun findById(postId: String): Post
