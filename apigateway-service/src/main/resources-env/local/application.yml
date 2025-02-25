@@ -124,6 +124,15 @@ spring:
         - id: community-service
           uri: lb://COMMUNITY-SERVICE
           predicates:
+            - Path=/community-service/topics
+            - Method=POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/community-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: community-service
+          uri: lb://COMMUNITY-SERVICE
+          predicates:
             - Path=/community-service/v3/api-docs
             - Method=GET
           filters:
@@ -136,6 +145,9 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/community-service/(?<segment>.*), /$\{segment}
+
+
+
 
         ## chat-service
         - id: chat-service
