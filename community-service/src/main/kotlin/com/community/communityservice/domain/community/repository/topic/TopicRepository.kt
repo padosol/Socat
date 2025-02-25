@@ -13,6 +13,4 @@ interface TopicRepository {
 
     fun delete(topicId: String)
 
-    fun modify(topic: Topic): Topic
-
 }
