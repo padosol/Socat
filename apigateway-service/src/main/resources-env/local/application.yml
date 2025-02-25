@@ -146,9 +146,6 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/community-service/(?<segment>.*), /$\{segment}
 
-
-
-
         ## chat-service
         - id: chat-service
           uri: lb://CHAT-SERVICE
@@ -192,8 +189,8 @@ springdoc:
       name: 유저 서비스
       url: user-service/v3/api-docs
     urls[1]:
-      name: 방 서비스
-      url: room-service/v3/api-docs
+      name: 커뮤니티 서비스
+      url: community-service/v3/api-docs
     urls[2]:
       name: 게시글 서비스
       url: post-service/v3/api-docs
