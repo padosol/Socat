@@ -3,9 +3,7 @@ package com.community.communityservice.domain.community.service.topic
 import com.community.communityservice.domain.community.domain.Topic
 import com.community.communityservice.domain.community.dto.request.topic.CreateTopicDTO
 import com.community.communityservice.domain.community.dto.request.topic.ModifyTopicDTO
-import com.community.communityservice.domain.community.dto.request.topic.RemoveTopicDTO
 import com.community.communityservice.domain.community.repository.topic.TopicRepository
-import com.community.communityservice.domain.community.service.community.CommunityService
 import com.community.communityservice.domain.community.service.topic.usecase.CreateTopicUseCase
 import com.community.communityservice.domain.community.service.topic.usecase.FIndTopicUseCase
 import com.community.communityservice.domain.community.service.topic.usecase.ModifyTopicUseCase

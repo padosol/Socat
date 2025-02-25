@@ -111,31 +111,31 @@ spring:
             - AuthorizationHeaderFilter
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 
-        ## room-service
-        - id: room-service
-          uri: lb://ROOM-SERVICE
+        ## community-service
+        - id: community-service
+          uri: lb://COMMUNITY-SERVICE
           predicates:
-            - Path=/room-service/rooms
+            - Path=/community-service/communities
             - Method=POST,PUT,DELETE
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/room-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/community-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
-        - id: room-service
-          uri: lb://ROOM-SERVICE
+        - id: community-service
+          uri: lb://COMMUNITY-SERVICE
           predicates:
-            - Path=/room-service/v3/api-docs
+            - Path=/community-service/v3/api-docs
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/room-service/(?<segment>.*), /$\{segment}
-        - id: room-service
-          uri: lb://ROOM-SERVICE
+            - RewritePath=/community-service/(?<segment>.*), /$\{segment}
+        - id: community-service
+          uri: lb://COMMUNITY-SERVICE
           predicates:
-            - Path=/room-service/**
+            - Path=/community-service/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/room-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/community-service/(?<segment>.*), /$\{segment}
 
         ## chat-service
         - id: chat-service
