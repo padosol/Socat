@@ -25,7 +25,7 @@ class SwaggerConfig {
                 Info()
                     .version("v0.1")
                     .title("Socat")
-                    .description("Socat Room API 문서")
+                    .description("Socat Community API 문서")
             )
     }
 

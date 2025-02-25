@@ -25,7 +25,7 @@ class TopicService(
     private val logger: Logger = LoggerFactory.getLogger(TopicService::class.java)
 
     override fun create(createTopicDTO: CreateTopicDTO): Topic {
-        topicRepository.findById(createTopicDTO.topicId) ?: {
+        topicRepository.findById(createTopicDTO.topicId) ?.let {
             logger.info("이미 등록된 토픽 아이디 입니다. [${createTopicDTO.topicId}]")
             throw CustomException(CustomExceptionCode.TOPIC_ID_ALREADY_EXISTS)
         }

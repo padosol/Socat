@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils
 data class CreateCommunityDTO(
         val communityName: String,
         val communityDesc: String,
-        val communityTopic: String,
+        val communityTopicId: String,
 ) {
     init {
         require(StringUtils.hasText(communityName))

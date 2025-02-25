@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/topics")
 class TopicsController(
     private val topicService: TopicService
-) {
+) : TopicSwagger{
 
     @PostMapping
     fun create(
