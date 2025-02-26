@@ -46,7 +46,7 @@ class CommunityService(
                 userId = user.id,
                 communityName = createCommunityDTO.communityName,
                 communityDesc = createCommunityDTO.communityDesc,
-                communityTopicId = createCommunityDTO.communityTopicId,
+                topicId = createCommunityDTO.topicId,
                 DefaultIdGenerator()
         )
 

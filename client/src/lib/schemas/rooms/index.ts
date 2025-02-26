@@ -1,12 +1,12 @@
 import {z} from 'zod'
 
-const roomSchema = z.object({
-  roomId: z.string(),
-  roomName: z.string(),
-  roomDesc: z.string(),
-  roomType: z.string(),
+const communitySchema = z.object({
+  communityId: z.string(),
+  communityName: z.string(),
+  communityDesc: z.string(),
+  topicId: z.string(),
 })
 
 export {
-  roomSchema
+  communitySchema
 }

@@ -1,32 +1,30 @@
 "use server"
 
 import { instance } from "@/lib/axios/axiosInstance";
-import { roomSchema } from "@/lib/schemas/rooms";
+import { communitySchema } from "@/lib/schemas/rooms";
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-export type RoomState = {
+export type CommunityState = {
   errors?: {
-    roomName?: string[];
-    roomDesc?: string[];
-    roomType?: string[];
+    communityName?: string[];
+    communityDesc?: string[];
+    topicId?: string[];
   };
   message?: string | null;
   success: boolean;
 };
 
-const roomForm = roomSchema.omit({roomId: true, })
+const communityForm = communitySchema.omit({communityId: true, })
 
-export async function createRoom(prevState: RoomState, formData: FormData) { 
+export async function createCommunity(prevState: CommunityState, formData: FormData) { 
 
-  const validatedFields = roomForm.safeParse({
-    roomName: formData.get("roomName"),
-    roomDesc: formData.get("roomDesc"),
-    roomType: formData.get("roomType"),
+  const validatedFields = communityForm.safeParse({
+    communityName: formData.get("communityName"),
+    communityDesc: formData.get("communityDesc"),
+    topicId: formData.get("topicId"),
   })
   
-  console.log(validatedFields)
-
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
@@ -38,7 +36,7 @@ export async function createRoom(prevState: RoomState, formData: FormData) {
   const form = validatedFields.data;
   
   try {
-    const resposne = await instance.post("/room-service/rooms", form);
+    const resposne = await instance.post("/community-service/communities", form);
 
     if (!resposne.data.success) {
       return {

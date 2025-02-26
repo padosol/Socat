@@ -15,7 +15,7 @@ class CommunityEntity(
     val communityDesc: String?,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime? = null,
-    val communityTopicId: String
+    val topicId: String
 ) {
 
 }

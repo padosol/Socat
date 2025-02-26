@@ -2,18 +2,22 @@
 
 import Link from "next/link";
 import { Button } from "@/components/button";
-import { menus } from "@/lib/static-data";
 import { useActionState } from "react";
+import { Topic } from "@/lib/definitions";
 
-import { 
-  RoomState,
-  createRoom
- } from "@/lib/api/rooms/create-room";
+ import { 
+  CommunityState,
+  createCommunity
+ } from "@/lib/api/communities/create-community";
 
 
-export default function Form() {
-  const initialState: RoomState = { message: null, errors: {}, success: false };
-  const [state, formAction] = useActionState(createRoom, initialState);
+export default function Form({
+  topics
+}: {
+  topics: Topic[]
+}) {
+  const initialState: CommunityState = { message: null, errors: {}, success: false };
+  const [state, formAction] = useActionState(createCommunity, initialState);
 
   return (
     <form action={formAction}>
@@ -21,17 +25,17 @@ export default function Form() {
 
         {/* Scoat Name */}
         <div className="mb-4">
-          <label htmlFor="roomName" className="mb-2 block text-sm font-medium">
+          <label htmlFor="communityName" className="mb-2 block text-sm font-medium">
             커뮤니티명
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="roomName"
-                name="roomName"
+                id="communityName"
+                name="communityName"
                 type="text"
                 step="0.01"
-                placeholder="소켓명 입력"
+                placeholder="커뮤니티명 입력"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-4 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="amount-error"
               />
@@ -49,17 +53,17 @@ export default function Form() {
 
         {/* 소켓 설명 */ }
         <div className="mb-4">
-          <label htmlFor="roomDesc" className="mb-2 block text-sm font-medium">
+          <label htmlFor="communityDesc" className="mb-2 block text-sm font-medium">
             커뮤니티 설명
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="roomDesc"
-                name="roomDesc"
+                id="communityDesc"
+                name="communityDesc"
                 type="text"
                 step="0.01"
-                placeholder="소켓 설명 입력"
+                placeholder="커뮤니티 설명 입력"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-4 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="amount-error"
               />
@@ -76,23 +80,23 @@ export default function Form() {
         </div>
         
         <div className="mb-4">
-          <label htmlFor="roomType" className="mb-2 block text-sm font-medium">
-            카테고리 선택
+          <label htmlFor="topicId" className="mb-2 block text-sm font-medium">
+            주제 선택
           </label>
           <div className="relative">
             <select
-              id="roomType"
-              name="roomType"
+              id="topicId"
+              name="topicId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-4 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
               aria-describedby="customer-error"
             >
               <option value="" disabled>
-                카테고리 선택
+                선택
               </option>
-              {menus.map((menu) => (
-                <option key={menu.id} value={menu.id} className="">
-                  {menu.name}
+              {topics && topics.map((topic) => (
+                <option key={topic.topicId} value={topic.topicId} className="">
+                  {topic.topicName}
                 </option>
               ))}
             </select>

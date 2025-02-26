@@ -1,7 +1,11 @@
 import Image from "next/image";
 import MenuNav from "../../components/menunav";
+import { getAllTopic } from "@/lib/api/communities/topic/get-all-topics";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+
+  const topics = await getAllTopic();
+
   return (
     <div className="h-screen">
       <div className="border h-20 flex justify-center items-center">
@@ -13,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="h-full border w-full flex justify-center">
         <div className="w-[1000px]">
           <div className="flex flex-col flex-1 border h-full">
-            <MenuNav />
+            <MenuNav topics={topics} />
             <div className="flex-1 p-4">
               {children}
             </div>

@@ -5,8 +5,23 @@ import { useUserStore } from "@/stores/userInfo-store-provider";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { logout } from "@/lib/api/auth/logout";
+import { Topic } from "@/lib/definitions";
+import { useSearchParams, usePathname } from 'next/navigation';
+import clsx from 'clsx';
+import { useRouter } from "next/navigation";
 
-export default function MenuNav() {
+export default function MenuNav({
+  topics
+}: {
+  topics: Topic[]
+}) {
+  const {replace} = useRouter();
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const topic = topics.find((topic) => topic.topicId === searchParams.get("type"));
+  const type = topic ? topic.topicId : "all"; 
+
   const { active, username } = useUserStore(
     (state) => state,
   )
@@ -31,35 +46,29 @@ export default function MenuNav() {
           홈
         </Link>
         <Link href={{
-          pathname: '/socat',
-          query: { type: 'all' }
-        }} className="text-gray-700 hover:text-gray-900">
-          전체
-        </Link>
-        <Link href={{
-          pathname: '/socat',
-          query: { type: 'stock' }
-        }} className="text-gray-700 hover:text-gray-900">
-          주식
-        </Link>
-        <Link href={{
-          pathname: '/socat',
-          query: { type: 'game' }
-        }} className="text-gray-700 hover:text-gray-900">
-          게임
-        </Link>
-        <Link href={{
-          pathname: '/socat',
-          query: { type: 'movie' }
-        }} className="text-gray-700 hover:text-gray-900">
-          영화
-        </Link>
-        <Link href={{
-          pathname: '/socat',
-          query: { type: 'news' }
-        }} className="text-gray-700 hover:text-gray-900">
-          뉴스
-        </Link>
+            pathname: '/socat',
+            query: { type: "all" }
+          }} className={clsx(
+            "text-gray-700 hover:text-gray-900",
+            {
+              'bg-sky-100 text-blue-600': (pathname === "/socat" && type === "all")
+            }
+          )}>
+            전체
+          </Link>
+        {topics && topics.map((topic) => (
+          <Link key={topic.topicId} href={{
+            pathname: '/socat',
+            query: { type: topic.topicId }
+          }} className={clsx(
+            "text-gray-700 hover:text-gray-900",
+            {
+              'bg-sky-100 text-blue-600': (pathname === "/socat" && type === topic.topicId)
+            }
+          )}>
+            {topic.topicName}
+          </Link>
+        ))}
       </div>
 
       {active ? 

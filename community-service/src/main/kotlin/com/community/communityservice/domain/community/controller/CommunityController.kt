@@ -26,15 +26,15 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/community")
 class CommunityController(
-    private val findCommunityUseCase: FindCommunityUseCase,
     private val createCommunityUseCase: CreateCommunityUseCase,
     private val modifyCommunityUseCase: ModifyCommunityUseCase,
     private val removeCommunityUseCase: RemoveCommunityUseCase,
+    private val findCommunityUseCase: FindCommunityUseCase,
     private val jwtProvider: JwtProvider
 ) : SwaggerController{
 
     /**
-     * 방 전체 조회
+     * 커뮤니티 전체 조회
      */
     @GetMapping()
     override fun communities(): ResponseEntity<APIResponse<List<CommunityResponse>>> {
@@ -44,7 +44,7 @@ class CommunityController(
     }
 
     /**
-     * 방 상세 정보
+     * 커뮤니티 상세 정보
      */
     @GetMapping("/{communityId}")
     override fun getCommunity(
@@ -57,7 +57,7 @@ class CommunityController(
     }
 
     /**
-     * 방 생성
+     * 커뮤니티 생성
      */
     @PostMapping("")
     override fun create(
@@ -72,7 +72,7 @@ class CommunityController(
     }
 
     /**
-     * 방 삭제
+     * 커뮤니티 삭제
      */
     @DeleteMapping("")
     override fun delete(
@@ -87,7 +87,7 @@ class CommunityController(
     }
 
     /**
-     * 방 수정
+     * 커뮤니티 수정
      */
     @PutMapping("")
     override fun modify(

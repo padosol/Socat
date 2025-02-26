@@ -19,7 +19,7 @@ class CommunityMapper {
                 communityDesc = communityEntity.communityDesc,
                 createdAt = communityEntity.createdAt,
                 updatedAt = communityEntity.updatedAt,
-                communityTopicId = communityEntity.communityTopicId,
+                topicId = communityEntity.topicId,
             )
         }
 
@@ -31,7 +31,7 @@ class CommunityMapper {
                 communityDesc = community.communityDesc,
                 createdAt = community.createdAt,
                 updatedAt = community.updatedAt,
-                communityTopicId = community.communityTopicId
+                topicId = community.topicId
             )
         }
 
@@ -42,7 +42,7 @@ class CommunityMapper {
                 communityName = community.communityName,
                 communityDesc = community.communityDesc,
                 createdAt = community.createdAt,
-                communityTopicId = community.communityTopicId,
+                topicId = community.topicId,
                 posts = community.posts,
             )
         }

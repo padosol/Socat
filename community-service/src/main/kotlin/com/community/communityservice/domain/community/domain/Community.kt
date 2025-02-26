@@ -14,18 +14,18 @@ class Community(
     var createdAt: LocalDateTime,
     var updatedAt: LocalDateTime? = null,
     var posts: MutableList<PostResponse> = mutableListOf(),
-    var communityTopicId: String,
+    var topicId: String,
 ){
 
     companion object {
-        fun create(userId: String, communityName: String, communityDesc: String, communityTopicId: String, idGenerator: IdGenerator): Community {
+        fun create(userId: String, communityName: String, communityDesc: String, topicId: String, idGenerator: IdGenerator): Community {
             return Community(
                 userId = userId,
                 communityId = idGenerator.createId(),
                 communityName = communityName,
                 communityDesc = communityDesc,
                 createdAt = LocalDateTime.now(),
-                communityTopicId = communityTopicId,
+                topicId = topicId,
             )
         }
     }

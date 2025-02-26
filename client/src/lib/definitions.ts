@@ -3,7 +3,7 @@ export type Community = {
   userId: string;
   communityName: string;
   communityDesc: string;
-  communityType: string;
+  topicId: string;
   createdAt: string;
 };
 
@@ -52,4 +52,9 @@ export type PostWithPage = {
   total: number,
   pageNumber: number,
   pageSize: number,
+}
+
+export type Topic = {
+  topicId: string,
+  topicName: string,
 }

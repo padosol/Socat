@@ -61,6 +61,7 @@ export default async function RootLayout({
         userState.email = user_response.email;
         userState.active = true;
       } catch(e) {
+        console.error(e)
         console.log("권한이 없습니다.")
       }
     }
