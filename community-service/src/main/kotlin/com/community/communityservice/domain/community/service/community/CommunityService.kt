@@ -4,12 +4,14 @@ import com.community.communityservice.domain.community.client.PostServiceClient
 import com.community.communityservice.domain.community.client.UserServiceClient
 import com.community.communityservice.domain.community.domain.Community
 import com.community.communityservice.domain.community.domain.DefaultIdGenerator
+import com.community.communityservice.domain.community.domain.Topic
 import com.community.communityservice.domain.community.dto.request.CreateCommunityDTO
 import com.community.communityservice.domain.community.dto.request.ModifyCommunityDTO
 import com.community.communityservice.domain.community.exception.CommunityNoRightModifyException
 import com.community.communityservice.domain.community.exception.CommunityNoRightRemoveException
 import com.community.communityservice.domain.community.exception.CommunityNotFoundException
 import com.community.communityservice.domain.community.repository.community.CommunityRepository
+import com.community.communityservice.domain.community.repository.topic.TopicRepository
 import com.community.communityservice.domain.community.service.community.usecase.CreateCommunityUseCase
 import com.community.communityservice.domain.community.service.community.usecase.FindCommunityUseCase
 import com.community.communityservice.domain.community.service.community.usecase.ModifyCommunityUseCase
@@ -30,7 +32,8 @@ class CommunityService(
     private val communityRepository: CommunityRepository,
     private val userServiceClient: UserServiceClient,
     private val postServiceClient: PostServiceClient,
-    private val circuitBreakerRegistry: CircuitBreakerRegistry
+    private val circuitBreakerRegistry: CircuitBreakerRegistry,
+    private val topicRepository: TopicRepository
 ) : RemoveCommunityUseCase, ModifyCommunityUseCase, FindCommunityUseCase, CreateCommunityUseCase {
 
     private val logger: Logger = LoggerFactory.getLogger(CommunityService::class.java)
@@ -41,12 +44,15 @@ class CommunityService(
             throw CustomException(CustomExceptionCode.USER_NOT_FOUND)
         }
 
+        val topic: Topic = topicRepository.findById(createCommunityDTO.topicId)
+            ?: throw CustomException(CustomExceptionCode.TOPIC_ID_NOT_EXISTS)
+
         val user = userResponse.data
         val createCommunity = Community.create(
                 userId = user.id,
                 communityName = createCommunityDTO.communityName,
                 communityDesc = createCommunityDTO.communityDesc,
-                topicId = createCommunityDTO.topicId,
+                topic = topic,
                 DefaultIdGenerator()
         )
 
@@ -55,18 +61,18 @@ class CommunityService(
 
     override fun findById(roomId: String): Community {
         return communityRepository.findById(roomId)
-        ?: throw CommunityNotFoundException(CustomExceptionCode.ROOM_NOT_FOUND)
+        ?: throw CommunityNotFoundException(CustomExceptionCode.COMMUNITY_NOT_FOUND)
     }
 
-    override fun findAll(): List<Community> {
-        return communityRepository.findAll()
+    override fun findAll(type: String): List<Community> {
+        return communityRepository.findAll(type)
     }
 
     override fun modify(modifyCommunityDTO: ModifyCommunityDTO, userId: String): Community {
         val findCommunity: Community = communityRepository.findById(modifyCommunityDTO.communityId) ?: throw RuntimeException()
 
         if (!findCommunity.equalsUserId(userId)) {
-            throw CommunityNoRightModifyException(CustomExceptionCode.ROOM_NO_RIGHT_MODIFY)
+            throw CommunityNoRightModifyException(CustomExceptionCode.COMMUNITY_NO_RIGHT_MODIFY)
         }
 
         findCommunity.modifyRoom(modifyCommunityDTO)
@@ -78,7 +84,7 @@ class CommunityService(
         val community = communityRepository.findRoomByRoomIdAndUserId(communityId, userId)
 
         if(!community.equalsUserId(userId)) {
-            throw CommunityNoRightRemoveException(CustomExceptionCode.ROOM_NO_RIGHT_DELETE)
+            throw CommunityNoRightRemoveException(CustomExceptionCode.COMMUNITY_NO_RIGHT_DELETE)
         }
 
         communityRepository.delete(community.communityId)

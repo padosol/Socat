@@ -4,6 +4,7 @@ export type Community = {
   communityName: string;
   communityDesc: string;
   topicId: string;
+  topicName: string;
   createdAt: string;
 };
 

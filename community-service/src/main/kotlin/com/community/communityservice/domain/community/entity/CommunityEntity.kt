@@ -1,8 +1,6 @@
 package com.community.communityservice.domain.community.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
@@ -12,10 +10,13 @@ class CommunityEntity(
     val communityId: String,
     val userId: String,
     val communityName: String,
-    val communityDesc: String?,
+    val communityDesc: String,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime? = null,
-    val topicId: String
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="topicId", referencedColumnName = "topicId")
+    val topic: TopicEntity,
 ) {
 
 }

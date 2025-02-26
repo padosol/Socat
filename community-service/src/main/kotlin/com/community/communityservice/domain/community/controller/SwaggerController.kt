@@ -26,7 +26,7 @@ interface SwaggerController {
                 )
             ]
     )
-    fun communities(): ResponseEntity<APIResponse<List<CommunityResponse>>>
+    fun communities(type: String): ResponseEntity<APIResponse<List<CommunityResponse>>>
 
     @Operation(summary = "채팅방 조회", description = "roomId 를 통해 채팅방을 조회한다.")
     @ApiResponse(
@@ -67,11 +67,10 @@ interface SwaggerController {
                         mediaType = "application/json"
                 )
             ]
-
     )
     @SecurityRequirement(name = "bearerAuth")
     fun delete(
-        removeCommunityDTO: RemoveCommunityDTO,
+        communityId: String,
         request: HttpServletRequest
     ): ResponseEntity<Void>
 

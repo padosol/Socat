@@ -24,7 +24,7 @@ class CommunityRepositoryImpl(
             ?.let {CommunityMapper.entityToDomain(it)}
     }
 
-    override fun findAll(): List<Community> {
+    override fun findAll(type: String): List<Community> {
         return  communityJpaRepository.findAll().map {
             CommunityMapper.entityToDomain(it)
         }
@@ -36,7 +36,7 @@ class CommunityRepositoryImpl(
 
     override fun findRoomByRoomIdAndUserId(roomId: String, userId: String): Community {
         val communityEntity = communityJpaRepository.findByIdOrNull(roomId)
-                ?: throw CommunityNotFoundException(CustomExceptionCode.ROOM_NOT_FOUND)
+                ?: throw CommunityNotFoundException(CustomExceptionCode.COMMUNITY_NOT_FOUND)
 
         return CommunityMapper.entityToDomain(communityEntity)
     }

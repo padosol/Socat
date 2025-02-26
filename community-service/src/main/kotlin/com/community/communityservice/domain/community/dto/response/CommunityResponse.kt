@@ -10,5 +10,6 @@ data class CommunityResponse(
     val communityDesc: String?,
     val createdAt: LocalDateTime,
     val topicId: String,
+    val topicName: String,
     val posts: List<PostResponse> = listOf()
 )

@@ -5,5 +5,5 @@ import com.community.communityservice.domain.community.domain.Community
 interface FindCommunityUseCase {
     fun findById(roomId: String): Community
 
-    fun findAll(): List<Community>
+    fun findAll(type: String): List<Community>
 }

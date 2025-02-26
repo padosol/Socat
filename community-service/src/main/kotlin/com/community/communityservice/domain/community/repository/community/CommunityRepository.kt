@@ -8,7 +8,7 @@ interface CommunityRepository {
 
     fun findById(roomId: String): Community?
 
-    fun findAll(): List<Community>
+    fun findAll(type: String): List<Community>
 
     fun delete(roomId: String)
 

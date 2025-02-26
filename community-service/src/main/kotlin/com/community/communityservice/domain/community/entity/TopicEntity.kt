@@ -9,5 +9,5 @@ import jakarta.persistence.Table
 class TopicEntity(
     @Id
     val topicId: String,
-    var topicName: String,
+    val topicName: String,
 )

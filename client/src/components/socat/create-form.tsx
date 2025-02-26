@@ -111,7 +111,7 @@ export default function Form({
         >
           취소
         </Link>
-        <Button type="submit">소켓 생성</Button>
+        <Button type="submit">생성</Button>
       </div>
     </form>
   )

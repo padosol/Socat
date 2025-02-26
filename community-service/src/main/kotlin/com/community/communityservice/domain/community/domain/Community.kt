@@ -10,22 +10,22 @@ class Community(
     val communityId: String,
     val userId: String,
     var communityName: String,
-    var communityDesc: String?,
+    var communityDesc: String,
     var createdAt: LocalDateTime,
     var updatedAt: LocalDateTime? = null,
     var posts: MutableList<PostResponse> = mutableListOf(),
-    var topicId: String,
+    val topic: Topic,
 ){
 
     companion object {
-        fun create(userId: String, communityName: String, communityDesc: String, topicId: String, idGenerator: IdGenerator): Community {
+        fun create(userId: String, communityName: String, communityDesc: String, topic: Topic, idGenerator: IdGenerator): Community {
             return Community(
                 userId = userId,
                 communityId = idGenerator.createId(),
                 communityName = communityName,
                 communityDesc = communityDesc,
                 createdAt = LocalDateTime.now(),
-                topicId = topicId,
+                topic = topic,
             )
         }
     }

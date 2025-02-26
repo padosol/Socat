@@ -21,10 +21,11 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/community")
+@RequestMapping("/communities")
 class CommunityController(
     private val createCommunityUseCase: CreateCommunityUseCase,
     private val modifyCommunityUseCase: ModifyCommunityUseCase,
@@ -37,8 +38,10 @@ class CommunityController(
      * 커뮤니티 전체 조회
      */
     @GetMapping()
-    override fun communities(): ResponseEntity<APIResponse<List<CommunityResponse>>> {
-        val findAllCommunity: List<Community> = findCommunityUseCase.findAll()
+    override fun communities(
+        @RequestParam(name = "type", defaultValue = "all") type: String,
+    ): ResponseEntity<APIResponse<List<CommunityResponse>>> {
+        val findAllCommunity: List<Community> = findCommunityUseCase.findAll(type)
 
         return ResponseEntity.status(200).body(APIResponse.ok(findAllCommunity.map { CommunityMapper.domainToDTO(it) }.toList()))
     }
@@ -71,17 +74,18 @@ class CommunityController(
         return ResponseEntity.status(201).body(APIResponse.ok(CommunityMapper.domainToDTO(createdCommunity)))
     }
 
+
     /**
      * 커뮤니티 삭제
      */
-    @DeleteMapping("")
+    @DeleteMapping("/{communityId}")
     override fun delete(
-        @RequestBody removeCommunityDTO: RemoveCommunityDTO,
+        @PathVariable("communityId") communityId: String,
         request: HttpServletRequest
     ): ResponseEntity<Void> {
         val userId = jwtProvider.getUserIdByRequest(request)
 
-        removeCommunityUseCase.remove(removeCommunityDTO.roomId, userId)
+        removeCommunityUseCase.remove(communityId, userId)
 
         return ResponseEntity.status(204).build()
     }
