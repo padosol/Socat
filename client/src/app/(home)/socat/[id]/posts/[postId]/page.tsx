@@ -11,7 +11,7 @@ export default async function Page(props: {
 
   const params = await props.params
   const postId = params.postId;
-  const roomId = params.id;
+  const communityId = params.id;
   
   const post = await getPostById(postId);
 
@@ -21,7 +21,7 @@ export default async function Page(props: {
 
   return (
     <div>
-      <PostDetail post={post} roomId={roomId}/>
+      <PostDetail post={post} communityId={communityId}/>
     </div>
   )
 }

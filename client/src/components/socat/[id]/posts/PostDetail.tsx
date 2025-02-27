@@ -11,10 +11,10 @@ const EditorViewer = dynamic(() => import('./editor-viewer'), {
 
 export default function PostDetail({
   post,
-  roomId
+  communityId
 }: {
   post: Post,
-  roomId: string
+  communityId: string
 }) {
 
   return (
@@ -40,7 +40,7 @@ export default function PostDetail({
       </div>
 
       <div>
-        <Link href={`/socat/${roomId}`}>
+        <Link href={`/socat/${communityId}`}>
           <Button>뒤로가기</Button>
         </Link>
       </div>

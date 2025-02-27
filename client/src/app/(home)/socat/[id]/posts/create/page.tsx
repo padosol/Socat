@@ -7,7 +7,7 @@ export default async function Page(props: {
 }) {
 
   const params = await props.params;
-  const roomId = params.id;
+  const communityId = params.id;
 
 
   // props 으로 roomId 전송
@@ -15,7 +15,7 @@ export default async function Page(props: {
 
   return (
     <div>
-      <Form roomId={roomId}/>
+      <Form communityId={communityId}/>
     </div>
   )
 }

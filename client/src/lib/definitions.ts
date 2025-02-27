@@ -16,7 +16,7 @@ export type User = {
 
 export type ApiResponse<T> = {
   success: boolean,
-  data: T,
+  data?: T | null,
   error: ErrorResponse
 }
 
@@ -28,7 +28,7 @@ export type ErrorResponse = {
 }
 
 export type Post = {
-  roomId: string,
+  communityId: string,
   postId: string,
   title: string,
   content: string,
@@ -52,7 +52,7 @@ export type PostWithPage = {
   posts: Post[],
   total: number,
   pageNumber: number,
-  pageSize: number,
+  totalPages: number,
 }
 
 export type Topic = {

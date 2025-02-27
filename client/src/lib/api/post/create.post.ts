@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 
 export type PostForm = {
-  roomId: string,
+  communityId: string,
   title: string,
   content: string,
 }
@@ -16,6 +16,6 @@ export async function createPost(createPostDto: PostForm) {
     return response.data;
   }
 
-  revalidatePath(`/socat/${createPostDto.roomId}`)
-  redirect(`/socat/${createPostDto.roomId}`)
+  revalidatePath(`/socat/${createPostDto.communityId}`)
+  redirect(`/socat/${createPostDto.communityId}`)
 }

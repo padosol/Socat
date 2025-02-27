@@ -1,22 +1,23 @@
-"use server"
-
-import getAllPostByRoomId from "@/lib/api/post/get-all-post-by-id";
+import getAllPostByCommunityId from "@/lib/api/post/get-all-post-by-id";
 import CurrentDate from "@/components/currentdate";
 import Pagination from "../pagination";
 import Link from "next/link";
 
 export default async function PostList({
-  roomId,
+  communityId,
   query,
   currentPage
 }: {
-  roomId: string;
+  communityId: string;
   query: string;
   currentPage: number;
 }) {
   const defaultSearch = {query: query, page: currentPage};
 
-  const response = await getAllPostByRoomId(roomId, defaultSearch);
+  const response = await getAllPostByCommunityId(communityId, defaultSearch);
+
+  const totalPages = response?.totalPages || 0;
+  const total = response?.total || 0;
 
   return (
     <div className="container mx-auto p-4">
@@ -24,7 +25,7 @@ export default async function PostList({
         <thead className="">
           <tr>
             <th className="py-2 px-4 border-b">번호</th>
-            <th className="py-2 px-4 border-b">분류</th>
+            {/* <th className="py-2 px-4 border-b">분류</th> */}
             <th className="py-2 px-4 border-b">제목</th>
             <th className="py-2 px-4 border-b">작성자</th>
             <th className="py-2 px-4 border-b">작성일</th>
@@ -35,10 +36,10 @@ export default async function PostList({
         <tbody>
           {response?.posts && response.posts.map((post, index) => (
             <tr key={post.postId} className="hover:bg-gray-100 text-center">
-              <td className="py-2 px-4 border-b">{response.total - ((currentPage - 1) * 10) - (index)}</td>
-              <td className="py-2 px-4 border-b">게임</td>
+              <td className="py-2 px-4 border-b">{total - ((currentPage - 1) * 10) - (index)}</td>
+              {/* <td className="py-2 px-4 border-b">게임</td> */}
               <td className="py-2 px-4 border-b">
-                <Link href={`/socat/${roomId}/posts/${post.postId}`}>
+                <Link href={`/socat/${communityId}/posts/${post.postId}`}>
                   {post.title}
                 </Link>
               </td>
@@ -52,7 +53,7 @@ export default async function PostList({
       </table>
 
       <div className="flex w-full justify-center items-center py-2">
-        <Pagination totalPages={response.total}/>
+        <Pagination totalPages={totalPages}/>
       </div>
     </div>
   )

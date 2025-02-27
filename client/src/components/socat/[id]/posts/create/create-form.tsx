@@ -8,14 +8,14 @@ import TuiEditor from "./tui-editor";
 import { createPost } from "@/lib/api/post/create.post";
 
 export default function Form({
-  roomId
-}: {roomId: string}) {
+  communityId
+}: {communityId: string}) {
   const router = useRouter();
 
   const editorRef = useRef<Editor>(null);
 
   const handleCancleButtonClick = () => {
-    router.push(`/socat/${roomId}`)
+    router.push(`/socat/${communityId}`)
   }
 
   const handleImageUpload = async (blob: File, callback: (url: string) => void) => {
@@ -36,7 +36,7 @@ export default function Form({
     const title = formData.get("title") as string;
     const content = editorRef.current?.getInstance().getHTML();
     const response = await createPost({
-      roomId,
+      communityId,
       title,
       content
     })

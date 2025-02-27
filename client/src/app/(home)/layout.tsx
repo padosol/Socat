@@ -6,6 +6,8 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   const topics = await getAllTopic();
 
+  console.log(topics)
+
   return (
     <div className="h-screen">
       <div className="border h-20 flex justify-center items-center">
