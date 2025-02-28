@@ -5,5 +5,10 @@ export default function EditorViewer({
 }: {
   initialValue: string;
 }) {
-  return <Viewer initialValue={initialValue} />;
+  return (
+    <Viewer 
+      initialValue={initialValue} 
+      height="500px"
+    />
+  );
 }

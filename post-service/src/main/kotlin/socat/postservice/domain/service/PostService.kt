@@ -14,26 +14,28 @@ import socat.postservice.application.port.output.CategoryPersistencePort
 import socat.postservice.application.port.output.PostPersistencePort
 import socat.postservice.domain.model.Post
 import socat.postservice.domain.service.exception.PostNotFoundException
-import socat.postservice.domain.service.exception.RoomNotFoundException
+import socat.postservice.domain.service.exception.CommunityNotFoundException
 import socat.postservice.global.dto.APIResponse
 import socat.postservice.global.exception.PostException
 import socat.postservice.global.exception.PostExceptionCode
-import socat.postservice.infrastructure.client.RoomServiceClient
+import socat.postservice.infrastructure.client.CommunityServiceClient
 import socat.postservice.infrastructure.client.UserServiceClient
+import socat.postservice.infrastructure.mapper.PostMapper
 import socat.postservice.infrastructure.web.dto.request.post.CreatePostDTO
 import socat.postservice.infrastructure.web.dto.request.post.ModifyPostDTO
 import socat.postservice.infrastructure.web.dto.request.post.RemovePostDTO
-import socat.postservice.infrastructure.vo.RoomResponse
+import socat.postservice.infrastructure.vo.CommunityResponse
 import socat.postservice.infrastructure.vo.UserResponse
 import socat.postservice.infrastructure.web.dto.response.post.PostResponse
 import socat.postservice.infrastructure.web.dto.response.post.PostWithPage
+import java.time.LocalDateTime
 import java.util.function.Supplier
 
 @Service
 class PostService(
     private val postPersistencePort: PostPersistencePort,
     private val userServiceClient: UserServiceClient,
-    private val roomServiceClient: RoomServiceClient,
+    private val communityServiceClient: CommunityServiceClient,
     private val circuitBreakerRegistry: CircuitBreakerRegistry,
     private val categoryPersistencePort: CategoryPersistencePort,
 ) : CreatePostUseCase, ModifyPostUseCase, RemovePostUseCase, FindPostUseCase {
@@ -49,15 +51,15 @@ class PostService(
             throw PostException(PostExceptionCode.USER_NOT_FOUND)
         }
 
-        val roomId = createPostDTO.roomId
-        val roomResponse: APIResponse<RoomResponse> = getRoomResponse(roomId)
-        if (!roomResponse.success) {
-            throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
+        val communityId = createPostDTO.communityId
+        val communityResponse: APIResponse<CommunityResponse> = getCommunityResponse(communityId)
+        if (!communityResponse.success) {
+            throw CommunityNotFoundException(PostExceptionCode.COMMUNITY_NOT_FOUND)
         }
 
-        val category = categoryPersistencePort.findById(createPostDTO.categoryId)
+//        val category = categoryPersistencePort.findById(createPostDTO.communityId)
 
-        val post = Post.createPost(createPostDTO, category, userId)
+        val post = Post.createPost(createPostDTO, userId)
         return postPersistencePort.savePost(post)
     }
 
@@ -77,9 +79,23 @@ class PostService(
         postPersistencePort.removePost(findPost)
     }
 
-    override fun findById(postId: String): Post {
-        return postPersistencePort.findById(postId)
-            ?: throw PostNotFoundException(PostExceptionCode.POST_NOT_FOUND)
+    override fun findById(postId: String): PostResponse {
+
+        val post = (postPersistencePort.findById(postId)
+            ?: throw PostNotFoundException(PostExceptionCode.POST_NOT_FOUND))
+
+        val userResponse = getUserResponse(post.userId)
+
+        return PostResponse(
+            communityId = post.communityId,
+            postId = post.postId,
+            userId = post.userId,
+            title = post.title,
+            content = post.content,
+            createdAt = post.createdAt,
+            updatedAt = post.updatedAt,
+            username = userResponse.data?.username,
+        )
     }
 
     override fun findAll(): List<Post> {
@@ -91,17 +107,17 @@ class PostService(
     }
 
     override fun findPostInRoomByRoomId(roomId: String): List<Post> {
-        val roomResponse: APIResponse<RoomResponse> = getRoomResponse(roomId)
+        val communityResponse: APIResponse<CommunityResponse> = getCommunityResponse(roomId)
 
-        if (!roomResponse.success) throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
+        if (!communityResponse.success) throw CommunityNotFoundException(PostExceptionCode.COMMUNITY_NOT_FOUND)
 
         return postPersistencePort.findPostInRoomByRoomId(roomId)
     }
 
     override fun findPostInRoomByRoomIdAndPageAndQuery(roomId: String, page: Int, query: String): PostWithPage {
-        val roomResponse: APIResponse<RoomResponse> = getRoomResponse(roomId)
+        val communityResponse: APIResponse<CommunityResponse> = getCommunityResponse(roomId)
 
-        if (!roomResponse.success) throw RoomNotFoundException(PostExceptionCode.ROOM_NOT_FOUND)
+        if (!communityResponse.success) throw CommunityNotFoundException(PostExceptionCode.COMMUNITY_NOT_FOUND)
 
         val response =
             postPersistencePort.findPostInRoomByRoomIdAndPageAndQuery(roomId, page, query)
@@ -110,27 +126,27 @@ class PostService(
 
         var postResponse: List<PostResponse> = mutableListOf()
         val userResponseMulti = getUserResponseMulti(userIds)
-//        if (userResponseMulti.success) {
-//            val data = userResponseMulti.data!!
-//            val result: List<PostResponse> = response.content.map {
-//                data[it.userId]
-//                    ?.let { userResponse -> it.toDTO(userResponse.username) }
-//                    ?: it.toDTO("익명")
-//            }
-//            postResponse = result
-//        }
+        if (userResponseMulti.success) {
+            val data = userResponseMulti.data!!
+            val result: List<PostResponse> = response.content.map {
+                data[it.userId]
+                    ?.let { userResponse -> PostMapper.domainToDTO(it, userResponse.username) }
+                    ?: PostMapper.domainToDTO(it, "익명")
+            }
+            postResponse = result
+        }
 
         return PostWithPage(
             posts = postResponse,
-            total = response.numberOfElements,
+            total = response.totalElements,
             pageNumber = response.number,
-            pageSize = response.size,
+            totalPages = response.totalPages,
         )
     }
 
-    fun getRoomResponse(roomId: String): APIResponse<RoomResponse> {
-        val circuitBreaker = circuitBreakerRegistry.circuitBreaker("roomCircuitBreaker")
-        val supplier: Supplier<APIResponse<RoomResponse>> = Supplier { roomServiceClient.getRoom(roomId) }
+    fun getCommunityResponse(communityId: String): APIResponse<CommunityResponse> {
+        val circuitBreaker = circuitBreakerRegistry.circuitBreaker("communityCircuitBreaker")
+        val supplier: Supplier<APIResponse<CommunityResponse>> = Supplier { communityServiceClient.getCommunity(communityId) }
         val decoratedSupplier = CircuitBreaker.decorateSupplier(circuitBreaker, supplier)
 
         return runCatching { decoratedSupplier.get() }

@@ -13,7 +13,7 @@ class PostExceptionAdvice {
 
     @ExceptionHandler(PostException::class)
     fun handlePostException(e: PostException): ResponseEntity<APIResponse<Any>> {
-        return ResponseEntity.ok(APIResponse.fail<Any>(ErrorResponse(e.postExceptionCode.status.value(), e.postExceptionCode.message)))
+        return ResponseEntity.ok(APIResponse.fail(ErrorResponse(e.postExceptionCode.status.value(), e.postExceptionCode.message)))
     }
 
 }

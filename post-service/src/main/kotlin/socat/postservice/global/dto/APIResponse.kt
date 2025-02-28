@@ -3,7 +3,7 @@ package socat.postservice.global.dto
 
 class APIResponse<T>(
         val success: Boolean,
-        val data: T?,
+        val data: T? = null,
         val error: ErrorResponse?,
 ) {
     companion object {

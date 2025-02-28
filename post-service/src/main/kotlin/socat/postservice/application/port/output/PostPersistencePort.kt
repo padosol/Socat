@@ -15,9 +15,9 @@ interface PostPersistencePort {
 
     fun findAll(): List<Post>
 
-    fun findPostInRoomByRoomId(roomId: String): List<Post>
+    fun findPostInRoomByRoomId(communityId: String): List<Post>
 
-    fun findPostInRoomByRoomIdAndPageAndQuery(roomId: String, page: Int, query: String): Page<Post>
+    fun findPostInRoomByRoomIdAndPageAndQuery(communityId: String, page: Int, query: String): Page<Post>
 
     fun findAllBySearch(page: Int, query: String): List<Post>
 

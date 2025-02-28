@@ -13,10 +13,10 @@ import java.time.LocalDateTime
 class PostEntity(
         @Id
         val postId: String,
-        val roomId: String,
+        val communityId: String,
 
-        @ManyToOne
-        val category: CategoryEntity,
+//        @ManyToOne
+//        val category: CategoryEntity,
 
         val title: String,
         val content: String,

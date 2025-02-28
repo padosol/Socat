@@ -3,6 +3,7 @@ package socat.postservice.infrastructure.web.dto.response.post
 import java.time.LocalDateTime
 
 data class PostResponse(
+        val communityId: String,
         val postId: String,
         val userId: String,
         val title: String,

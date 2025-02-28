@@ -21,7 +21,7 @@ export default async function Page(props: {
 
   return (
     <div>
-      <PostDetail post={post} communityId={communityId}/>
+      <PostDetail post={post} communityId={communityId} />
     </div>
   )
 }

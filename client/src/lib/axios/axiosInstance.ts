@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { cookies } from "next/headers";
 
+
 const instance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {

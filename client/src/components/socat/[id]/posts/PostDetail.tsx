@@ -18,31 +18,37 @@ export default function PostDetail({
 }) {
 
   return (
-    <div className="border">
-      <div>
-        <div>
-          <span>제목: {post.title}</span>
+    <div className="border p-4 rounded-md shadow-md">
+      <div className="mb-4">
+        <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
+        <div className="text-gray-500 text-sm flex justify-between">
           <div>
-            <span>
-              {post.createdAt}
-            </span>
-            <span>조회수 0</span>
-            <span>댓글 0</span>
-            <span>추천 0</span>
+            <span>일반</span>
+            <span className="mx-2">|</span>
+            <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+            <span className="mx-2">|</span>
+            <span className="">{post.username}</span>
+          </div>
+          <div>
+            <span className="ml-4">조회수 0</span>
+            <span className="ml-4">댓글 0</span>
+            <span className="ml-4">추천 0</span>
           </div>
         </div>
+      </div>
+      <div className="mb-4 min-h-[200px]">
         <EditorViewer initialValue={post.content}/>
       </div>
-
-      <div className="flex">
-        <Button>Good</Button>
-        <Button>Woops</Button>
+      <div className="flex space-x-2 mb-4 justify-center">
+        <Button className="bg-green-500 text-white">Good</Button>
+        <Button className="bg-red-500 text-white">Woops</Button>
       </div>
-
-      <div>
-        <Link href={`/socat/${communityId}`}>
-          <Button>뒤로가기</Button>
-        </Link>
+      <div className="flex justify-end">
+          <Button className="bg-gray-500 text-white">
+            <Link href={`/socat/${communityId}`}>
+              뒤로가기
+            </Link>
+          </Button>
       </div>
     </div>
   )

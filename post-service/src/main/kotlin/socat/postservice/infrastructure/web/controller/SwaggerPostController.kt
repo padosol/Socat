@@ -35,7 +35,7 @@ interface SwaggerPostController {
     ): ResponseEntity<APIResponse<List<PostResponse>>>
 
     fun findPostInRoomByRoomId(
-        roomId: String,
+        categoryId: String,
         page: Int,
         query: String,
     ): ResponseEntity<APIResponse<PostWithPage>>

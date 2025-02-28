@@ -39,6 +39,9 @@ class PostRepository(
         }
 
         override fun findById(postId: String): Post? {
+                val let = jpaPostRepository.findByIdOrNull(postId)
+                        ?.let { PostMapper.entityToDomain(it) }
+
                 return jpaPostRepository.findByIdOrNull(postId)
                         ?.let { PostMapper.entityToDomain(it) }
         }
@@ -49,15 +52,15 @@ class PostRepository(
                 return findAll.map { PostMapper.entityToDomain(it) }.toList()
         }
 
-        override fun findPostInRoomByRoomId(roomId: String): List<Post> {
-                val posts: List<PostEntity> = jpaPostRepository.findPostEntitiesByRoomId(roomId)
+        override fun findPostInRoomByRoomId(communityId: String): List<Post> {
+                val posts: List<PostEntity> = jpaPostRepository.findPostEntitiesByCommunityId(communityId)
 
                 return posts.map { PostMapper.entityToDomain(it) }.toList()
         }
 
-        override fun findPostInRoomByRoomIdAndPageAndQuery(roomId: String, page: Int, query: String): Page<Post> {
+        override fun findPostInRoomByRoomIdAndPageAndQuery(communityId: String, page: Int, query: String): Page<Post> {
                 val pageable: Pageable = PageRequest.of(page - 1, 10)
-                val result: Page<PostEntity> = jpaPostRepository.findAllByRoomIdOrderByCreatedAtDesc(roomId, pageable)
+                val result: Page<PostEntity> = jpaPostRepository.findAllByCommunityIdOrderByCreatedAtDesc(communityId, pageable)
                 return result.map { PostMapper.entityToDomain(it) }
         }
 

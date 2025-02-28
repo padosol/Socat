@@ -7,10 +7,10 @@ import socat.postservice.infrastructure.persistence.entity.PostEntity
 
 interface JpaPostRepository : JpaRepository<PostEntity, String> {
 
-    fun findPostEntitiesByRoomId(roomId: String): List<PostEntity>
+    fun findPostEntitiesByCommunityId(roomId: String): List<PostEntity>
 
     fun findAllByOrderByCreatedAtDesc(pageable: Pageable): Page<PostEntity>
 
-    fun findAllByRoomIdOrderByCreatedAtDesc(roomId: String, pageable: Pageable): Page<PostEntity>
+    fun findAllByCommunityIdOrderByCreatedAtDesc(roomId: String, pageable: Pageable): Page<PostEntity>
 
 }

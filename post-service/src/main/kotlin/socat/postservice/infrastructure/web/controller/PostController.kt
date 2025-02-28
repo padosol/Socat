@@ -85,9 +85,9 @@ class PostController(
        @PathVariable("postId") postId: String
     ): ResponseEntity<APIResponse<PostResponse>> {
 
-        val post: Post = findPostUseCase.findById(postId)
+        val post: PostResponse = findPostUseCase.findById(postId)
 
-        return ResponseEntity.ok(APIResponse.ok(PostMapper.domainToDTO(post)))
+        return ResponseEntity.ok(APIResponse.ok(post))
     }
 
     /**
@@ -107,14 +107,14 @@ class PostController(
     /**
      * 소켓에 등록된 게시글 조회
      */
-    @GetMapping("/{roomId}/posts")
+    @GetMapping("/{categoryId}/posts")
     override fun findPostInRoomByRoomId(
-        @PathVariable("roomId") roomId: String,
+        @PathVariable("categoryId") categoryId: String,
         @RequestParam("page") page: Int,
         @RequestParam("query") query: String,
     ): ResponseEntity<APIResponse<PostWithPage>> {
 
-        val posts: PostWithPage = findPostUseCase.findPostInRoomByRoomIdAndPageAndQuery(roomId, page, query)
+        val posts: PostWithPage = findPostUseCase.findPostInRoomByRoomIdAndPageAndQuery(categoryId, page, query)
 
         return ResponseEntity.ok(APIResponse.ok(posts))
     }

@@ -9,9 +9,9 @@ class PostMapper {
     companion object {
         fun entityToDomain(postEntity: PostEntity): Post {
             return Post(
-                roomId = postEntity.roomId,
+                communityId = postEntity.communityId,
                 postId = postEntity.postId,
-                category = CategoryMapper.entityToDomain(postEntity.category),
+//                category = CategoryMapper.entityToDomain(postEntity.category),
                 title = postEntity.title,
                 content = postEntity.content,
                 createdAt = postEntity.createdAt,
@@ -25,8 +25,8 @@ class PostMapper {
         fun domainToEntity(post: Post): PostEntity {
             return PostEntity(
                 postId = post.postId ,
-                roomId = post.roomId ,
-                category = CategoryMapper.domainToEntity(post.category),
+                communityId = post.communityId ,
+//                category = CategoryMapper.domainToEntity(post.category),
                 title = post.title ,
                 content = post.content ,
                 createdAt = post.createdAt ,
@@ -39,6 +39,7 @@ class PostMapper {
 
         fun domainToDTO(post: Post, username: String): PostResponse {
             return PostResponse(
+                communityId = post.communityId,
                 postId = post.postId,
                 userId = post.userId,
                 title = post.title,
@@ -51,6 +52,7 @@ class PostMapper {
 
         fun domainToDTO(post: Post): PostResponse {
             return PostResponse(
+                communityId = post.communityId,
                 postId = post.postId,
                 userId = post.userId,
                 title = post.title,

@@ -7,9 +7,9 @@ import java.time.ZoneId
 import java.util.*
 
 class Post(
-    val roomId: String,
+    val communityId: String,
     val postId: String,
-    val category: Category,
+//    val category: Category,
     var title: String,
     var content: String,
     val createdAt: LocalDateTime,
@@ -21,11 +21,11 @@ class Post(
 ) {
 
     companion object {
-        fun createPost(createPostDTO: CreatePostDTO, category: Category, userId: String): Post {
+        fun createPost(createPostDTO: CreatePostDTO, userId: String): Post {
             return Post(
-                roomId = createPostDTO.roomId,
+                communityId = createPostDTO.communityId,
                 postId = UUID.randomUUID().toString(),
-                category = category,
+//                category = category,
                 title = createPostDTO.title,
                 content = createPostDTO.content,
                 createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul")),
