@@ -1,3 +1,0 @@
-api:
- service: api-service
- test: api-gateway-test
