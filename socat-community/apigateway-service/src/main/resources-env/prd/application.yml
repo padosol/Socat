@@ -1,0 +1,135 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
+
+spring:
+  application:
+    name: apigateway-service
+
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: admin
+    password: 1234
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+  config:
+    import: optional:configserver:http://config-service:8888
+
+  cloud:
+    config:
+      name: api-service
+
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring Cloud Gateway GlobalFilter
+            preLogger: true
+            postLogger: true
+      routes:
+          ## user-service
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/authenticate
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/logout
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/refresh-auth
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+          filters:
+            - AuthorizationHeaderFilter
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        ## room-service
+        - id: room-service
+          uri: lb://ROOM-SERVICE
+          predicates:
+            - Path=/room-service/rooms
+            - Method=POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/room-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: room-service
+          uri: lb://ROOM-SERVICE
+          predicates:
+            - Path=/room-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/room-service/(?<segment>.*), /$\{segment}
+
+        ## chat-service
+        - id: chat-service
+          uri: lb://CHAT-SERVICE
+          predicates:
+            - Path=/chat-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
+
+        - id: chat-service
+          uri: lb:ws://CHAT-SERVICE
+          predicates:
+            - Path=/chat-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, beans, busrefresh
+
+logging:
+  level:
+    io.netty: DEBUG
+    reactor.netty: DEBUG
+
