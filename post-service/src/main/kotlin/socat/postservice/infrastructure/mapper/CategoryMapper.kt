@@ -1,8 +1,7 @@
 package socat.postservice.infrastructure.mapper
 
 import socat.postservice.domain.model.Category
-import socat.postservice.domain.model.Post
-import socat.postservice.infrastructure.persistence.entity.CategoryEntity
+import socat.postservice.infrastructure.persistence.category.entity.CategoryEntity
 
 class CategoryMapper {
 

@@ -1,7 +1,7 @@
 package socat.postservice.infrastructure.mapper
 
 import socat.postservice.domain.model.Post
-import socat.postservice.infrastructure.persistence.entity.PostEntity
+import socat.postservice.infrastructure.persistence.post.entity.PostEntity
 import socat.postservice.infrastructure.web.dto.response.post.PostResponse
 
 class PostMapper {

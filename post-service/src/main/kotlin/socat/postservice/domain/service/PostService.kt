@@ -153,6 +153,7 @@ class PostService(
             .recover { APIResponse.fail(null) }
             .getOrThrow()
     }
+
     fun getUserResponse(userId: String): APIResponse<UserResponse> {
         val circuitBreaker = circuitBreakerRegistry.circuitBreaker("userCircuitBreaker")
         val supplier = Supplier { userServiceClient.getUser(userId) }
