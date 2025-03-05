@@ -6,4 +6,5 @@ import socat.postservice.infrastructure.persistence.comment.entity.CommentEntity
 interface JpaCommentRepository : JpaRepository<CommentEntity, String>{
 
     fun findAllByPostId(postId: String): List<CommentEntity>
+
 }

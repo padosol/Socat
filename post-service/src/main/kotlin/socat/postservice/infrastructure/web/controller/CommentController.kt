@@ -2,8 +2,7 @@ package socat.postservice.infrastructure.web.controller
 
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import socat.postservice.domain.service.CommentService
 import socat.postservice.global.dto.APIResponse
 import socat.postservice.global.utils.JwtProvider
@@ -18,8 +17,11 @@ class CommentController(
     private val commentService: CommentService,
     private val jwtProvider: JwtProvider,
 ) : SwaggerComment{
+
+
+    @PostMapping("/comments")
     override fun createComment(
-        createCommentDTO: CreateCommentDTO,
+        @RequestBody createCommentDTO: CreateCommentDTO,
         @RequestHeader(HttpHeaders.AUTHORIZATION) token: String
     ): ResponseEntity<APIResponse<CommentResponse>> {
         val userId = jwtProvider.getUserIdWithBearer(token)
@@ -29,8 +31,9 @@ class CommentController(
         return ResponseEntity.status(201).body(APIResponse.ok(CommentMapper.domainToResponse(comment)))
     }
 
+    @PutMapping("/comments")
     override fun modifyComment(
-        modifyCommentDTO: ModifyCommentDTO,
+        @RequestBody modifyCommentDTO: ModifyCommentDTO,
         @RequestHeader(HttpHeaders.AUTHORIZATION) token: String
     ): ResponseEntity<APIResponse<CommentResponse>> {
         val userId = jwtProvider.getUserIdWithBearer(token)
@@ -40,8 +43,9 @@ class CommentController(
         return ResponseEntity.status(200).body(APIResponse.ok(CommentMapper.domainToResponse(comment)))
     }
 
+    @DeleteMapping("/comments")
     override fun removeComment(
-        removeCommentDTO: RemoveCommentDTO,
+        @RequestBody removeCommentDTO: RemoveCommentDTO,
         @RequestHeader(HttpHeaders.AUTHORIZATION) token: String
     ): ResponseEntity<APIResponse<Nothing?>> {
         val userId = jwtProvider.getUserIdWithBearer(token)
@@ -51,14 +55,20 @@ class CommentController(
         return ResponseEntity.status(204).body(APIResponse.ok(null))
     }
 
-    override fun findCommentById(commentId: String): ResponseEntity<APIResponse<CommentResponse>> {
+    @GetMapping("/comments/{commentId}")
+    override fun findCommentById(
+        @PathVariable("commentId") commentId: String
+    ): ResponseEntity<APIResponse<CommentResponse>> {
         val comment = commentService.findByCommentId(commentId)
 
         return ResponseEntity.ok(APIResponse.ok(CommentMapper.domainToResponse(comment)))
     }
 
+    @GetMapping("/posts/{postId}/comments")
     override fun findAllCommentByPostId(
-        postId: String, page: Int, query: String
+        @PathVariable("postId") postId: String,
+        @RequestParam(value = "page", defaultValue = "1", required = false) page: Int,
+        @RequestParam("query", defaultValue = "", required = false) query: String,
     ): ResponseEntity<APIResponse<List<CommentResponse>>> {
 
         val comments = commentService.findAllByPostId(postId)

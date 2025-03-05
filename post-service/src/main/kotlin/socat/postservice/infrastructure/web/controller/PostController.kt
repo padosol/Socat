@@ -95,7 +95,7 @@ class PostController(
      */
     @GetMapping(value = ["/posts"])
     override fun findAllPost(
-        @RequestParam(value = "page", defaultValue = "0", required = false) page: Int,
+        @RequestParam(value = "page", defaultValue = "1", required = false) page: Int,
         @RequestParam(value = "query", required = false) query: String,
     ): ResponseEntity<APIResponse<List<PostResponse>>> {
         val findAll = findPostUseCase.findAllBySearch(page, query)
@@ -105,16 +105,16 @@ class PostController(
     }
 
     /**
-     * 소켓에 등록된 게시글 조회
+     * 커뮤니티에 등록된 게시글 조회
      */
-    @GetMapping("/{categoryId}/posts")
-    override fun findPostInRoomByRoomId(
-        @PathVariable("categoryId") categoryId: String,
-        @RequestParam("page") page: Int,
-        @RequestParam("query") query: String,
+    @GetMapping("/{communityId}/posts")
+    override fun findPostInCommunityByRoomId(
+        @PathVariable("communityId") communityId: String,
+        @RequestParam(value = "page", defaultValue = "1", required = false) page: Int,
+        @RequestParam("query", defaultValue = "", required = false) query: String,
     ): ResponseEntity<APIResponse<PostWithPage>> {
 
-        val posts: PostWithPage = findPostUseCase.findPostInRoomByRoomIdAndPageAndQuery(categoryId, page, query)
+        val posts: PostWithPage = findPostUseCase.findPostInRoomByRoomIdAndPageAndQuery(communityId, page, query)
 
         return ResponseEntity.ok(APIResponse.ok(posts))
     }
