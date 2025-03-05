@@ -1,15 +1,19 @@
 package socat.postservice.infrastructure.persistence.comment
 
+import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import socat.postservice.application.port.output.CommentPersistencePort
 import socat.postservice.domain.model.Comment
+import socat.postservice.domain.vo.CommentStatus
 import socat.postservice.infrastructure.mapper.CommentMapper
-import socat.postservice.infrastructure.mapper.PostMapper
+import socat.postservice.infrastructure.persistence.comment.entity.QCommentEntity.*
+
 
 @Repository
 class CommentRepository(
-    private val jpaCommentRepository: JpaCommentRepository
+    private val jpaCommentRepository: JpaCommentRepository,
+    private val queryFactory: JPAQueryFactory
 ) : CommentPersistencePort {
     override fun save(comment: Comment): Comment {
         val commentEntity = jpaCommentRepository.save(CommentMapper.domainToEntity(comment))
@@ -26,6 +30,9 @@ class CommentRepository(
     }
 
     override fun findAllByPostId(postId: String): List<Comment> {
-        return jpaCommentRepository.findAllByPostId(postId).map { CommentMapper.entityToDomain(it) }
+        return queryFactory
+            .selectFrom(commentEntity)
+            .where(commentEntity.status.eq(CommentStatus.READ))
+            .fetch().map { CommentMapper.entityToDomain(it) }
     }
 }
