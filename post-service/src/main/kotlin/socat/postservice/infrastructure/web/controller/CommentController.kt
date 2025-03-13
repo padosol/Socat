@@ -18,7 +18,6 @@ class CommentController(
     private val jwtProvider: JwtProvider,
 ) : SwaggerComment{
 
-
     @PostMapping("/comments")
     override fun createComment(
         @RequestBody createCommentDTO: CreateCommentDTO,

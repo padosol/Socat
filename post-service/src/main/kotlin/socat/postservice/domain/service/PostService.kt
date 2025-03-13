@@ -5,6 +5,7 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import socat.postservice.application.port.input.*
 import socat.postservice.application.port.input.post.CreatePostUseCase
 import socat.postservice.application.port.input.post.FindPostUseCase
@@ -21,6 +22,8 @@ import socat.postservice.global.exception.PostExceptionCode
 import socat.postservice.infrastructure.client.CommunityServiceClient
 import socat.postservice.infrastructure.client.UserServiceClient
 import socat.postservice.infrastructure.mapper.PostMapper
+import socat.postservice.infrastructure.persistence.user.UserRepository
+import socat.postservice.infrastructure.persistence.user.entity.UserEntity
 import socat.postservice.infrastructure.web.dto.request.post.CreatePostDTO
 import socat.postservice.infrastructure.web.dto.request.post.ModifyPostDTO
 import socat.postservice.infrastructure.web.dto.request.post.RemovePostDTO
@@ -37,7 +40,7 @@ class PostService(
     private val userServiceClient: UserServiceClient,
     private val communityServiceClient: CommunityServiceClient,
     private val circuitBreakerRegistry: CircuitBreakerRegistry,
-    private val categoryPersistencePort: CategoryPersistencePort,
+    private val userRepository: UserRepository
 ) : CreatePostUseCase, ModifyPostUseCase, RemovePostUseCase, FindPostUseCase {
 
     private val log = LoggerFactory.getLogger(PostService::class.java)
@@ -45,10 +48,21 @@ class PostService(
     @Value("\${rootDir.path:Default 'D:\\'}")
     lateinit var rootDir: String
 
+    @Transactional
     override fun createPost(createPostDTO: CreatePostDTO, userId: String): Post {
-        val userResponse = getUserResponse(userId)
-        if (!userResponse.success) {
-            throw PostException(PostExceptionCode.USER_NOT_FOUND)
+        var username: String? = null
+
+        val postUser = userRepository.findById(userId)
+        if (postUser.isEmpty) {
+            val userResponse = getUserResponse(userId)
+            if (!userResponse.success) {
+                throw PostException(PostExceptionCode.USER_NOT_FOUND)
+            }
+            username = userResponse.data?.username
+            userRepository.save(UserEntity(userId, username))
+        } else {
+            val user = postUser.get()
+            username = user.userName
         }
 
         val communityId = createPostDTO.communityId
@@ -56,8 +70,6 @@ class PostService(
         if (!communityResponse.success) {
             throw CommunityNotFoundException(PostExceptionCode.COMMUNITY_NOT_FOUND)
         }
-
-//        val category = categoryPersistencePort.findById(createPostDTO.communityId)
 
         val post = Post.createPost(createPostDTO, userId)
         return postPersistencePort.savePost(post)

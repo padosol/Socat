@@ -9,5 +9,6 @@ data class CommentResponse(
     val username: String? = null,
     val status: String,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime? = null
+    val updatedAt: LocalDateTime? = null,
+    val comments: List<CommentResponse> = mutableListOf()
 )

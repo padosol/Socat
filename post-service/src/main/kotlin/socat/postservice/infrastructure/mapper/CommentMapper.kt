@@ -13,6 +13,7 @@ class CommentMapper {
                 postId = comment.postId,
                 userId = comment.userId,
                 comment = comment.comment,
+                parent = comment.parent?.let { CommentMapper.domainToEntity(it) },
                 likes = comment.likes,
                 status = comment.status,
                 createdAt = comment.createdAt,
@@ -28,6 +29,7 @@ class CommentMapper {
                 likes = commentEntity.likes,
                 status = commentEntity.status,
                 createdAt = commentEntity.createdAt,
+                children = commentEntity.children.map { CommentMapper.entityToDomain(it) }.toMutableList()
             )
         }
 
@@ -39,7 +41,21 @@ class CommentMapper {
                 username = comment.username,
                 status = comment.status.name,
                 createdAt = comment.createdAt,
-                updatedAt = comment.updatedAt
+                updatedAt = comment.updatedAt,
+                comments = comment.children.map { CommentMapper.domainToResponse(it) }.toList()
+            )
+        }
+
+        fun domainToResponse(comment: Comment, username: String): CommentResponse {
+            return CommentResponse(
+                commentId = comment.commentId,
+                comment = comment.comment,
+                userId = comment.userId,
+                username = username,
+                status = comment.status.name,
+                createdAt = comment.createdAt,
+                updatedAt = comment.updatedAt,
+                comments = comment.children.map { CommentMapper.domainToResponse(it, username) }.toList()
             )
         }
     }

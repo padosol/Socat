@@ -16,13 +16,18 @@ class CommentEntity(
 
     val likes: Int,
 
-    val parentId: String? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    val parent: CommentEntity? = null,
+
+    @OneToMany(mappedBy = "parent")
+    val children: List<CommentEntity> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
     val status: CommentStatus,
 
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime? = null
+    val updatedAt: LocalDateTime? = null,
 ) {
 
 }

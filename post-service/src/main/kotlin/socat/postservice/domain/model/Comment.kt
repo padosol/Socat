@@ -8,12 +8,13 @@ class Comment(
     val postId: String,
     val userId: String,
     var comment: String,
-    val parentId: String? = null,
+    var parent: Comment? = null,
     var likes: Int,
     var status: CommentStatus,
     val createdAt: LocalDateTime,
     val username: String? = null,
     var updatedAt: LocalDateTime? = null,
+    val children: MutableList<Comment> = mutableListOf()
 ) {
 
     companion object {
@@ -22,7 +23,6 @@ class Comment(
             postId: String,
             userId: String,
             comment: String,
-            parentId: String?,
             createdAt: LocalDateTime
         ): Comment {
             return Comment(
@@ -31,7 +31,6 @@ class Comment(
                 userId = userId,
                 comment = comment,
                 likes = 0,
-                parentId = parentId,
                 status = CommentStatus.READ,
                 createdAt = createdAt,
             )
@@ -49,6 +48,10 @@ class Comment(
 
     fun remove() {
         this.status = CommentStatus.DELETE
+    }
+
+    fun reply(parentComment: Comment) {
+        this.parent = parentComment
     }
 
 }

@@ -8,12 +8,14 @@ import socat.postservice.domain.model.Comment
 import socat.postservice.domain.vo.CommentStatus
 import socat.postservice.infrastructure.mapper.CommentMapper
 import socat.postservice.infrastructure.persistence.comment.entity.QCommentEntity.*
+import socat.postservice.infrastructure.persistence.user.UserRepository
 
 
 @Repository
 class CommentRepository(
     private val jpaCommentRepository: JpaCommentRepository,
-    private val queryFactory: JPAQueryFactory
+    private val queryFactory: JPAQueryFactory,
+    private val userRepository: UserRepository
 ) : CommentPersistencePort {
     override fun save(comment: Comment): Comment {
         val commentEntity = jpaCommentRepository.save(CommentMapper.domainToEntity(comment))
@@ -32,7 +34,10 @@ class CommentRepository(
     override fun findAllByPostId(postId: String): List<Comment> {
         return queryFactory
             .selectFrom(commentEntity)
-            .where(commentEntity.status.eq(CommentStatus.READ))
+            .leftJoin(commentEntity.parent)
+            .fetchJoin()
+            .where(commentEntity.status.eq(CommentStatus.READ).and(commentEntity.parent.commentId.isNull))
+            .orderBy(commentEntity.createdAt.asc())
             .fetch().map { CommentMapper.entityToDomain(it) }
     }
 }
