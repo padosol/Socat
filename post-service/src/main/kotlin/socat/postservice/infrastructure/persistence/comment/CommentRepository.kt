@@ -36,7 +36,11 @@ class CommentRepository(
             .selectFrom(commentEntity)
             .leftJoin(commentEntity.parent)
             .fetchJoin()
-            .where(commentEntity.status.eq(CommentStatus.READ).and(commentEntity.parent.commentId.isNull))
+            .where(
+                commentEntity.status.eq(CommentStatus.READ)
+                    .and(commentEntity.parent.commentId.isNull)
+                    .and(commentEntity.postId.eq(postId))
+            )
             .orderBy(commentEntity.createdAt.asc())
             .fetch().map { CommentMapper.entityToDomain(it) }
     }

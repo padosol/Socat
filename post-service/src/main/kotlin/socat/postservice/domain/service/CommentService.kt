@@ -75,8 +75,12 @@ class CommentService(
     }
 
     override fun findByCommentId(commentId: String): Comment {
-        return commentPersistencePort.findByCommentId(commentId)
-            ?: throw IllegalStateException("존재하지 않는 댓글 입니다.")
+        val comment: Comment = (commentPersistencePort.findByCommentId(commentId)
+            ?: throw IllegalStateException("존재하지 않는 댓글 입니다."))
+
+        comment.plusViewCount()
+
+        return commentPersistencePort.save(comment)
     }
 
     override fun findAllByPostId(postId: String): List<Comment> {

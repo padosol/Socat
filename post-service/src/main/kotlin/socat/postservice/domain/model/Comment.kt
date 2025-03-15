@@ -12,6 +12,7 @@ class Comment(
     var likes: Int,
     var status: CommentStatus,
     val createdAt: LocalDateTime,
+    var viewCount: Int,
     val username: String? = null,
     var updatedAt: LocalDateTime? = null,
     val children: MutableList<Comment> = mutableListOf()
@@ -33,6 +34,7 @@ class Comment(
                 likes = 0,
                 status = CommentStatus.READ,
                 createdAt = createdAt,
+                viewCount = 0
             )
         }
     }
@@ -52,6 +54,10 @@ class Comment(
 
     fun reply(parentComment: Comment) {
         this.parent = parentComment
+    }
+
+    fun plusViewCount() {
+        this.viewCount += 1
     }
 
 }

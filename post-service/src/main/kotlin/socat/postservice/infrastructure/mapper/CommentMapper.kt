@@ -17,6 +17,7 @@ class CommentMapper {
                 likes = comment.likes,
                 status = comment.status,
                 createdAt = comment.createdAt,
+                viewCount = comment.viewCount
             )
         }
 
@@ -29,7 +30,8 @@ class CommentMapper {
                 likes = commentEntity.likes,
                 status = commentEntity.status,
                 createdAt = commentEntity.createdAt,
-                children = commentEntity.children.map { CommentMapper.entityToDomain(it) }.toMutableList()
+                children = commentEntity.children.map { CommentMapper.entityToDomain(it) }.toMutableList(),
+                viewCount = commentEntity.viewCount
             )
         }
 
@@ -40,6 +42,7 @@ class CommentMapper {
                 userId = comment.userId,
                 username = comment.username,
                 status = comment.status.name,
+                viewCount = comment.viewCount,
                 createdAt = comment.createdAt,
                 updatedAt = comment.updatedAt,
                 comments = comment.children.map { CommentMapper.domainToResponse(it) }.toList()
@@ -53,6 +56,7 @@ class CommentMapper {
                 userId = comment.userId,
                 username = username,
                 status = comment.status.name,
+                viewCount = comment.viewCount,
                 createdAt = comment.createdAt,
                 updatedAt = comment.updatedAt,
                 comments = comment.children.map { CommentMapper.domainToResponse(it, username) }.toList()

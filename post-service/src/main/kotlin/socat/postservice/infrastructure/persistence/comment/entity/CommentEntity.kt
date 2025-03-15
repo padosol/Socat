@@ -26,6 +26,8 @@ class CommentEntity(
     @Enumerated(EnumType.STRING)
     val status: CommentStatus,
 
+    val viewCount: Int,
+
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime? = null,
 ) {
