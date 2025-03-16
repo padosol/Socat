@@ -44,8 +44,6 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // 재 로그인시 기존에 발급받은 토큰은 사용하지 못하게 처리해야함
-//        String accessToken = jwtProvider.createJwt(authentication);
         String accessToken = accessUseCase.createAccessToken(authentication);
         String refreshToken = refreshUseCase.createRefreshToken(accessToken);
 

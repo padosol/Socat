@@ -53,6 +53,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
 
+    // QueryDSL 의존성 추가
+    implementation "com.querydsl:querydsl-jpa:5.1.0:jakarta"
+
     // jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'

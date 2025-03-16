@@ -25,6 +25,8 @@ class CommunityRepositoryImpl(
     }
 
     override fun findAll(type: String): List<Community> {
+
+
         return  communityJpaRepository.findAll().map {
             CommunityMapper.entityToDomain(it)
         }

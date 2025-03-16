@@ -1,5 +1,6 @@
 package com.userservice.domain.user.service;
 
+import com.userservice.domain.auth.entity.Auth;
 import com.userservice.domain.user.entity.IdGenerator;
 import com.userservice.domain.user.entity.UserEntity;
 import com.userservice.domain.user.exception.UserAlreadyExistException;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class UserService implements
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse createUser(UserEntity user) {
+    public UserResponse signup(UserEntity user) {
 
         // 해당 이메일로 가입되어 있는 유저 체크
         Optional<UserEntity> findUser = userJpaRepository.findUserByEmail(user.getEmail());
@@ -44,7 +46,8 @@ public class UserService implements
             throw new UserAlreadyExistException(HttpStatus.BAD_REQUEST, "이미 가입되어 있는 유저 입니다.");
         }
 
-        user.createUser(idGenerator);
+        Auth auth = new Auth("USER");
+        user.createUser(idGenerator, Collections.singleton(auth));
         user.encoderPassword(passwordEncoder);
 
         UserEntity saveUser = userJpaRepository.save(user);
@@ -73,8 +76,9 @@ public class UserService implements
         UserEntity user = userJpaRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("유저정보가 없습니다."));
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("USER_ROLE"));
+        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getId()))
+                .collect(Collectors.toList());
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getId())
@@ -105,6 +109,7 @@ public class UserService implements
                 .username(user.getUserName())
                 .email(user.getEmail())
                 .id(user.getId())
+                .authorities(user.getAuthorities().stream().map(Auth::getId).collect(Collectors.toSet()))
                 .build();
     }
 

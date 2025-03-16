@@ -108,7 +108,7 @@ spring:
           predicates:
             - Path=/user-service/**
           filters:
-            - AuthorizationHeaderFilter
+            - AuthorizationFilter
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 
         ## community-service
@@ -120,7 +120,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/community-service/(?<segment>.*), /$\{segment}
-            - AuthorizationHeaderFilter
+            - AuthorizationFilter
         - id: community-service
           uri: lb://COMMUNITY-SERVICE
           predicates:
@@ -129,7 +129,10 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/community-service/(?<segment>.*), /$\{segment}
-            - AuthorizationHeaderFilter
+            - name: AuthorizationFilter
+              args:
+                requiredRole: ADMIN
+
         - id: community-service
           uri: lb://COMMUNITY-SERVICE
           predicates:
@@ -146,23 +149,6 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/community-service/(?<segment>.*), /$\{segment}
 
-        ## chat-service
-        - id: chat-service
-          uri: lb://CHAT-SERVICE
-          predicates:
-            - Path=/chat-service/**
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
-
-        - id: chat-service
-          uri: lb:ws://CHAT-SERVICE
-          predicates:
-            - Path=/chat-service/**
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
-
         ## post-service
         - id: post-service
           uri: lb://POST-SERVICE
@@ -171,7 +157,7 @@ spring:
             - Method=POST,PUT,DELETE
           filters:
             - RemoveRequestHeader=Cookie
-            - AuthorizationHeaderFilter
+            - AuthorizationFilter
             - RewritePath=/post-service/(?<segment>.*), /$\{segment}
 
         - id: post-service

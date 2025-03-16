@@ -1,6 +1,5 @@
 package com.community.communityservice.domain.community.service.community
 
-import com.community.communityservice.domain.community.client.PostServiceClient
 import com.community.communityservice.domain.community.client.UserServiceClient
 import com.community.communityservice.domain.community.domain.Community
 import com.community.communityservice.domain.community.domain.DefaultIdGenerator
@@ -31,7 +30,6 @@ import java.util.function.Supplier
 class CommunityService(
     private val communityRepository: CommunityRepository,
     private val userServiceClient: UserServiceClient,
-    private val postServiceClient: PostServiceClient,
     private val circuitBreakerRegistry: CircuitBreakerRegistry,
     private val topicRepository: TopicRepository
 ) : RemoveCommunityUseCase, ModifyCommunityUseCase, FindCommunityUseCase, CreateCommunityUseCase {

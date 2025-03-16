@@ -1,37 +1,36 @@
 package com.apigateway.apigatewayservice.filter;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 @Slf4j
 @Component
-public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
+public class AuthorizationFilter extends AbstractGatewayFilterFactory<AuthorizationFilter.Config> {
 
     private final HashOperations<String, Object, Object> redisHash;
 
     Environment env;
 
-    public AuthorizationHeaderFilter(Environment env, RedisTemplate<String, Object> redisTemplate) {
+    public AuthorizationFilter(Environment env, RedisTemplate<String, Object> redisTemplate) {
         super(Config.class);
         this.env = env;
         this.redisHash = redisTemplate.opsForHash();
@@ -39,13 +38,22 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     }
 
     public static class Config {
+        private String requiredRole;
 
+        public String getRequiredRole() {
+            return requiredRole;
+        }
+
+        public void setRequiredRole(String requiredRole) {
+            this.requiredRole = requiredRole;
+        }
     }
 
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
+
 
             // 토큰이 존재하는지 확인
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
@@ -63,6 +71,20 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
             if(redisHash.hasKey("black_list", jwt)) {
                 return onError(exchange, "JWT is Black", HttpStatus.UNAUTHORIZED);
+            }
+
+            String requiredRole = config.getRequiredRole();
+            if (StringUtils.hasText(requiredRole)) {
+                Claims claims = getClaims(jwt);
+                String auths = (String) claims.get("auth");
+                List<String> authList = Arrays.stream(auths.split(",")).toList();
+                if (!authList.contains(requiredRole)) {
+                    return onError(
+                            exchange,
+                            String.format("%s 권한이 없습니다.", requiredRole),
+                            HttpStatus.UNAUTHORIZED
+                    );
+                }
             }
 
             return chain.filter(exchange);
@@ -108,6 +130,14 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         }
 
         return returnValue;
+    }
+
+    private Claims getClaims(String jwt) {
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(env.getProperty("jwt.secret"))))
+                .build()
+                .parseSignedClaims(jwt)
+                .getPayload();
     }
 
     // Mono, Flux -> Spring WebFlux

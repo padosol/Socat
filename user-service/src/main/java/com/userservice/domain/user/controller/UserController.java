@@ -35,7 +35,7 @@ public class UserController implements SwaggerUserController {
     public ResponseEntity<UserResponse> createUser(
             @RequestBody @Valid CreateUserDTO createUserDTO
     ) {
-        UserResponse user = createUserUseCase.createUser(
+        UserResponse user = createUserUseCase.signup(
                 UserEntity.builder()
                     .userName(createUserDTO.getUsername())
                     .email(createUserDTO.getEmail())
