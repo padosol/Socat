@@ -1,7 +1,6 @@
 rootProject.name = 'socat-community'
 include 'apigateway-service'
 include 'discovery-service'
-include 'chat-service'
 include 'community-service'
 include 'config-service'
 include 'post-service'

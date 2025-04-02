@@ -1,15 +1,23 @@
-version: '3.8'
-
 services:
-
   redis:
+    # 사용할 이미지
+    image: redis:latest
+    # 컨테이너명
     container_name: redis
-
-  postgres:
-    container_name: postgres
-
-  rabbitmq:
-    container_name: rabbitmq
+    # 접근 포트 설정(컨테이너 외부:컨테이너 내부)
+    ports:
+      - "6379:6379"
+    # 스토리지 마운트(볼륨) 설정
+    volumes:
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+    # 컨테이너에 docker label을 이용해서 메타데이터 추가
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    # 컨테이너 종료시 재시작 여부 설정
+    restart: always
+    command: redis-server /usr/local/conf/redis.conf
 
   storage:
     image: openzipkin/zipkin-mysql
@@ -35,7 +43,6 @@ services:
     depends_on:
       - storage
     restart: always
-
   dependencies:
     image: openzipkin/zipkin-dependencies
     container_name: dependencies
@@ -49,28 +56,36 @@ services:
     depends_on:
       - storage
     restart: always
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data/data:/var/lib/postgresql/data
+      - ./postgres_data/init:/docker-entrypoint-initdb.d
 
-  discovery-service:
-    container_name: discovery-service
-
-  config-service:
-    container_name: config-service
-
-  apigateway-service:
-    container_name: apigateway-service
-
-  user-service:
-    image: ${BASE_IMAGE_NAME}/user-service
-    container_name: user-service
+  discovery:
+    container_name: discovery-server
     build:
-      context: .W
-      dockerfile: ./user-service/Dockerfile
-      args:
-        - FILE_DIRECTORY=.
+      dockerfile: Dockerfile
+      context: ./discovery-service
 
-  post-service:
-    container_name: post-service
+  api-gateway:
+    container_name: api-gateway
+    build:
+      dockerfile: Dockerfile
+      context: ./apigateway-service
+  config:
+    container_name: config-server
+    build:
+      dockerfile: Dockerfile
+      context: ./config-service
+    volumes:
+      - ./config-data/apiEncryptionKey.jks:/apiEncryptionKey.jks
 
-  community-service:
-    container_name: community-service
+
 
